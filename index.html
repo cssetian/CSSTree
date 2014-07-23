@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>
+  Tree Drawer Tester
+  </title>
+  <link rel="stylesheet" type="text/css" href="index.css" />
+</head>
+
+<body>
+  <input id="json-input" type="text" />
+  <br />
+  <button type="button" id="json-text-button" onclick="loadStringData()">Load JSON Text Input</button>
+  <button type="button" id="json-url-button" onclick="loadRemoteData()">Load JSON From URL</button>
+
+  <div id="tree-container">
+  </div>
+
+  <div id="json-container"></div>
+
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+<script type="text/javascript" src="http://underscorejs.org/underscore.js"></script>
+<script type="text/javascript" src="treedrawerplugin.js"></script>
+<script type="text/javascript">
+
+var userInput;
+
+var loadStringData = function() {
+  userInput = $.parseJSON($("#json-input").val());
+
+  $("#json-container").text(JSON.stringify(userInput));
+  
+  var options = {
+    node: userInput
+  };
+  $("#tree-container").html("");
+  $("#tree-container").drawTree(options);
+};
+
+var loadRemoteData = function(url) {
+  alert('not implemented yet!');
+};
+
+$(document).ready(function() {
+  //$("#tree-container").text("Hello World");
+  //
+
+
+});
+</script>
+</html>
