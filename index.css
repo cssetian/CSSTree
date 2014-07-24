@@ -28,3 +28,9 @@
       stroke-width: 1px;
       overflow: visible; 
     }
+
+    #json-input {
+      width: 500px;
+      height: 200px;
+      text-overflow: wrap;
+    }
