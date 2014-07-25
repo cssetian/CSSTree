@@ -10,11 +10,9 @@
 
 <body>
 
-  <button type="button" id="json-text-button" onclick="loadStringData()">Load JSON Text Input</button>
-  <button type="button" id="json-url-button" onclick="loadRemoteData()">Load JSON From URL</button>
-
-  <div id="tree-container"></div>
-  <div id="json-container"></div>
+  <button type="button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
+  <button type="button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
+  <button type="button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Data</button>
 
   <div id="options-container">
     <table>
@@ -44,10 +42,29 @@
       </tr>
       <tr>
         <td><label for="option-node-id">Child Node ID</label></td>
-        <td><input id="option-node-id"></input></td>
+        <td><input id="option-child-node-id"></input></td>
+      </tr>
+      <tr>
+        <td><label for="option-link-classes">Link Classes</label></td>
+        <td><input id="option-link-classes"></input></td>
+      </tr>
+      <tr>
+        <td><label for="option-link-arrow-classes">Link Arrow Classes</label></td>
+        <td><input id="option-link-arrow-classes"></input></td>
+      </tr>
+      <tr>
+        <td><label for="option-node-background-classes">Node Background Classes</label></td>
+        <td><input id="option-node-background-classes"></input></td>
+      </tr>
+      <tr>
+        <td><label for="option-node-html-classes">Node HTML Template Classes</label></td>
+        <td><input id="option-node-html-classes"></input></td>
       </tr>
     </table>
   </div>
+
+  <div id="tree-container"></div>
+  <div id="json-container"></div>
 
 </body>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -73,6 +90,11 @@ var loadStringData = function() {
 var loadRemoteData = function(url) {
   alert('not implemented yet!');
 };
+
+var loadDefaultData = function() {
+  $("#tree-container").html("");
+  $("#tree-container").drawTree({});
+}
 
 $(document).ready(function() {
   //$("#tree-container").text("Hello World");

@@ -32,24 +32,25 @@
         }, {
           dataValue: '4',
           node: [{
-            dataValue: '5',
-            node: {
-              dataValue: '8'
-            }
+            dataValue: '7',
+            node: [{
+              dataValue: '10'
+            }]
           }, {
-            dataValue: '6'
+            dataValue: '8'
           }, {
-            dataValue: '7'
+            dataValue: '9'
           }]
         }]
       },
+      nodeBackgroundClasses: ['node-background'],
       nodeClasses: ['node-html-container'],
       linkClasses: ['link-html-container'],
       arrowClasses: ['arrow-html-container'],
       notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.'
     };
 
-    // We can use the extend method to merge options/settings as usual:
+    // We can use the extend method to merge options as usual:
     // But with the added first parameter of TRUE to signify a DEEP COPY:
     var mergedOptions = $.extend( {}, defaultOptions, userOptions );
     _drawTree(mergedOptions);
@@ -58,138 +59,157 @@
   };
 
 
-  /**************** Generic Tree Drawing Function ******************/
+  /*************************** Generic Tree Drawing Function ****************************/
   var _drawTree = function (options) {
+    treeOptions = {};
 
-    /******************* Tree Layout Constants *******************/
-    var DATA_ROOT_NODE            = options.node;                     // The Javascript object representing the root node of the tree
-    var TREE_CONTAINER_ID         = options.treeContainerId;          // ID of the element the tree will be appended to
-    var CHILD_NODE_NAME           = options.childNodeName;            // Property name of the node container JSON property
-    var NODE_WIDTH                = options.nodeSizing.width;         // Width of each node
-    var NODE_HEIGHT               = options.nodeSizing.height;        // Height of each node
-    var NODE_DEPTH_SPACING        = options.nodeSpacing.level;        // Depth-wise spacing in pixels between each level of the tree
-    var NODE_SPAN_SPACING         = options.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
-    var G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
-    var HTML_TEMPLATE             = options.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
-    var NODE_CSS_CLASSES          = options.nodeClasses;              // Any classes to be added onto the root HTML template of each node
-    var LINK_CSS_CLASSES          = options.linkClasses;              // Any classes to be added onto the links between each pair of nodes
-    var ARROW_CSS_CLASSES         = options.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
-    var D3_NOT_SUPPORTED_MESSAGE  = options.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
-
-    /******************* Tree Layout Calcualted Fields *******************/
+    /**************************** Tree Layout Constants *********************************/
+    treeOptions.DATA_ROOT_NODE            = options.node;                     // The Javascript object representing the root node of the tree
+    treeOptions.TREE_CONTAINER_ID         = options.treeContainerId;          // ID of the element the tree will be appended to
+    treeOptions.CHILD_NODE_NAME           = options.childNodeName;            // Property name of the node container JSON property
+    treeOptions.NODE_WIDTH                = options.nodeSizing.width;         // Width of each node
+    treeOptions.NODE_HEIGHT               = options.nodeSizing.height;        // Height of each node
+    treeOptions.NODE_DEPTH_SPACING        = options.nodeSpacing.level;        // Depth-wise spacing in pixels between each level of the tree
+    treeOptions.NODE_SPAN_SPACING         = options.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
+    treeOptions.G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
+    treeOptions.HTML_TEMPLATE             = options.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
+    treeOptions.NODE_CSS_CLASSES          = options.nodeClasses;              // Any classes to be added onto the root HTML template element of each node
+    treeOptions.NODE_BACKGROUND_CSS_CLASSES   = options.nodeBackgroundClasses;    // Any classes to be added onto the rect SVG element of each node
+    treeOptions.LINK_CSS_CLASSES          = options.linkClasses;              // Any classes to be added onto the links between each pair of nodes
+    treeOptions.ARROW_CSS_CLASSES         = options.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
+    treeOptions.D3_NOT_SUPPORTED_MESSAGE  = options.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
+    treeOptions.ROTATION_ANGLE_DEGREES    = options.orientation;
+    /************************* Tree Layout Calcualted Fields *****************************/
     // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
-    var ROTATION                  = options.orientation * (Math.PI / 180);
+    treeOptions.ROTATION_ANGLE_RADIANS    = treeOptions.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
 
     // Calculates the sin and cos of the rotation angle for various projection calculations throughout the function
-    var SIN_R                     = Math.round(Math.sin(ROTATION));
-    var COS_R                     = Math.round(Math.cos(ROTATION));
+    treeOptions.SIN_R                     = Math.round(Math.sin(treeOptions.ROTATION_ANGLE_RADIANS));
+    treeOptions.COS_R                     = Math.round(Math.cos(treeOptions.ROTATION_ANGLE_RADIANS));
 
     // The H/W ratio via H_W_RATIO scales so that it always results in d3ParsedNodes being adjacent when horizontal spacing is 0.
-    var H_W_RATIO = (NODE_HEIGHT / NODE_WIDTH);
+    treeOptions.H_W_RATIO = (treeOptions.NODE_HEIGHT / treeOptions.NODE_WIDTH);
 
     // Helper field that calcualtes the actual number of pixels that need to be between the 
-    var BASE_ZERO_SPAN_SPACING = H_W_RATIO * Math.abs(SIN_R) + (1) * Math.abs(COS_R);
+    treeOptions.BASE_ZERO_SPAN_SPACING = treeOptions.H_W_RATIO * Math.abs(treeOptions.SIN_R) + (1) * Math.abs(treeOptions.COS_R);
 
     // A decimal percent specifying the spacing between sibling and cousin elements - Used with the separation function on the layout
     // Use NODE_WIDTH if tree is vertical, NODE_HEIGHT if tree is horizontal
-    var NODE_SPAN_SPACING_PCT = (1 / NODE_WIDTH) * ( (NODE_HEIGHT * Math.abs(SIN_R)) + (NODE_WIDTH * Math.abs(COS_R)) + NODE_SPAN_SPACING );
-    console.log(NODE_SPAN_SPACING_PCT);
+    treeOptions.NODE_SPAN_SPACING_PCT = (1 / treeOptions.NODE_WIDTH) * ( (treeOptions.NODE_HEIGHT * Math.abs(treeOptions.SIN_R)) + (treeOptions.NODE_WIDTH * Math.abs(treeOptions.COS_R)) + treeOptions.NODE_SPAN_SPACING );
     /********************* End Of Tree Layout Constants Initialization *******************/
-    // Create all the basic options here for passing through to helper functions. 
-    // This object will be enriched throughout the tree-drawing process,
-    //    as more parameters are calculated and initialized.
-    var factoryOptions = {
-      'NODE_WIDTH': NODE_WIDTH,
-      'NODE_HEIGHT': NODE_HEIGHT,
-      'ROTATION': ROTATION,
-      'SIN_R': SIN_R,
-      'COS_R': COS_R,
-      'NODE_SPAN_SPACING_PCT': NODE_SPAN_SPACING_PCT,
-      'CHILD_NODE_NAME': CHILD_NODE_NAME,
-      'NODE_DEPTH_SPACING': NODE_DEPTH_SPACING,
-      'DATA_ROOT_NODE': DATA_ROOT_NODE,
-    };
 
-    /****************** Tree Layout Initialization *********************/
+    /*************************** Tree Layout Initialization ******************************/
 
     // Generate the basic tree layout, given its logical structure
-    var newTree = _treeLayoutFactory(factoryOptions);
+    var newTree = _d3TreeLayoutFactory(treeOptions);
     var treeLayout = newTree.layout;
     var treeNodes = newTree.nodes;
     var treeLinks = newTree.links;
 
-    // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
-    var MIN_X_COORDS = _.min(treeNodes, function (node) { return node.x; });
-    var MAX_X_COORDS = _.max(treeNodes, function (node) { return node.x; });
-    var MIN_Y_COORDS = _.min(treeNodes, function (node) { return node.y; });
-    var MAX_Y_COORDS = _.max(treeNodes, function (node) { return node.y; });
-    console.log('Min X: ' + Math.round(MIN_X_COORDS.x) + ' | Max X: ' + Math.round(MAX_X_COORDS.x));
-    console.log('Min Y: ' + Math.round(MIN_Y_COORDS.y) + ' | Max Y: ' + Math.round(MAX_Y_COORDS.y));
+    /******** Extract Critical Properties From Calculated Layout ********/
+    var minMaxCoords = _calculateMinMaxCoords(treeNodes);
+    treeOptions.MIN_X = minMaxCoords.MIN_X;
+    treeOptions.MIN_Y = minMaxCoords.MIN_Y;
+    treeOptions.MAX_X = minMaxCoords.MAX_X;
+    treeOptions.MAX_Y = minMaxCoords.MAX_Y;
 
+    // Calculate the offset of the root node of the tree, based on the overall dimensions and spacing of the tree nodes
+    var offsets = _calculateTreeRootNodeOffset(treeOptions);
+    treeOptions.ROOT_X_OFFSET = offsets.ROOT_X_OFFSET;
+    treeOptions.ROOT_Y_OFFSET = offsets.ROOT_Y_OFFSET;
 
     // Not currently used for any specific purpose
     // Calculate the maximum depth and span of the Tree (requires the d3 extracted treeNodes to do so)
-    var MAX_DEPTH   = d3.max(treeNodes, function (x) { return x.depth; }) + 1;
-    var MAX_SPAN    = _.max(_.countBy(treeNodes, function (x) { return x.depth; }));
-    console.log('Max Depth: ' + MAX_DEPTH + ' | Max Span: ' + MAX_SPAN);
+    treeOptions.MAX_DEPTH   = d3.max(treeNodes, function (x) { return x.depth; }) + 1;
+    treeOptions.MAX_SPAN    = _.max(_.countBy(treeNodes, function (x) { return x.depth; }));
+    console.log('Max Depth: ' + treeOptions.MAX_DEPTH + ' | Max Span: ' + treeOptions.MAX_SPAN);
 
     // Calculate the container element width and height, based on depth/span spacing, orientation, and node size
-    var TREE_CONTAINER_HEIGHT = Math.abs(SIN_R) * (MAX_X_COORDS.x - MIN_X_COORDS.x + NODE_HEIGHT)
-                              + Math.abs(COS_R) * (MAX_Y_COORDS.y - MIN_Y_COORDS.y + NODE_HEIGHT);
-    var TREE_CONTAINER_WIDTH =  Math.abs(SIN_R) * (MAX_Y_COORDS.y - MIN_Y_COORDS.y + NODE_WIDTH)
-                              + Math.abs(COS_R) * (MAX_X_COORDS.x - MIN_X_COORDS.x + NODE_WIDTH);
-    console.log('Container Width: ' + Math.round(TREE_CONTAINER_WIDTH) + ' | Container Height: ' + Math.round(TREE_CONTAINER_HEIGHT));
+    treeOptions.TREE_CONTAINER_HEIGHT = Math.abs(treeOptions.SIN_R) * (treeOptions.MAX_X - treeOptions.MIN_X + treeOptions.NODE_HEIGHT)
+                              + Math.abs(treeOptions.COS_R) * (treeOptions.MAX_Y - treeOptions.MIN_Y + treeOptions.NODE_HEIGHT);
+    treeOptions.TREE_CONTAINER_WIDTH =  Math.abs(treeOptions.SIN_R) * (treeOptions.MAX_Y - treeOptions.MIN_Y + treeOptions.NODE_WIDTH)
+                              + Math.abs(treeOptions.COS_R) * (treeOptions.MAX_X - treeOptions.MIN_X + treeOptions.NODE_WIDTH);
+    console.log('Container Width: ' + Math.round(treeOptions.TREE_CONTAINER_WIDTH) + ' | Container Height: ' + Math.round(treeOptions.TREE_CONTAINER_HEIGHT));
+    
+    // Generate the different link types we can use for drawing links between nodes
+    //var diagonal = _diagonalLinkStrategy(treeOptions);
+    treeOptions.LINK_FUNCTION = _elbowLinkStrategy(treeOptions);
+    /********************************************************************************/
 
-    // Calculate the offset of the root node of the tree, based on the overall dimensions and spacing of the tree nodes
-    factoryOptions['G_EL_TREE_PADDING'] = G_EL_TREE_PADDING;
-    factoryOptions['MIN_X_COORDS'] = MIN_X_COORDS;
-    factoryOptions['MAX_X_COORDS'] = MAX_X_COORDS;
-    factoryOptions['MIN_Y_COORDS'] = MIN_Y_COORDS;
-    factoryOptions['MAX_Y_COORDS'] = MAX_Y_COORDS;
-    var offsets = _calculateTreeRootNodeOffset(factoryOptions);
-    var ROOT_X_OFFSET = offsets.ROOT_X_OFFSET;
-    var ROOT_Y_OFFSET = offsets.ROOT_Y_OFFSET;
-
-    // Generate the two different link types we can use for between nodes
-    factoryOptions['ROOT_X_OFFSET'] = ROOT_X_OFFSET;
-    factoryOptions['ROOT_Y_OFFSET'] = ROOT_Y_OFFSET;
-    var diagonal = _svgDiagonalFactory(factoryOptions);
-    var elbow = _svgElbowFactory(factoryOptions);
-
+    /********************** DRAW TREE WITH HELPER FUNCTIONS *************************/
     // Generate the SVG element that will serve as a container for the SVG representation of the tree
-    factoryOptions['TREE_CONTAINER_ID'] = TREE_CONTAINER_ID;
-    factoryOptions['TREE_CONTAINER_WIDTH'] = TREE_CONTAINER_WIDTH;
-    factoryOptions['TREE_CONTAINER_HEIGHT'] = TREE_CONTAINER_HEIGHT;
-    var svg = _svgTreeContainerFactory(factoryOptions);
+    var svg = _svgContainerElFactory(treeOptions);
     
     // Initialize the SVG nodes - defines their depth, gives each node an ID, and applies any necessary transformations
-    var svgInitializedNodes = _svgNodeFactory(svg, treeNodes, factoryOptions);
+    var svgInitializedNodes = _svgNodeFactory(svg, treeNodes, treeOptions);
 
     // Check to make sure the browser supports the ForeignObject feature of SVG
     var foreignObjectSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
 
     // If the foreignObject feature is supported, append the HTML Template. Otherwise, append a not-supported message
-    factoryOptions['HTML_TEMPLATE'] = HTML_TEMPLATE;
-    factoryOptions['NODE_CSS_CLASSES'] = NODE_CSS_CLASSES;
-    factoryOptions['D3_NOT_SUPPORTED_MESSAGE'] = D3_NOT_SUPPORTED_MESSAGE;
     if (foreignObjectSupported) {
-      _svgAppendHTMLTemplate(svgInitializedNodes, factoryOptions);
+      _svgAppendHTMLTemplate(svgInitializedNodes, treeOptions);
     } else {
-      _svgAppendForeignObjectNotSupported(svgInitializedNodes, factoryOptions);
+      _svgAppendForeignObjectNotSupported(svgInitializedNodes, treeOptions);
     }
 
     // Define the basic properties of the Link Markers, which will be used for a custom marker during link creation
-    factoryOptions['ARROW_CSS_CLASSES'] = ARROW_CSS_CLASSES;
-    _svgDefineLinkMarkers(svg, factoryOptions);
+    _svgDefineLinkMarkers(svg, treeOptions);
     
     // Finally, append the links to the tree
-    factoryOptions['LINK_CSS_CLASSES'] = LINK_CSS_CLASSES;
-    factoryOptions['ELBOW_LINK_FUNCTION'] = elbow;
-    var svgInitializedLinks = _svgLinkFactory(svg, treeLinks, factoryOptions);
+    var svgInitializedLinks = _svgLinkFactory(svg, treeLinks, treeOptions);
   };
+  /**********************************************************************************/
 
-  /**************************** HELPER FUNCTIONS ***********************************/
+  /*----------------------------- HELPER FUNCTIONS ---------------------------------*/
 
+  /************************ Calculate Computed Properties ***************************/
+  function _calculateMinMaxCoords (treeNodes) {
+    // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
+    MIN_X_COORDS = _.min(treeNodes, function (node) { return node.x; });
+    MAX_X_COORDS = _.max(treeNodes, function (node) { return node.x; });
+    MIN_Y_COORDS = _.min(treeNodes, function (node) { return node.y; });
+    MAX_Y_COORDS = _.max(treeNodes, function (node) { return node.y; });
+    console.log('Min X: ' + Math.round(MIN_X_COORDS.x) + ' | Max X: ' + Math.round(MAX_X_COORDS.x));
+    console.log('Min Y: ' + Math.round(MIN_Y_COORDS.y) + ' | Max Y: ' + Math.round(MAX_Y_COORDS.y));
+
+    return {
+      MIN_X: MIN_X_COORDS.x,
+      MIN_Y: MIN_Y_COORDS.y,
+      MAX_X: MAX_X_COORDS.x,
+      MAX_Y: MAX_Y_COORDS.y
+    };
+  }
+
+  function _calculateTreeRootNodeOffset(options) {
+    var SIN_R = options.SIN_R;
+    var COS_R = options.COS_R;
+
+    // Calculate the root node X offset based on the min and max layout positionings, along with offsets based on orientation
+    // The X offset is always the offset of the tree in the SPAN (horizontal) direction
+    var ROOT_X_OFFSET = 0;    // By default no X offset
+    if (SIN_R == 1 || COS_R == 1) {
+      ROOT_X_OFFSET = SIN_R * ((-1 * options.MIN_X) + (options.G_EL_TREE_PADDING / 2))
+                    + COS_R * ((-1 * options.MIN_X) + (options.G_EL_TREE_PADDING / 2));
+    } else if (SIN_R === -1 || COS_R === -1) {
+      ROOT_X_OFFSET = SIN_R * (options.MAX_X + (options.G_EL_TREE_PADDING / 2))
+                    + COS_R * (options.MAX_X + (options.G_EL_TREE_PADDING / 2));
+    }
+
+    // If necessary, calculate the root node Y offset based on the size of the calculated tree container
+    // The Y offset is always the offset of the root node in the DEPTH (vertical) direction
+    // The Y offset is only necessary when the tree is rotated 180 or 270 degrees (How do you write a function that is 1 for 180/270, but 0 for 0/90?)
+    var ROOT_Y_OFFSET = (options.G_EL_TREE_PADDING / 2);    // By default Y offset should be half the tree padding
+    if (SIN_R == -1 || COS_R == -1)
+      ROOT_Y_OFFSET = -1 * (options.MAX_Y - options.MIN_Y + (options.G_EL_TREE_PADDING / 2));
+
+    console.log('Root X Offset: ' + Math.round(ROOT_X_OFFSET) + ' | Root Y Offset: ' + Math.round(ROOT_Y_OFFSET));
+
+    return { 'ROOT_X_OFFSET': ROOT_X_OFFSET, 'ROOT_Y_OFFSET': ROOT_Y_OFFSET };
+  }
+  /***************************************************************************************/
+
+  /***************************** SVG Helper Functions ************************************/
   function _svgAppendForeignObjectNotFound (nodes, options) {
     // If foreignObjects are not supported, add a node with a default not-supported message
     nodes.append('rect')
@@ -220,7 +240,7 @@
     nodes.append('rect')
       .attr('width', options.NODE_WIDTH)
       .attr('height', options.NODE_HEIGHT)
-      .attr('class', 'node-background');
+      .attr('class', function(d, i) { return options.NODE_BACKGROUND_CSS_CLASSES.join(' '); });
 
     // The foreignObject which allows the user to inject HTML templates into the tree node
     // Appends the requiredFeatures property as a further guard to make sure d3 is supported
@@ -251,8 +271,10 @@
       .append('path')
         .attr('d', 'M0,0 L4,2 0,4');  //SVG definition of the arrow shaped link marker
   }
+  /***********************************************************************************/
 
-  function _svgElbowFactory (options) {
+  /********************************** d3 Link Strategies *****************************/
+  function _elbowLinkStrategy (options) {
     // If you want to switch to a standard elbow connector, use this instead of the diagonal
     return function elbow(d, i) {
       //elbow link source base offset
@@ -299,7 +321,7 @@
   };
 
   // Diagonal = SVG line type with curvature - currently unused but can incorporate into an option
-  function _svgDiagonalFactory (options) {
+  function _diagonalLinkStrategy (options) {
     return d3.svg.diagonal()
       // PROJECTION: Used to map X and Y into a rotated plane by a specified multiple of 90 degrees
       //              To map from a vertical to horizontal orientation, map (x,y) -> (y,x)
@@ -336,7 +358,9 @@
         return { x: (d.target.x + x_anchor), y: (d.target.y + y_anchor) };
       });
   }
+  /******************************************************************************/
 
+  /****************************** SVG Factories *********************************/
   function _svgNodeFactory(svg, nodes, options) {
     var SIN_R = options.SIN_R;
     var COS_R = options.COS_R;
@@ -361,7 +385,7 @@
     .each(function (d) {
       var mynode = d3.select(this);
       if (d.depth == 0) {
-          mynode.classed('root-node', true);
+        mynode.classed('root-node', true);
       }
     })
     // Gives the treeNodes the initial offset to start at on initialization (location of root node)
@@ -388,12 +412,12 @@
       .attr('class', function(d, i) { return options.LINK_CSS_CLASSES.join(' '); })
       .attr('marker-end', 'url(#end-arrow)')
       .attr('stroke-width', 1)
-      .attr('d', options.ELBOW_LINK_FUNCTION);
+      .attr('d', options.LINK_FUNCTION);
 
     return svgInitializedLinks;
   }
 
-  function _svgTreeContainerFactory(options) {
+  function _svgContainerElFactory(options) {
     // Define the spatial container that the tree will be laid out in
     var svgContainer = d3.select(options.TREE_CONTAINER_ID)
       .append('svg')
@@ -406,8 +430,10 @@
 
     return svgContainer;
   }
+  /*******************************************************************************/
 
-  function _treeLayoutFactory(options) {
+  /*************************** d3 Tree Layout Factory ****************************/
+  function _d3TreeLayoutFactory(options) {
     var d3Tree = d3.layout.tree()
       .size(null)
       .nodeSize([options.NODE_WIDTH, options.NODE_HEIGHT])  // Set this width and height of a rectangular node
@@ -435,33 +461,7 @@
 
     return {'tree': d3Tree, 'nodes': d3ParsedNodes, 'links': d3ParsedLinks};
   }
-
-  function _calculateTreeRootNodeOffset(options) {
-    var SIN_R = options.SIN_R;
-    var COS_R = options.COS_R;
-
-    // Calculate the root node X offset based on the min and max layout positionings, along with offsets based on orientation
-    // The X offset is always the offset of the tree in the SPAN (horizontal) direction
-    var ROOT_X_OFFSET = 0;    // By default no X offset
-    if (SIN_R == 1 || COS_R == 1) {
-      ROOT_X_OFFSET = SIN_R * ((-1 * options.MIN_X_COORDS.x) + (options.G_EL_TREE_PADDING / 2))
-                    + COS_R * ((-1 * options.MIN_X_COORDS.x) + (options.G_EL_TREE_PADDING / 2));
-    } else if (SIN_R === -1 || COS_R === -1) {
-      ROOT_X_OFFSET = SIN_R * (options.MAX_X_COORDS.x + (options.G_EL_TREE_PADDING / 2))
-                    + COS_R * (options.MAX_X_COORDS.x + (options.G_EL_TREE_PADDING / 2));
-    }
-
-    // If necessary, calculate the root node Y offset based on the size of the calculated tree container
-    // The Y offset is always the offset of the root node in the DEPTH (vertical) direction
-    // The Y offset is only necessary when the tree is rotated 180 or 270 degrees (How do you write a function that is 1 for 180/270, but 0 for 0/90?)
-    var ROOT_Y_OFFSET = (options.G_EL_TREE_PADDING / 2);    // By default Y offset should be half the tree padding
-    if (SIN_R == -1 || COS_R == -1)
-      ROOT_Y_OFFSET = -1 * (options.MAX_Y_COORDS.y - options.MIN_Y_COORDS.y + (options.G_EL_TREE_PADDING / 2));
-
-    console.log('Root X Offset: ' + Math.round(ROOT_X_OFFSET) + ' | Root Y Offset: ' + Math.round(ROOT_Y_OFFSET));
-
-    return { 'ROOT_X_OFFSET': ROOT_X_OFFSET, 'ROOT_Y_OFFSET': ROOT_Y_OFFSET };
-  }
+  /*********************************************************************************/
 
   //Text wrapping backwards-compatibility function found at: http://bl.ocks.org/mbostock/7555321
   //Enables wrapping of a d3-not-supported message within the node bounds 
