@@ -5,13 +5,14 @@
 
     var defaultOptions = {
       treeContainerId: '#tree-container',
-      orientation: 90,
+      orientation: 0,
       nodeSizing: {
-        width: 300,
+        width: 200,
         height: 100
       },
+      linkStrategy: 'elbow',
       nodeSpacing: {
-        level: 25,
+        level: 100,
         span: 10
       },
       childNodeName: 'node',
@@ -44,7 +45,7 @@
         }]
       },
       nodeBackgroundClasses: ['node-background'],
-      nodeClasses: ['node-html-container'],
+      nodeHTMLClasses: ['node-html-container'],
       linkClasses: ['link-html-container'],
       arrowClasses: ['arrow-html-container'],
       notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.'
@@ -73,12 +74,13 @@
     treeOptions.NODE_SPAN_SPACING         = options.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
     treeOptions.G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
     treeOptions.HTML_TEMPLATE             = options.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
-    treeOptions.NODE_CSS_CLASSES          = options.nodeClasses;              // Any classes to be added onto the root HTML template element of each node
+    treeOptions.NODE_CSS_CLASSES          = options.nodeHTMLClasses;              // Any classes to be added onto the root HTML template element of each node
     treeOptions.NODE_BACKGROUND_CSS_CLASSES   = options.nodeBackgroundClasses;    // Any classes to be added onto the rect SVG element of each node
     treeOptions.LINK_CSS_CLASSES          = options.linkClasses;              // Any classes to be added onto the links between each pair of nodes
     treeOptions.ARROW_CSS_CLASSES         = options.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
     treeOptions.D3_NOT_SUPPORTED_MESSAGE  = options.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
     treeOptions.ROTATION_ANGLE_DEGREES    = options.orientation;
+    treeOptions.LINK_STRATEGY             = options.linkStrategy;
     /************************* Tree Layout Calcualted Fields *****************************/
     // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
     treeOptions.ROTATION_ANGLE_RADIANS    = treeOptions.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
@@ -101,7 +103,7 @@
     /*************************** Tree Layout Initialization ******************************/
 
     // Generate the basic tree layout, given its logical structure
-    var newTree = _d3TreeLayoutFactory(treeOptions);
+    var newTree = _d3TreeLayoutBuilder(treeOptions);
     var treeLayout = newTree.layout;
     var treeNodes = newTree.nodes;
     var treeLinks = newTree.links;
@@ -132,32 +134,38 @@
     console.log('Container Width: ' + Math.round(treeOptions.TREE_CONTAINER_WIDTH) + ' | Container Height: ' + Math.round(treeOptions.TREE_CONTAINER_HEIGHT));
     
     // Generate the different link types we can use for drawing links between nodes
-    //var diagonal = _diagonalLinkStrategy(treeOptions);
-    treeOptions.LINK_FUNCTION = _elbowLinkStrategy(treeOptions);
+    switch(treeOptions.LINK_STRATEGY) {
+      case 'diagonal':
+        treeOptions.LINK_FUNCTION = _diagonalLinkStrategy(treeOptions);
+        break;
+      case 'elbow':
+        treeOptions.LINK_FUNCTION = _elbowLinkStrategy(treeOptions);
+        break;
+    }
     /********************************************************************************/
 
     /********************** DRAW TREE WITH HELPER FUNCTIONS *************************/
     // Generate the SVG element that will serve as a container for the SVG representation of the tree
-    var svg = _svgContainerElFactory(treeOptions);
+    var svg = _svgContainerElBuilder(treeOptions);
     
     // Initialize the SVG nodes - defines their depth, gives each node an ID, and applies any necessary transformations
-    var svgInitializedNodes = _svgNodeFactory(svg, treeNodes, treeOptions);
+    var svgInitializedNodes = _svgNodeBuilder(svg, treeNodes, treeOptions);
 
     // Check to make sure the browser supports the ForeignObject feature of SVG
     var foreignObjectSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
 
     // If the foreignObject feature is supported, append the HTML Template. Otherwise, append a not-supported message
     if (foreignObjectSupported) {
-      _svgAppendHTMLTemplate(svgInitializedNodes, treeOptions);
+      _svgForeignObjTemplate(svgInitializedNodes, treeOptions);
     } else {
-      _svgAppendForeignObjectNotSupported(svgInitializedNodes, treeOptions);
+      _svgForeignObjNotSupportedTemplate(svgInitializedNodes, treeOptions);
     }
 
     // Define the basic properties of the Link Markers, which will be used for a custom marker during link creation
     _svgDefineLinkMarkers(svg, treeOptions);
     
     // Finally, append the links to the tree
-    var svgInitializedLinks = _svgLinkFactory(svg, treeLinks, treeOptions);
+    var svgInitializedLinks = _svgLinkBuilder(svg, treeLinks, treeOptions);
   };
   /**********************************************************************************/
 
@@ -209,8 +217,60 @@
   }
   /***************************************************************************************/
 
+  /*************************** d3 Tree Layout Builder ****************************/
+  function _d3TreeLayoutBuilder(options) {
+    var d3Tree = d3.layout.tree()
+      .size(null)
+      .nodeSize([options.NODE_WIDTH, options.NODE_HEIGHT])  // Set this width and height of a rectangular node
+      .separation(function separation(a, b) {         // Set the spacing between 2 nodes in the tree - d3 default is 1 : 2
+        return a.parent === b.parent ? options.NODE_SPAN_SPACING_PCT : options.NODE_SPAN_SPACING_PCT;
+      })
+      .children(function (d) {                        // Custom define the children element names
+        return (!d[options.CHILD_NODE_NAME] || d[options.CHILD_NODE_NAME].length === 0) ? null : d[options.CHILD_NODE_NAME];
+      });
+
+    // Extract d3ParsedNodes and d3ParsedLinks from the root node via the specifications of the Tree Layout (d3.layout.tree())
+    var d3ParsedNodes = d3Tree.nodes(options.DATA_ROOT_NODE).reverse();
+    var d3ParsedLinks = d3Tree.links(d3ParsedNodes);
+
+    // Modify each node to add the desired spacing between depth levels of the tree
+    d3ParsedNodes.forEach(function (d) {
+      // Find the depth of 1 node, whether it be width for vertical trees or height for horizontal trees
+      // Depth is always a positive value, since it's applied before the node transformation, so take the abs value of sin and cosine
+      var node_depth_size = Math.abs(options.SIN_R) * options.NODE_WIDTH
+                          + Math.abs(options.COS_R) * options.NODE_HEIGHT;
+
+      // Find the total depth of this particular node by multiplying its depth level by the sum of its depth size + depth spacing
+      d.y = d.depth * (node_depth_size + options.NODE_DEPTH_SPACING);
+    });
+
+    return {'tree': d3Tree, 'nodes': d3ParsedNodes, 'links': d3ParsedLinks};
+  }
+  /*********************************************************************************/
+
   /***************************** SVG Helper Functions ************************************/
-  function _svgAppendForeignObjectNotFound (nodes, options) {
+  function _svgForeignObjTemplate (nodes, options) {
+    // Background rectangle for each node. Can be styled with the class .node-background
+    nodes.append('rect')
+      .attr('width', options.NODE_WIDTH)
+      .attr('height', options.NODE_HEIGHT)
+      .attr('class', function(d, i) { return options.NODE_BACKGROUND_CSS_CLASSES.join(' '); });
+
+    // The foreignObject which allows the user to inject HTML templates into the tree node
+    // Appends the requiredFeatures property as a further guard to make sure d3 is supported
+    // Then appends the XHTML object and the HTML template onto that
+    nodes.append('foreignObject')
+      .attr('requiredFeatures', 'http://www.w3.org/TR/SVG11/feature#Extensibility')
+      .attr('width', options.NODE_WIDTH)
+      .attr('height', options.NODE_HEIGHT)
+      .append('xhtml:div')
+      .attr('class', function(d, i) { return options.NODE_CSS_CLASSES.join(' '); })
+      .html(function(d) {
+        return options.HTML_TEMPLATE(d);
+      });
+  }
+
+  function _svgForeignObjNotSupportedTemplate (nodes, options) {
     // If foreignObjects are not supported, add a node with a default not-supported message
     nodes.append('rect')
       .attr('width', options.NODE_WIDTH)
@@ -235,27 +295,6 @@
     console.log(textNodes);
   }
 
-  function _svgAppendHTMLTemplate (nodes, options) {
-    // Background rectangle for each node. Can be styled with the class .node-background
-    nodes.append('rect')
-      .attr('width', options.NODE_WIDTH)
-      .attr('height', options.NODE_HEIGHT)
-      .attr('class', function(d, i) { return options.NODE_BACKGROUND_CSS_CLASSES.join(' '); });
-
-    // The foreignObject which allows the user to inject HTML templates into the tree node
-    // Appends the requiredFeatures property as a further guard to make sure d3 is supported
-    // Then appends the XHTML object and the HTML template onto that
-    nodes.append('foreignObject')
-      .attr('requiredFeatures', 'http://www.w3.org/TR/SVG11/feature#Extensibility')
-      .attr('width', options.NODE_WIDTH)
-      .attr('height', options.NODE_HEIGHT)
-      .append('xhtml:div')
-      .attr('class', function(d, i) { return options.NODE_CSS_CLASSES.join(' '); })
-      .html(function(d) {
-        return options.HTML_TEMPLATE(d);
-      });
-  }
-
   function _svgDefineLinkMarkers (svg, options) {
     // Define the markers to be added at the end of the treeLinks
     svg.append('defs')
@@ -278,44 +317,44 @@
     // If you want to switch to a standard elbow connector, use this instead of the diagonal
     return function elbow(d, i) {
       //elbow link source base offset
-      var x_source_base = Math.abs(options.SIN_R) *  (options.SIN_R * (options.NODE_HEIGHT / 2)) +
-                          Math.abs(options.COS_R) *  (options.COS_R * (options.NODE_WIDTH / 2));
-      var y_source_base = Math.abs(options.SIN_R) * ((options.SIN_R * (options.NODE_WIDTH / 2))  + (options.NODE_WIDTH / 2)) +
-                          Math.abs(options.COS_R) * ((options.COS_R * (options.NODE_HEIGHT / 2)) + (options.NODE_HEIGHT / 2));
+      var xSourceBaseCoord = Math.abs(options.SIN_R) *  (options.SIN_R * (options.NODE_HEIGHT / 2)) +
+                              Math.abs(options.COS_R) *  (options.COS_R * (options.NODE_WIDTH / 2));
+      var ySourceBaseCoord = Math.abs(options.SIN_R) * ((options.SIN_R * (options.NODE_WIDTH / 2))  + (options.NODE_WIDTH / 2)) +
+                              Math.abs(options.COS_R) * ((options.COS_R * (options.NODE_HEIGHT / 2)) + (options.NODE_HEIGHT / 2));
 
       //elbow link target base offset
-      var x_target_base = Math.abs(options.SIN_R) *  (options.SIN_R * (options.NODE_HEIGHT / 2)) +
-                          Math.abs(options.COS_R) *  (options.COS_R * (options.NODE_WIDTH / 2));
-      var y_target_base = Math.abs(options.SIN_R) * ((options.SIN_R * (options.NODE_WIDTH / 2))  + -1 * (options.NODE_WIDTH / 2)) +
-                          Math.abs(options.COS_R) * ((options.COS_R * (options.NODE_HEIGHT / 2)) + -1 * (options.NODE_HEIGHT / 2));
+      var xTargetBaseCoord = Math.abs(options.SIN_R) *  (options.SIN_R * (options.NODE_HEIGHT / 2)) +
+                              Math.abs(options.COS_R) *  (options.COS_R * (options.NODE_WIDTH / 2));
+      var yTargetBaseCoord = Math.abs(options.SIN_R) * ((options.SIN_R * (options.NODE_WIDTH / 2))  + -1 * (options.NODE_WIDTH / 2)) +
+                              Math.abs(options.COS_R) * ((options.COS_R * (options.NODE_HEIGHT / 2)) + -1 * (options.NODE_HEIGHT / 2));
 
       //elbow link source calculated offset
-      var x_source_calc = options.SIN_R * (d.source.x + x_source_base + options.ROOT_X_OFFSET) +
-                          options.COS_R * (d.source.y + y_source_base + options.ROOT_Y_OFFSET);
-      var y_source_calc = options.SIN_R * (d.source.y + y_source_base + options.ROOT_Y_OFFSET) + 
-                          options.COS_R * (d.source.x + x_source_base + options.ROOT_X_OFFSET);
+      var xSourceCalcCoord = options.SIN_R * (d.source.x + xSourceBaseCoord + options.ROOT_X_OFFSET) +
+                              options.COS_R * (d.source.y + ySourceBaseCoord + options.ROOT_Y_OFFSET);
+      var ySourceCalcCoord = options.SIN_R * (d.source.y + ySourceBaseCoord + options.ROOT_Y_OFFSET) +
+                              options.COS_R * (d.source.x + xSourceBaseCoord + options.ROOT_X_OFFSET);
 
       //elbow link target calculcated offset
-      var x_target_calc = options.SIN_R * (d.target.x + x_target_base + options.ROOT_X_OFFSET) +
-                          options.COS_R * (d.target.y + y_target_base + options.ROOT_Y_OFFSET);
-      var y_target_calc = options.SIN_R * (d.target.y + y_target_base + options.ROOT_Y_OFFSET) +
-                          options.COS_R * (d.target.x + x_target_base + options.ROOT_X_OFFSET);
+      var xTargetCalcCoord = options.SIN_R * (d.target.x + xTargetBaseCoord + options.ROOT_X_OFFSET) +
+                              options.COS_R * (d.target.y + yTargetBaseCoord + options.ROOT_Y_OFFSET);
+      var yTargetCalcCoord = options.SIN_R * (d.target.y + yTargetBaseCoord + options.ROOT_Y_OFFSET) +
+                              options.COS_R * (d.target.x + xTargetBaseCoord + options.ROOT_X_OFFSET);
 
-      var hy = (y_target_calc - y_source_calc) / 4;
-      var hx = (x_target_calc - x_source_calc) / 4;
+      var hy = (yTargetCalcCoord - ySourceCalcCoord) / 4;
+      var hx = (xTargetCalcCoord - xSourceCalcCoord) / 4;
 
       if (options.SIN_R < 0) {
-        return 'M' + (y_target_calc) + ',' + (x_target_calc)    //Custom link drawer to always have link arrows pointing to the right
-            + 'H' + (y_target_calc - hy)
-            + 'V' + (x_source_calc) + 'H' + (y_source_calc);
+        return 'M' + (yTargetCalcCoord) + ',' + (xTargetCalcCoord)    //Custom link drawer to always have link arrows pointing to the right
+            + 'H' + (yTargetCalcCoord - hy)
+            + 'V' + (xSourceCalcCoord) + 'H' + (ySourceCalcCoord);
       } if (options.SIN_R > 0) {
-        return 'M' + (y_source_calc) + ',' + (x_source_calc)
-            + 'H' + (y_source_calc + hy)
-            + 'V' + (x_target_calc) + 'H' + (y_target_calc);
+        return 'M' + (ySourceCalcCoord) + ',' + (xSourceCalcCoord)
+            + 'H' + (ySourceCalcCoord + hy)
+            + 'V' + (xTargetCalcCoord) + 'H' + (yTargetCalcCoord);
       } else {
-        return 'M' + (y_source_calc) + ',' + (x_source_calc)
-            + 'V' + (x_source_calc + hx)
-            + 'H' + (y_target_calc) + 'V' + (x_target_calc);
+        return 'M' + (ySourceCalcCoord) + ',' + (xSourceCalcCoord)
+            + 'V' + (xSourceCalcCoord + hx)
+            + 'H' + (yTargetCalcCoord) + 'V' + (xTargetCalcCoord);
       }
     };
   };
@@ -332,36 +371,36 @@
                             options.COS_R * (d.y + options.ROOT_Y_OFFSET);
         return [x_oriented, y_oriented];
       })
-      // A positive value for x_anchor offsets in the direction of increasing depth
-      // A positive value for y_anchor offsets to the right when depth is viewed as increasing downward
+      // A positive value for xAnchor offsets in the direction of increasing depth
+      // A positive value for yAnchor offsets to the right when depth is viewed as increasing downward
       // Link Source, Link Target, Unmutated Location - Top Left of Node
       .source(function (d) {
         // Link Source, 0 Degrees   - Bottom Middle of Node
         // Link Source, 90 Degrees  - Right Middle of Node
         // Link Source, 180 Degrees - Top Middle of Node
         // Link Source, 270 Degrees - Left Middle of Node
-        var x_anchor =  Math.abs(options.SIN_R) * (options.SIN_R * (options.NODE_HEIGHT / 2)) + 
+        var xAnchor =  Math.abs(options.SIN_R) * (options.SIN_R * (options.NODE_HEIGHT / 2)) +
                         Math.abs(options.COS_R) * (options.COS_R * (options.NODE_WIDTH  / 2));
-        var y_anchor =  Math.abs(options.SIN_R) * ((options.NODE_WIDTH  / 2) + (options.SIN_R * (options.NODE_WIDTH  / 2))) +
+        var yAnchor =  Math.abs(options.SIN_R) * ((options.NODE_WIDTH  / 2) + (options.SIN_R * (options.NODE_WIDTH  / 2))) +
                         Math.abs(options.COS_R) * ((options.NODE_HEIGHT / 2) + (options.COS_R * (options.NODE_HEIGHT / 2)));
-        return { x: (d.source.x + x_anchor), y: (d.source.y + y_anchor) };
+        return { x: (d.source.x + xAnchor), y: (d.source.y + yAnchor) };
       })
       .target(function (d) {
         // Link Target, 0 Degrees   - Top Middle of Node
         // Link Target, 90 Degrees  - Left Middle of Node
         // Link Target, 180 Degrees - Bottom Middle of Node
         // Link Target, 270 Degrees - Right Middle of Node
-        var x_anchor =  Math.abs(options.SIN_R) * (options.SIN_R * (options.NODE_HEIGHT / 2)) + 
+        var xAnchor =  Math.abs(options.SIN_R) * (options.SIN_R * (options.NODE_HEIGHT / 2)) +
                         Math.abs(options.COS_R) * (options.COS_R * (options.NODE_WIDTH  / 2));
-        var y_anchor =  Math.abs(options.SIN_R) * (-1 * (options.NODE_WIDTH  / 2) + (options.SIN_R * (options.NODE_WIDTH  / 2))) +
+        var yAnchor =  Math.abs(options.SIN_R) * (-1 * (options.NODE_WIDTH  / 2) + (options.SIN_R * (options.NODE_WIDTH  / 2))) +
                         Math.abs(options.COS_R) * (-1 * (options.NODE_HEIGHT / 2) + (options.COS_R * (options.NODE_HEIGHT / 2)));
-        return { x: (d.target.x + x_anchor), y: (d.target.y + y_anchor) };
+        return { x: (d.target.x + xAnchor), y: (d.target.y + yAnchor) };
       });
   }
   /******************************************************************************/
 
-  /****************************** SVG Factories *********************************/
-  function _svgNodeFactory(svg, nodes, options) {
+  /****************************** SVG Builders *********************************/
+  function _svgNodeBuilder(svg, nodes, options) {
     var SIN_R = options.SIN_R;
     var COS_R = options.COS_R;
 
@@ -369,7 +408,7 @@
     nodes.forEach(function (d) {
         //Depth is always a positive value, since it's applied before the node transformation, so take the abs value of sin and cos
         var node_depth = Math.abs(SIN_R) * options.NODE_WIDTH
-                       + Math.abs(COS_R) * options.NODE_HEIGHT;
+                          Math.abs(COS_R) * options.NODE_HEIGHT;
         d.y = d.depth * (node_depth + options.NODE_DEPTH_SPACING);
     });
 
@@ -401,7 +440,7 @@
     return svgInitializedNodes;
   };
 
-  function _svgLinkFactory(svg, links, options) {
+  function _svgLinkBuilder(svg, links, options) {
     // This block specifically selects all the treeLinks and adds an ID to each of them
     var svgInitializedLinks = svg.selectAll('path.link')
       .data(links, function (d) {
@@ -417,7 +456,7 @@
     return svgInitializedLinks;
   }
 
-  function _svgContainerElFactory(options) {
+  function _svgContainerElBuilder(options) {
     // Define the spatial container that the tree will be laid out in
     var svgContainer = d3.select(options.TREE_CONTAINER_ID)
       .append('svg')
@@ -431,37 +470,6 @@
     return svgContainer;
   }
   /*******************************************************************************/
-
-  /*************************** d3 Tree Layout Factory ****************************/
-  function _d3TreeLayoutFactory(options) {
-    var d3Tree = d3.layout.tree()
-      .size(null)
-      .nodeSize([options.NODE_WIDTH, options.NODE_HEIGHT])  // Set this width and height of a rectangular node
-      .separation(function separation(a, b) {         // Set the spacing between 2 nodes in the tree - d3 default is 1 : 2
-        return a.parent === b.parent ? options.NODE_SPAN_SPACING_PCT : options.NODE_SPAN_SPACING_PCT;
-      })
-      .children(function (d) {                        // Custom define the children element names
-        return (!d[options.CHILD_NODE_NAME] || d[options.CHILD_NODE_NAME].length === 0) ? null : d[options.CHILD_NODE_NAME];
-      });
-
-    // Extract d3ParsedNodes and d3ParsedLinks from the root node via the specifications of the Tree Layout (d3.layout.tree())
-    var d3ParsedNodes = d3Tree.nodes(options.DATA_ROOT_NODE).reverse();
-    var d3ParsedLinks = d3Tree.links(d3ParsedNodes);
-
-    // Modify each node to add the desired spacing between depth levels of the tree
-    d3ParsedNodes.forEach(function (d) {
-      // Find the depth of 1 node, whether it be width for vertical trees or height for horizontal trees
-      // Depth is always a positive value, since it's applied before the node transformation, so take the abs value of sin and cosine
-      var node_depth_size = Math.abs(options.SIN_R) * options.NODE_WIDTH
-                          + Math.abs(options.COS_R) * options.NODE_HEIGHT;
-
-      // Find the total depth of this particular node by multiplying its depth level by the sum of its depth size + depth spacing
-      d.y = d.depth * (node_depth_size + options.NODE_DEPTH_SPACING);
-    });
-
-    return {'tree': d3Tree, 'nodes': d3ParsedNodes, 'links': d3ParsedLinks};
-  }
-  /*********************************************************************************/
 
   //Text wrapping backwards-compatibility function found at: http://bl.ocks.org/mbostock/7555321
   //Enables wrapping of a d3-not-supported message within the node bounds 

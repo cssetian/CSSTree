@@ -9,11 +9,11 @@
 </head>
 
 <body>
-
+<div>
   <button type="button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
   <button type="button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
   <button type="button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Data</button>
-
+</div>
   <div id="options-container">
     <table>
       <tr>
@@ -61,6 +61,10 @@
         <td><input id="option-node-html-classes"></input></td>
       </tr>
     </table>
+  </div>
+  <div id="legend-container">
+    <div class="root-node"><div class="node-background">Root Node Background</div></div>
+    <div class="node"><div class="node-background">Node Background</div></div>
   </div>
 
   <div id="tree-container"></div>
