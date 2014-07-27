@@ -111,19 +111,19 @@
     var treeLinks     = d3TreeLayout.links;
 
     // Calculate the layout boundaries because the tree is centered at (0,0) and needs to be offset to be entirely in the container
-    var minMaxCoords = helpers.calculateMinMaxCoords(nodes);
+    var minMaxCoords = helpers.calcMinMaxCoords(nodes);
     treeSettings.MIN_X = minMaxCoords.MIN_X;
     treeSettings.MIN_Y = minMaxCoords.MIN_Y;
     treeSettings.MAX_X = minMaxCoords.MAX_X;
     treeSettings.MAX_Y = minMaxCoords.MAX_Y;
 
     // Calculate the offset of the root node of the tree, based on the overall dimensions and spacing of the tree nodes
-    var offsets = helpers.calculateTreeRootNodeOffset(treeSettings);
+    var offsets = helpers.calcTreeRootNodeOffset(treeSettings);
     treeSettings.ROOT_X_OFFSET = offsets.ROOT_X_OFFSET;
     treeSettings.ROOT_Y_OFFSET = offsets.ROOT_Y_OFFSET;
 
     // Calculate the height and width of the container that will hold the tree
-    var heightAndWidth = helpers.calculateHeightAndWidth(treeSettings, nodes);
+    var heightAndWidth = helpers.calcContainerHeightAndWidth(treeSettings, nodes);
     treeSettings.TREE_CONTAINER_HEIGHT = heightAndWidth.TREE_CONTAINER_HEIGHT;
     treeSettings.TREE_CONTAINER_WIDTH = heightAndWidth.TREE_CONTAINER_WIDTH;
 
@@ -166,7 +166,7 @@
 
     /*********************** Calculate Computed Properties **************************/
     // Calculate the min and max coords of the calculated tree layout for centering
-    calculateMinMaxCoords: function(nodes) {
+    calcMinMaxCoords: function(nodes) {
       // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
       var MIN_X_COORDS = _.min(nodes, function (node) { return node.x; });
       var MAX_X_COORDS = _.max(nodes, function (node) { return node.x; });
@@ -184,7 +184,7 @@
     },
 
     // Calculate the tree root node offsets, so it can be centered in the containing el
-    calculateTreeRootNodeOffset: function(settings) {
+    calcTreeRootNodeOffset: function(settings) {
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
@@ -212,8 +212,8 @@
       return { 'ROOT_X_OFFSET': ROOT_X_OFFSET, 'ROOT_Y_OFFSET': ROOT_Y_OFFSET };
     },
 
-    // Calculate the 
-    calculateHeightAndWidth: function(settings, nodes) {
+    // Calculate the height and width of the tree container element
+    calcContainerHeightAndWidth: function(settings, nodes) {
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
@@ -481,7 +481,7 @@
 
       return svgInitializedNodes;
     },
-    
+
     // Build the SVG link elements of the tree from the layout and current SVG object
     svgLinkBuilder: function(settings, svg, links) {
       // This block specifically selects all the treeLinks and adds an ID to each of them
