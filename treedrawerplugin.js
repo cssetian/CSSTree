@@ -81,6 +81,7 @@
     treeOptions.D3_NOT_SUPPORTED_MESSAGE  = options.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
     treeOptions.ROTATION_ANGLE_DEGREES    = options.orientation;
     treeOptions.LINK_STRATEGY             = options.linkStrategy;
+
     /************************* Tree Layout Calcualted Fields *****************************/
     // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
     treeOptions.ROTATION_ANGLE_RADIANS    = treeOptions.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
@@ -101,7 +102,6 @@
     /********************* End Of Tree Layout Constants Initialization *******************/
 
     /*************************** Tree Layout Initialization ******************************/
-
     // Generate the basic tree layout, given its logical structure
     var d3TreeLayout = helpers.d3TreeLayoutBuilder(treeOptions);
     var treeLayout = d3TreeLayout.layout; // Never used
@@ -142,7 +142,6 @@
       treeOptions.LINK_FUNCTION = helpers.elbowLinkStrategy(treeOptions);
       break;
     }
-    /********************************************************************************/
 
     /********************** DRAW TREE WITH HELPER FUNCTIONS *************************/
     // Generate the SVG element that will serve as a container for the SVG representation of the tree
@@ -173,6 +172,7 @@
 
   /************************ Calculate Computed Properties ***************************/
   var helpers = {
+    // Calculate the min and max coords of the calculated tree layout for centering
     calculateMinMaxCoords: function(treeNodes) {
       // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
       var MIN_X_COORDS = _.min(treeNodes, function (node) { return node.x; });
@@ -190,6 +190,7 @@
       };
     },
 
+    // Calculate the tree root node offsets, so it can be centered in the containing el
     calculateTreeRootNodeOffset: function(options) {
       var SIN_R = options.SIN_R;
       var COS_R = options.COS_R;
@@ -217,9 +218,10 @@
 
       return { 'ROOT_X_OFFSET': ROOT_X_OFFSET, 'ROOT_Y_OFFSET': ROOT_Y_OFFSET };
     },
-    /***************************************************************************************/
+    /*********************************************************************************/
 
-    /*************************** d3 Tree Layout Builder ****************************/
+    /**************************** d3 Tree Layout Builder *****************************/
+    // Build the layout of the tree, based on the structure of the JSON
     d3TreeLayoutBuilder: function(options) {
       var d3Tree = d3.layout.tree()
         .size(null)
@@ -250,7 +252,8 @@
     },
     /*********************************************************************************/
 
-    /***************************** SVG Helper Functions ************************************/
+    /*************************** SVG Helper Functions ********************************/
+    // Use supplied HTML template to create content when SVG's foreignObject is supported
     svgForeignObjTemplate: function(nodes, options) {
       // Background rectangle for each node. Can be styled with the class .node-background
       nodes.append('rect')
@@ -272,6 +275,7 @@
         });
     },
 
+    // Wrap the text data line to line in each node when SVG's foreignObject is not supported
     svgForeignObjNotSupportedTemplate: function(nodes, options) {
       // If foreignObjects are not supported, add a node with a default not-supported message
       nodes.append('rect')
@@ -297,6 +301,7 @@
       console.log(textNodes);
     },
 
+    // Define the markers at the end of each link pointing at the next node as an arrow
     svgDefineFixedMarkerArrows: function(svg, options) {
       // Define the markers to be added at the end of the treeLinks
       svg.append('defs')
@@ -312,9 +317,10 @@
         .append('path')
           .attr('d', 'M0,0 L4,2 0,4');  //SVG definition of the arrow shaped link marker
     },
-    /***********************************************************************************/
+    /**********************************************************************************/
 
-    /********************************** d3 Link Strategies *****************************/
+    /********************************* d3 Link Strategies *****************************/
+    // Elbow = Links that are at right angles and kink at a specified pct of distance btwn nodes
     elbowLinkStrategy: function(options) {
       // If you want to switch to a standard elbow connector, use this instead of the diagonal
       return function elbow(d, i) {
@@ -362,7 +368,7 @@
       };
     },
 
-    // Diagonal = SVG line type with curvature - currently unused but can incorporate into an option
+    // Diagonal = Links that have curvature and arc from one node to another
     diagonalLinkStrategy: function(options) {
       return d3.svg.diagonal()
         // PROJECTION: Used to map X and Y into a rotated plane by a specified multiple of 90 degrees
@@ -400,9 +406,25 @@
           return { x: (d.target.x + xAnchor), y: (d.target.y + yAnchor) };
         });
     },
-    /******************************************************************************/
+    /***********************************************************************************/
 
-    /****************************** SVG Builders *********************************/
+    /********************************* SVG Builders ************************************/
+    // Build the container SVG element that the node and link SVG elements will be appended within 
+    svgContainerElBuilder: function(options) {
+      // Define the spatial container that the tree will be laid out in
+      var svgContainer = d3.select(options.TREE_CONTAINER_ID)
+        .append('svg')
+          // The SVG element is consistently 4 pixels larger on all sides than the G element
+          // Add on 4 extra pixels in either direction for padding...could be due to borders?
+          .attr('width', options.TREE_CONTAINER_WIDTH + options.G_EL_TREE_PADDING)
+          .attr('height', options.TREE_CONTAINER_HEIGHT + options.G_EL_TREE_PADDING)
+        .append('g')
+          .attr('id', 'tree-container');
+
+      return svgContainer;
+    },
+
+    // Build the SVG node elements of the tree from the layout and current SVG object
     svgNodeBuilder: function(svg, nodes, options) {
       var SIN_R = options.SIN_R;
       var COS_R = options.COS_R;
@@ -442,7 +464,7 @@
 
       return svgInitializedNodes;
     },
-
+    // Build the SVG link elements of the tree from the layout and current SVG object
     svgLinkBuilder: function(svg, links, options) {
       // This block specifically selects all the treeLinks and adds an ID to each of them
       var svgInitializedLinks = svg.selectAll('path.link')
@@ -458,21 +480,7 @@
 
       return svgInitializedLinks;
     },
-
-    svgContainerElBuilder: function(options) {
-      // Define the spatial container that the tree will be laid out in
-      var svgContainer = d3.select(options.TREE_CONTAINER_ID)
-        .append('svg')
-          // The SVG element is consistently 4 pixels larger on all sides than the G element
-          // Add on 4 extra pixels in either direction for padding...could be due to borders?
-          .attr('width', options.TREE_CONTAINER_WIDTH + options.G_EL_TREE_PADDING)
-          .attr('height', options.TREE_CONTAINER_HEIGHT + options.G_EL_TREE_PADDING)
-        .append('g')
-          .attr('id', 'tree-container');
-
-      return svgContainer;
-    },
-    /*******************************************************************************/
+    /************************************************************************************/
 
     //Text wrapping backwards-compatibility function found at: http://bl.ocks.org/mbostock/7555321
     //Enables wrapping of a d3-not-supported message within the node bounds 
