@@ -80,15 +80,15 @@
 var userInput;
 
 var loadStringData = function() {
-  userInput = $.parseJSON($("#json-input").val());
+  userInput = $.parseJSON($('#json-input').val());
 
-  $("#json-container").text(JSON.stringify(userInput));
+  $('#json-container').text(JSON.stringify(userInput));
   
-  var options = {
+  var settings = {
     node: userInput
   };
-  $("#tree-container").html("");
-  $("#tree-container").drawTree(options);
+  $('#tree-container').html('');
+  $('#tree-container').drawTree(settings);
 };
 
 var loadRemoteData = function(url) {
@@ -96,8 +96,8 @@ var loadRemoteData = function(url) {
 };
 
 var loadDefaultData = function() {
-  $("#tree-container").html("");
-  $("#tree-container").drawTree({});
+  $('#tree-container').html('');
+  $('#tree-container').drawTree({});
 }
 
 $(document).ready(function() {
