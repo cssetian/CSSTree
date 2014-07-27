@@ -152,10 +152,10 @@
     var svgInitializedNodes = helpers.svgNodeBuilder(svgTreeObject, treeNodes, treeOptions);
 
     // Check to make sure the browser supports the ForeignObject feature of SVG
-    var foreignObjectSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
+    var foreignObjectIsSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
 
     // If the foreignObject feature is supported, append the HTML Template. Otherwise, append a not-supported message
-    if (foreignObjectSupported) {
+    if (foreignObjectIsSupported) {
       helpers.svgForeignObjTemplate(svgInitializedNodes, treeOptions);
     } else {
       helpers.svgForeignObjNotSupportedTemplate(svgInitializedNodes, treeOptions);
