@@ -102,7 +102,6 @@
     // A decimal percent specifying the spacing between sibling and cousin elements - Used with the separation function on the layout
     // Use NODE_WIDTH if tree is vertical, NODE_HEIGHT if tree is horizontal
     treeOptions.NODE_SPAN_SPACING_PCT = (1 / treeOptions.NODE_WIDTH) * ( (treeOptions.NODE_HEIGHT * Math.abs(treeOptions.SIN_R)) + (treeOptions.NODE_WIDTH * Math.abs(treeOptions.COS_R)) + treeOptions.NODE_SPAN_SPACING );
-    /********************* End Of Tree Layout Constants Initialization *******************/
 
     /*************************** Tree Layout Initialization ******************************/
     // Generate the basic tree layout, given its logical structure - extract the nodes and links to feed into and calculate the display
