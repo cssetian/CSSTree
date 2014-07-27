@@ -135,12 +135,12 @@
     
     // Generate the different link types we can use for drawing links between nodes
     switch(treeOptions.LINK_STRATEGY) {
-      case 'diagonal':
-        treeOptions.LINK_FUNCTION = helpers.diagonalLinkStrategy(treeOptions);
-        break;
-      case 'elbow':
-        treeOptions.LINK_FUNCTION = helpers.elbowLinkStrategy(treeOptions);
-        break;
+    case 'diagonal':
+      treeOptions.LINK_FUNCTION = helpers.diagonalLinkStrategy(treeOptions);
+      break;
+    case 'elbow':
+      treeOptions.LINK_FUNCTION = helpers.elbowLinkStrategy(treeOptions);
+      break;
     }
     /********************************************************************************/
 
@@ -291,7 +291,7 @@
 
       //If the text is too long for the width of the element, wrap the text using the custom text wrapping function below
       var textNodes = nodes.selectAll('.d3-not-supported-template text');
-      textNodes.call(wrap, (options.NODE_WIDTH - (options.G_EL_TREE_PADDING * 2)));
+      textNodes.call(helpers.wrap, (options.NODE_WIDTH - (options.G_EL_TREE_PADDING * 2)));
 
       console.log('textNodes: ');
       console.log(textNodes);
@@ -532,6 +532,6 @@
         }
       });
     }
-  }
+  };
 
 }(jQuery, _, d3 ));
