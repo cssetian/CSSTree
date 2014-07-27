@@ -105,10 +105,10 @@
 
     /*************************** Tree Layout Initialization ******************************/
     // Generate the basic tree layout, given its logical structure - extract the nodes and links to feed into and calculate the display
-    var d3TreeLayout = helpers.d3TreeLayoutBuilder(treeSettings);
-    var treeLayout = d3TreeLayout.layout; // Never used
-    var treeNodes = d3TreeLayout.nodes;
-    var treeLinks = d3TreeLayout.links;
+    var d3TreeLayout  = helpers.d3TreeLayoutBuilder(treeSettings);
+    var treeLayout    = d3TreeLayout.layout; // Never used
+    var treeNodes     = d3TreeLayout.nodes;
+    var treeLinks     = d3TreeLayout.links;
 
     // Calculate the layout boundaries because the tree is centered at (0,0) and needs to be offset to be entirely in the container
     var minMaxCoords = helpers.calculateMinMaxCoords(treeNodes);
@@ -481,6 +481,7 @@
 
       return svgInitializedNodes;
     },
+    
     // Build the SVG link elements of the tree from the layout and current SVG object
     svgLinkBuilder: function(settings, svg, links) {
       // This block specifically selects all the treeLinks and adds an ID to each of them
