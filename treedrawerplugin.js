@@ -74,7 +74,7 @@
     treeOptions.NODE_SPAN_SPACING         = options.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
     treeOptions.G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
     treeOptions.HTML_TEMPLATE             = options.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
-    treeOptions.NODE_CSS_CLASSES          = options.nodeHTMLClasses;              // Any classes to be added onto the root HTML template element of each node
+    treeOptions.NODE_CSS_CLASSES          = options.nodeHTMLClasses;          // Any classes to be added onto the root HTML template element of each node
     treeOptions.NODE_BACKGROUND_CSS_CLASSES   = options.nodeBackgroundClasses;    // Any classes to be added onto the rect SVG element of each node
     treeOptions.LINK_CSS_CLASSES          = options.linkClasses;              // Any classes to be added onto the links between each pair of nodes
     treeOptions.ARROW_CSS_CLASSES         = options.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
@@ -103,10 +103,10 @@
     /*************************** Tree Layout Initialization ******************************/
 
     // Generate the basic tree layout, given its logical structure
-    var newTree = helpers.d3TreeLayoutBuilder(treeOptions);
-    var treeLayout = newTree.layout; // Never used
-    var treeNodes = newTree.nodes;
-    var treeLinks = newTree.links;
+    var d3TreeLayout = helpers.d3TreeLayoutBuilder(treeOptions);
+    var treeLayout = d3TreeLayout.layout; // Never used
+    var treeNodes = d3TreeLayout.nodes;
+    var treeLinks = d3TreeLayout.links;
 
     /******** Extract Critical Properties From Calculated Layout ********/
     var minMaxCoords = helpers.calculateMinMaxCoords(treeNodes);
@@ -146,10 +146,10 @@
 
     /********************** DRAW TREE WITH HELPER FUNCTIONS *************************/
     // Generate the SVG element that will serve as a container for the SVG representation of the tree
-    var svg = helpers.svgContainerElBuilder(treeOptions);
+    var svgTreeObject = helpers.svgContainerElBuilder(treeOptions);
     
     // Initialize the SVG nodes - defines their depth, gives each node an ID, and applies any necessary transformations
-    var svgInitializedNodes = helpers.svgNodeBuilder(svg, treeNodes, treeOptions);
+    var svgInitializedNodes = helpers.svgNodeBuilder(svgTreeObject, treeNodes, treeOptions);
 
     // Check to make sure the browser supports the ForeignObject feature of SVG
     var foreignObjectSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
@@ -162,10 +162,10 @@
     }
 
     // Define the basic properties of the Link Markers, which will be used for a custom marker during link creation
-    helpers.svgDefineFixedMarkerArrows(svg, treeOptions);
+    helpers.svgDefineFixedMarkerArrows(svgTreeObject, treeOptions);
     
     // Finally, append the links to the tree
-    var svgInitializedLinks = helpers.svgLinkBuilder(svg, treeLinks, treeOptions);
+    helpers.svgLinkBuilder(svgTreeObject, treeLinks, treeOptions);
   };
   /**********************************************************************************/
 
