@@ -65,100 +65,100 @@
 
   /*************************** Generic Tree Drawing Function ****************************/
   var _drawTree = function (settings) {
-    var treeOptions = {};
+    var treeSettings = {};
 
     /**************************** Tree Layout Constants *********************************/
-    treeOptions.DATA_ROOT_NODE            = settings.node;                     // The Javascript object representing the root node of the tree
-    treeOptions.TREE_CONTAINER_ID         = settings.treeContainerId;          // ID of the element the tree will be appended to
-    treeOptions.CHILD_NODE_NAME           = settings.childNodeName;            // Property name of the node container JSON property
-    treeOptions.NODE_WIDTH                = settings.nodeSizing.width;         // Width of each node
-    treeOptions.NODE_HEIGHT               = settings.nodeSizing.height;        // Height of each node
-    treeOptions.NODE_DEPTH_SPACING        = settings.nodeSpacing.level;        // Depth-wise spacing in pixels between each level of the tree
-    treeOptions.NODE_SPAN_SPACING         = settings.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
-    treeOptions.G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
-    treeOptions.HTML_TEMPLATE             = settings.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
-    treeOptions.NODE_CSS_CLASSES          = settings.nodeHTMLClasses;          // Any classes to be added onto the root HTML template element of each node
-    treeOptions.NODE_BKND_CSS_CLASSES     = settings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
-    treeOptions.LINK_CSS_CLASSES          = settings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
-    treeOptions.ARROW_CSS_CLASSES         = settings.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
-    treeOptions.D3_NOT_SUPPORTED_MSG      = settings.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
-    treeOptions.ROTATION_ANGLE_DEGREES    = settings.orientation;
-    treeOptions.LINK_STRATEGY             = settings.linkStrategy;
+    treeSettings.DATA_ROOT_NODE            = settings.node;                     // The Javascript object representing the root node of the tree
+    treeSettings.TREE_CONTAINER_ID         = settings.treeContainerId;          // ID of the element the tree will be appended to
+    treeSettings.CHILD_NODE_NAME           = settings.childNodeName;            // Property name of the node container JSON property
+    treeSettings.NODE_WIDTH                = settings.nodeSizing.width;         // Width of each node
+    treeSettings.NODE_HEIGHT               = settings.nodeSizing.height;        // Height of each node
+    treeSettings.NODE_DEPTH_SPACING        = settings.nodeSpacing.level;        // Depth-wise spacing in pixels between each level of the tree
+    treeSettings.NODE_SPAN_SPACING         = settings.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
+    treeSettings.G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
+    treeSettings.HTML_TEMPLATE             = settings.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
+    treeSettings.NODE_CSS_CLASSES          = settings.nodeHTMLClasses;          // Any classes to be added onto the root HTML template element of each node
+    treeSettings.NODE_BKND_CSS_CLASSES     = settings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
+    treeSettings.LINK_CSS_CLASSES          = settings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
+    treeSettings.ARROW_CSS_CLASSES         = settings.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
+    treeSettings.D3_NOT_SUPPORTED_MSG      = settings.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
+    treeSettings.ROTATION_ANGLE_DEGREES    = settings.orientation;
+    treeSettings.LINK_STRATEGY             = settings.linkStrategy;
 
     /************************* Tree Layout Calcualted Fields *****************************/
     // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
-    treeOptions.ROTATION_ANGLE_RADIANS    = treeOptions.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
+    treeSettings.ROTATION_ANGLE_RADIANS    = treeSettings.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
 
     // Calculates the sin and cos of the rotation angle for various projection calculations throughout the function
-    treeOptions.SIN_R                     = Math.round(Math.sin(treeOptions.ROTATION_ANGLE_RADIANS));
-    treeOptions.COS_R                     = Math.round(Math.cos(treeOptions.ROTATION_ANGLE_RADIANS));
+    treeSettings.SIN_R                     = Math.round(Math.sin(treeSettings.ROTATION_ANGLE_RADIANS));
+    treeSettings.COS_R                     = Math.round(Math.cos(treeSettings.ROTATION_ANGLE_RADIANS));
 
     // The H/W ratio via H_W_RATIO scales so that it always results in d3ParsedNodes being adjacent when horizontal spacing is 0.
-    treeOptions.H_W_RATIO = (treeOptions.NODE_HEIGHT / treeOptions.NODE_WIDTH);
+    treeSettings.H_W_RATIO = (treeSettings.NODE_HEIGHT / treeSettings.NODE_WIDTH);
 
     // Helper field that calcualtes the actual number of pixels that need to be between the 
-    treeOptions.BASE_ZERO_SPAN_SPACING = treeOptions.H_W_RATIO * Math.abs(treeOptions.SIN_R) + (1) * Math.abs(treeOptions.COS_R);
+    treeSettings.BASE_ZERO_SPAN_SPACING = treeSettings.H_W_RATIO * Math.abs(treeSettings.SIN_R) + (1) * Math.abs(treeSettings.COS_R);
 
     // A decimal percent specifying the spacing between sibling and cousin elements - Used with the separation function on the layout
     // Use NODE_WIDTH if tree is vertical, NODE_HEIGHT if tree is horizontal
-    treeOptions.NODE_SPAN_SPACING_PCT = (1 / treeOptions.NODE_WIDTH) * ( (treeOptions.NODE_HEIGHT * Math.abs(treeOptions.SIN_R)) + (treeOptions.NODE_WIDTH * Math.abs(treeOptions.COS_R)) + treeOptions.NODE_SPAN_SPACING );
+    treeSettings.NODE_SPAN_SPACING_PCT = (1 / treeSettings.NODE_WIDTH) * ( (treeSettings.NODE_HEIGHT * Math.abs(treeSettings.SIN_R)) + (treeSettings.NODE_WIDTH * Math.abs(treeSettings.COS_R)) + treeSettings.NODE_SPAN_SPACING );
 
     /*************************** Tree Layout Initialization ******************************/
     // Generate the basic tree layout, given its logical structure - extract the nodes and links to feed into and calculate the display
-    var d3TreeLayout = helpers.d3TreeLayoutBuilder(treeOptions);
+    var d3TreeLayout = helpers.d3TreeLayoutBuilder(treeSettings);
     var treeLayout = d3TreeLayout.layout; // Never used
     var treeNodes = d3TreeLayout.nodes;
     var treeLinks = d3TreeLayout.links;
 
     // Calculate the layout boundaries because the tree is centered at (0,0) and needs to be offset to be entirely in the container
     var minMaxCoords = helpers.calculateMinMaxCoords(treeNodes);
-    treeOptions.MIN_X = minMaxCoords.MIN_X;
-    treeOptions.MIN_Y = minMaxCoords.MIN_Y;
-    treeOptions.MAX_X = minMaxCoords.MAX_X;
-    treeOptions.MAX_Y = minMaxCoords.MAX_Y;
+    treeSettings.MIN_X = minMaxCoords.MIN_X;
+    treeSettings.MIN_Y = minMaxCoords.MIN_Y;
+    treeSettings.MAX_X = minMaxCoords.MAX_X;
+    treeSettings.MAX_Y = minMaxCoords.MAX_Y;
 
     // Calculate the offset of the root node of the tree, based on the overall dimensions and spacing of the tree nodes
-    var offsets = helpers.calculateTreeRootNodeOffset(treeOptions);
-    treeOptions.ROOT_X_OFFSET = offsets.ROOT_X_OFFSET;
-    treeOptions.ROOT_Y_OFFSET = offsets.ROOT_Y_OFFSET;
+    var offsets = helpers.calculateTreeRootNodeOffset(treeSettings);
+    treeSettings.ROOT_X_OFFSET = offsets.ROOT_X_OFFSET;
+    treeSettings.ROOT_Y_OFFSET = offsets.ROOT_Y_OFFSET;
 
     // Calculate the height and width of the container that will hold the tree
-    var heightAndWidth = helpers.calculateHeightAndWidth(treeOptions, treeNodes);
-    treeOptions.TREE_CONTAINER_HEIGHT = heightAndWidth.TREE_CONTAINER_HEIGHT;
-    treeOptions.TREE_CONTAINER_WIDTH = heightAndWidth.TREE_CONTAINER_WIDTH;
+    var heightAndWidth = helpers.calculateHeightAndWidth(treeSettings, treeNodes);
+    treeSettings.TREE_CONTAINER_HEIGHT = heightAndWidth.TREE_CONTAINER_HEIGHT;
+    treeSettings.TREE_CONTAINER_WIDTH = heightAndWidth.TREE_CONTAINER_WIDTH;
 
     // Generate the different link types we can use for drawing links between nodes
-    switch(treeOptions.LINK_STRATEGY) {
+    switch(treeSettings.LINK_STRATEGY) {
     case 'diagonal':
-      treeOptions.LINK_FUNCTION = helpers.diagonalLinkStrategy(treeOptions);
+      treeSettings.LINK_FUNCTION = helpers.diagonalLinkStrategy(treeSettings);
       break;
     case 'elbow':
-      treeOptions.LINK_FUNCTION = helpers.elbowLinkStrategy(treeOptions);
+      treeSettings.LINK_FUNCTION = helpers.elbowLinkStrategy(treeSettings);
       break;
     }
 
     /********************** DRAW TREE WITH HELPER FUNCTIONS *************************/
     // Generate the SVG element that will serve as a container for the SVG representation of the tree
-    var svgTreeObject = helpers.svgContainerElBuilder(treeOptions);
+    var svgTreeObject = helpers.svgContainerElBuilder(treeSettings);
     
     // Initialize the SVG nodes - defines their depth, gives each node an ID, and applies any necessary transformations
-    var svgInitializedNodes = helpers.svgNodeBuilder(svgTreeObject, treeNodes, treeOptions);
+    var svgInitializedNodes = helpers.svgNodeBuilder(treeSettings, svgTreeObject, treeNodes);
 
     // Check to make sure the browser supports the ForeignObject feature of SVG
     var foreignObjectIsSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
 
     // If the foreignObject feature is supported, append the HTML Template. Otherwise, append a not-supported message
     if (foreignObjectIsSupported) {
-      helpers.svgForeignObjTemplate(svgInitializedNodes, treeOptions);
+      helpers.svgForeignObjTemplate(treeSettings, svgInitializedNodes);
     } else {
-      helpers.svgForeignObjNotSupportedTemplate(svgInitializedNodes, treeOptions);
+      helpers.svgForeignObjNotSupportedTemplate(treeSettings, svgInitializedNodes);
     }
 
     // Define the basic properties of the Link Markers, which will be used for a custom marker during link creation
-    helpers.svgDefineFixedMarkerArrows(svgTreeObject, treeOptions);
+    helpers.svgDefineFixedMarkerArrows(treeSettings, svgTreeObject);
     
     // Finally, append the links to the tree
-    helpers.svgLinkBuilder(svgTreeObject, treeLinks, treeOptions);
+    helpers.svgLinkBuilder(treeSettings, svgTreeObject, treeLinks);
   };
 
   /*----------------------------- HELPER FUNCTIONS ---------------------------------*/
@@ -271,7 +271,7 @@
 
     /*************************** SVG Helper Functions ********************************/
     // Use supplied HTML template to create content when SVG's foreignObject is supported
-    svgForeignObjTemplate: function(nodes, settings) {
+    svgForeignObjTemplate: function(settings, nodes) {
       // Background rectangle for each node. Can be styled with the class .node-background
       nodes.append('rect')
         .attr('width', settings.NODE_WIDTH)
@@ -293,7 +293,7 @@
     },
 
     // Wrap the text data line to line in each node when SVG's foreignObject is not supported
-    svgForeignObjNotSupportedTemplate: function(nodes, settings) {
+    svgForeignObjNotSupportedTemplate: function(settings, nodes) {
       // If foreignObjects are not supported, add a node with a default not-supported message
       nodes.append('rect')
         .attr('width', settings.NODE_WIDTH)
@@ -319,7 +319,7 @@
     },
 
     // Define the markers at the end of each link pointing at the next node as an arrow
-    svgDefineFixedMarkerArrows: function(svg, settings) {
+    svgDefineFixedMarkerArrows: function(settings, svg) {
       // Define the markers to be added at the end of the treeLinks
       svg.append('defs')
         .append('marker')
@@ -442,7 +442,7 @@
     },
 
     // Build the SVG node elements of the tree from the layout and current SVG object
-    svgNodeBuilder: function(svg, nodes, settings) {
+    svgNodeBuilder: function(settings, svg, nodes) {
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
@@ -482,7 +482,7 @@
       return svgInitializedNodes;
     },
     // Build the SVG link elements of the tree from the layout and current SVG object
-    svgLinkBuilder: function(svg, links, settings) {
+    svgLinkBuilder: function(settings, svg, links) {
       // This block specifically selects all the treeLinks and adds an ID to each of them
       var svgInitializedLinks = svg.selectAll('path.link')
         .data(links, function (d) {
