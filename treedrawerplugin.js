@@ -65,49 +65,18 @@
 
   /*************************** Generic Tree Drawing Function ****************************/
   var _drawTree = function (settings) {
-    var treeSettings = {};
 
     /**************************** Tree Layout Constants *********************************/
-    treeSettings.DATA_ROOT_NODE            = settings.node;                     // The Javascript object representing the root node of the tree
-    treeSettings.TREE_CONTAINER_ID         = settings.treeContainerId;          // ID of the element the tree will be appended to
-    treeSettings.CHILD_NODE_NAME           = settings.childNodeName;            // Property name of the node container JSON property
-    treeSettings.NODE_WIDTH                = settings.nodeSizing.width;         // Width of each node
-    treeSettings.NODE_HEIGHT               = settings.nodeSizing.height;        // Height of each node
-    treeSettings.NODE_DEPTH_SPACING        = settings.nodeSpacing.level;        // Depth-wise spacing in pixels between each level of the tree
-    treeSettings.NODE_SPAN_SPACING         = settings.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
-    treeSettings.G_EL_TREE_PADDING         = 8;                                // Needs at least a slight padding offset, likely because of node borders
-    treeSettings.HTML_TEMPLATE             = settings.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
-    treeSettings.NODE_CSS_CLASSES          = settings.nodeHTMLClasses;          // Any classes to be added onto the root HTML template element of each node
-    treeSettings.NODE_BKND_CSS_CLASSES     = settings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
-    treeSettings.LINK_CSS_CLASSES          = settings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
-    treeSettings.ARROW_CSS_CLASSES         = settings.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
-    treeSettings.D3_NOT_SUPPORTED_MSG      = settings.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
-    treeSettings.ROTATION_ANGLE_DEGREES    = settings.orientation;
-    treeSettings.LINK_STRATEGY             = settings.linkStrategy;
+    var basicSettings = helpers.initializeConstants(settings);
 
-    /************************* Tree Layout Calcualted Fields *****************************/
-    // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
-    treeSettings.ROTATION_ANGLE_RADIANS    = treeSettings.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
-
-    // Calculates the sin and cos of the rotation angle for various projection calculations throughout the function
-    treeSettings.SIN_R                     = Math.round(Math.sin(treeSettings.ROTATION_ANGLE_RADIANS));
-    treeSettings.COS_R                     = Math.round(Math.cos(treeSettings.ROTATION_ANGLE_RADIANS));
-
-    // The H/W ratio via H_W_RATIO scales so that it always results in d3ParsedNodes being adjacent when horizontal spacing is 0.
-    treeSettings.H_W_RATIO = (treeSettings.NODE_HEIGHT / treeSettings.NODE_WIDTH);
-
-    // Helper field that calcualtes the actual number of pixels that need to be between the 
-    treeSettings.BASE_ZERO_SPAN_SPACING = treeSettings.H_W_RATIO * Math.abs(treeSettings.SIN_R) + (1) * Math.abs(treeSettings.COS_R);
-
-    // A decimal percent specifying the spacing between sibling and cousin elements - Used with the separation function on the layout
-    // Use NODE_WIDTH if tree is vertical, NODE_HEIGHT if tree is horizontal
-    treeSettings.NODE_SPAN_SPACING_PCT = (1 / treeSettings.NODE_WIDTH) * ( (treeSettings.NODE_HEIGHT * Math.abs(treeSettings.SIN_R)) + (treeSettings.NODE_WIDTH * Math.abs(treeSettings.COS_R)) + treeSettings.NODE_SPAN_SPACING );
+    /************************* Tree Layout Calculated Fields *****************************/
+    var treeSettings = helpers.addCalculatedSettings(basicSettings);
 
     /*************************** Tree Layout Initialization ******************************/
     // Generate the basic tree layout, given its logical structure - extract the nodes and links to feed into and calculate the display
     var d3TreeLayout  = helpers.d3TreeLayoutBuilder(treeSettings);
     var treeLayout    = d3TreeLayout.layout; // Never used
-    var nodes     = d3TreeLayout.nodes;
+    var nodes         = d3TreeLayout.nodes;
     var treeLinks     = d3TreeLayout.links;
 
     // Calculate the layout boundaries because the tree is centered at (0,0) and needs to be offset to be entirely in the container
@@ -164,7 +133,53 @@
   /*----------------------------- HELPER FUNCTIONS ---------------------------------*/
   var helpers = {
 
-    /*********************** Calculate Computed Properties **************************/
+    /************************* Calculate Basic Properties ***************************/
+    initializeConstants: function(settings) {
+      var treeSettings = {};
+
+      treeSettings.DATA_ROOT_NODE            = settings.node;                     // The Javascript object representing the root node of the tree
+      treeSettings.TREE_CONTAINER_ID         = settings.treeContainerId;          // ID of the element the tree will be appended to
+      treeSettings.CHILD_NODE_NAME           = settings.childNodeName;            // Property name of the node container JSON property
+      treeSettings.NODE_WIDTH                = settings.nodeSizing.width;         // Width of each node
+      treeSettings.NODE_HEIGHT               = settings.nodeSizing.height;        // Height of each node
+      treeSettings.NODE_DEPTH_SPACING        = settings.nodeSpacing.level;        // Depth-wise spacing in pixels between each level of the tree
+      treeSettings.NODE_SPAN_SPACING         = settings.nodeSpacing.span;         // Span-wise spacing in pixels between each sibling/cousin of the tree
+      treeSettings.G_EL_TREE_PADDING         = 8;                                 // Needs at least a slight padding offset, likely because of node borders
+      treeSettings.HTML_TEMPLATE             = settings.nodeHTMLTemplate;         // Function that returns the compiled HTML template string appended to each node's foreignObject element
+      treeSettings.NODE_CSS_CLASSES          = settings.nodeHTMLClasses;          // Any classes to be added onto the root HTML template element of each node
+      treeSettings.NODE_BKND_CSS_CLASSES     = settings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
+      treeSettings.LINK_CSS_CLASSES          = settings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
+      treeSettings.ARROW_CSS_CLASSES         = settings.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
+      treeSettings.D3_NOT_SUPPORTED_MSG      = settings.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
+      treeSettings.ROTATION_ANGLE_DEGREES    = settings.orientation;
+      treeSettings.LINK_STRATEGY             = settings.linkStrategy;
+
+      return treeSettings;
+    },
+
+    addCalculatedSettings: function(settings) {
+      // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
+      settings.ROTATION_ANGLE_RADIANS    = settings.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
+
+      // Calculates the sin and cos of the rotation angle for various projection calculations throughout the function
+      settings.SIN_R                     = Math.round(Math.sin(settings.ROTATION_ANGLE_RADIANS));
+      settings.COS_R                     = Math.round(Math.cos(settings.ROTATION_ANGLE_RADIANS));
+
+      // The H/W ratio via H_W_RATIO scales so that it always results in d3ParsedNodes being adjacent when horizontal spacing is 0.
+      settings.H_W_RATIO = (settings.NODE_HEIGHT / settings.NODE_WIDTH);
+
+      // Helper field that calcualtes the actual number of pixels that need to be between the 
+      settings.BASE_ZERO_SPAN_SPACING = settings.H_W_RATIO * Math.abs(settings.SIN_R) + (1) * Math.abs(settings.COS_R);
+
+      // A decimal percent specifying the spacing between sibling and cousin elements - Used with the separation function on the layout
+      // Use NODE_WIDTH if tree is vertical, NODE_HEIGHT if tree is horizontal
+      settings.NODE_SPAN_SPACING_PCT = (1 / settings.NODE_WIDTH) * ( (settings.NODE_HEIGHT * Math.abs(settings.SIN_R)) + (settings.NODE_WIDTH * Math.abs(settings.COS_R)) + settings.NODE_SPAN_SPACING );
+      
+      return settings;
+    },
+    /*********************************************************************************/
+
+    /************************ Calculate Computed Properties **************************/
     // Calculate the min and max coords of the calculated tree layout for centering
     calcMinMaxCoords: function(nodes) {
       // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
