@@ -107,11 +107,11 @@
     // Generate the basic tree layout, given its logical structure - extract the nodes and links to feed into and calculate the display
     var d3TreeLayout  = helpers.d3TreeLayoutBuilder(treeSettings);
     var treeLayout    = d3TreeLayout.layout; // Never used
-    var treeNodes     = d3TreeLayout.nodes;
+    var nodes     = d3TreeLayout.nodes;
     var treeLinks     = d3TreeLayout.links;
 
     // Calculate the layout boundaries because the tree is centered at (0,0) and needs to be offset to be entirely in the container
-    var minMaxCoords = helpers.calculateMinMaxCoords(treeNodes);
+    var minMaxCoords = helpers.calculateMinMaxCoords(nodes);
     treeSettings.MIN_X = minMaxCoords.MIN_X;
     treeSettings.MIN_Y = minMaxCoords.MIN_Y;
     treeSettings.MAX_X = minMaxCoords.MAX_X;
@@ -123,7 +123,7 @@
     treeSettings.ROOT_Y_OFFSET = offsets.ROOT_Y_OFFSET;
 
     // Calculate the height and width of the container that will hold the tree
-    var heightAndWidth = helpers.calculateHeightAndWidth(treeSettings, treeNodes);
+    var heightAndWidth = helpers.calculateHeightAndWidth(treeSettings, nodes);
     treeSettings.TREE_CONTAINER_HEIGHT = heightAndWidth.TREE_CONTAINER_HEIGHT;
     treeSettings.TREE_CONTAINER_WIDTH = heightAndWidth.TREE_CONTAINER_WIDTH;
 
@@ -142,7 +142,7 @@
     var svgTreeObject = helpers.svgContainerElBuilder(treeSettings);
     
     // Initialize the SVG nodes - defines their depth, gives each node an ID, and applies any necessary transformations
-    var svgInitializedNodes = helpers.svgNodeBuilder(treeSettings, svgTreeObject, treeNodes);
+    var svgInitializedNodes = helpers.svgNodeBuilder(treeSettings, svgTreeObject, nodes);
 
     // Check to make sure the browser supports the ForeignObject feature of SVG
     var foreignObjectIsSupported = document.implementation.hasFeature('w3.org/TR/SVG11/feature#Extensibility', '1.1');
@@ -166,12 +166,12 @@
 
     /*********************** Calculate Computed Properties **************************/
     // Calculate the min and max coords of the calculated tree layout for centering
-    calculateMinMaxCoords: function(treeNodes) {
+    calculateMinMaxCoords: function(nodes) {
       // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
-      var MIN_X_COORDS = _.min(treeNodes, function (node) { return node.x; });
-      var MAX_X_COORDS = _.max(treeNodes, function (node) { return node.x; });
-      var MIN_Y_COORDS = _.min(treeNodes, function (node) { return node.y; });
-      var MAX_Y_COORDS = _.max(treeNodes, function (node) { return node.y; });
+      var MIN_X_COORDS = _.min(nodes, function (node) { return node.x; });
+      var MAX_X_COORDS = _.max(nodes, function (node) { return node.x; });
+      var MIN_Y_COORDS = _.min(nodes, function (node) { return node.y; });
+      var MAX_Y_COORDS = _.max(nodes, function (node) { return node.y; });
       console.log('Min X: ' + Math.round(MIN_X_COORDS.x) + ' | Max X: ' + Math.round(MAX_X_COORDS.x));
       console.log('Min Y: ' + Math.round(MIN_Y_COORDS.y) + ' | Max Y: ' + Math.round(MAX_Y_COORDS.y));
 
@@ -213,14 +213,14 @@
     },
 
     // Calculate the 
-    calculateHeightAndWidth: function(settings, treeNodes) {
+    calculateHeightAndWidth: function(settings, nodes) {
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
       // Not currently used for any specific purpose
-      // Calculate the maximum depth and span of the Tree (requires the d3 extracted treeNodes to do so)
-      var MAX_DEPTH   = d3.max(treeNodes, function (x) { return x.depth; }) + 1;
-      var MAX_SPAN    = _.max(_.countBy(treeNodes, function (x) { return x.depth; }));
+      // Calculate the maximum depth and span of the Tree (requires the d3 extracted nodes to do so)
+      var MAX_DEPTH   = d3.max(nodes, function (x) { return x.depth; }) + 1;
+      var MAX_SPAN    = _.max(_.countBy(nodes, function (x) { return x.depth; }));
       console.log('Max Depth: ' + MAX_DEPTH + ' | Max Span: ' + MAX_SPAN);
 
       // Calculate the container element width and height, based on depth/span spacing, orientation, and node size
@@ -469,7 +469,7 @@
           mynode.classed('root-node', true);
         }
       })
-      // Gives the treeNodes the initial offset to start at on initialization (location of root node)
+      // Gives the nodes the initial offset to start at on initialization (location of root node)
       .attr('transform', function (d) {
         var xOriented = SIN_R * (d.y + settings.ROOT_Y_OFFSET) +
                          COS_R * (d.x + settings.ROOT_X_OFFSET);
