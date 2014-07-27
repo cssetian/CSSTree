@@ -135,6 +135,7 @@
 
     /************************* Calculate Basic Properties ***************************/
     initializeConstants: function(settings) {
+      console.log('Beginning constant initialization');
       var treeSettings = {};
 
       treeSettings.DATA_ROOT_NODE            = settings.node;                     // The Javascript object representing the root node of the tree
@@ -154,10 +155,13 @@
       treeSettings.ROTATION_ANGLE_DEGREES    = settings.orientation;
       treeSettings.LINK_STRATEGY             = settings.linkStrategy;
 
+      console.log('Completed constant initialization');
       return treeSettings;
     },
 
     addCalculatedSettings: function(settings) {
+      console.log('Beginning to add calculated settings');
+
       // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
       settings.ROTATION_ANGLE_RADIANS    = settings.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
 
@@ -175,6 +179,7 @@
       // Use NODE_WIDTH if tree is vertical, NODE_HEIGHT if tree is horizontal
       settings.NODE_SPAN_SPACING_PCT = (1 / settings.NODE_WIDTH) * ( (settings.NODE_HEIGHT * Math.abs(settings.SIN_R)) + (settings.NODE_WIDTH * Math.abs(settings.COS_R)) + settings.NODE_SPAN_SPACING );
       
+      console.log('Completed the addition of calculated settings');
       return settings;
     },
     /*********************************************************************************/
@@ -182,6 +187,8 @@
     /************************ Calculate Computed Properties **************************/
     // Calculate the min and max coords of the calculated tree layout for centering
     calcMinMaxCoords: function(nodes) {
+      console.log('Beginning to calculate the min/max coordinates of the tree space');
+
       // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
       var MIN_X_COORDS = _.min(nodes, function (node) { return node.x; });
       var MAX_X_COORDS = _.max(nodes, function (node) { return node.x; });
@@ -190,6 +197,7 @@
       console.log('Min X: ' + Math.round(MIN_X_COORDS.x) + ' | Max X: ' + Math.round(MAX_X_COORDS.x));
       console.log('Min Y: ' + Math.round(MIN_Y_COORDS.y) + ' | Max Y: ' + Math.round(MAX_Y_COORDS.y));
 
+      console.log('Completed calculation of the min/max coordinates of the tree space');
       return {
         MIN_X: MIN_X_COORDS.x,
         MIN_Y: MIN_Y_COORDS.y,
@@ -200,6 +208,8 @@
 
     // Calculate the tree root node offsets, so it can be centered in the containing el
     calcTreeRootNodeOffset: function(settings) {
+      console.log('Beginning to calculate the x and y offset of the tree root node');
+
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
@@ -224,11 +234,14 @@
 
       console.log('Root X Offset: ' + Math.round(ROOT_X_OFFSET) + ' | Root Y Offset: ' + Math.round(ROOT_Y_OFFSET));
 
+      console.log('Completed calculation of the min/max tree space coordinates');
       return { 'ROOT_X_OFFSET': ROOT_X_OFFSET, 'ROOT_Y_OFFSET': ROOT_Y_OFFSET };
     },
 
     // Calculate the height and width of the tree container element
     calcContainerHeightAndWidth: function(settings, nodes) {
+      console.log('Beginning to calculate the tree container height and width');
+
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
@@ -245,6 +258,7 @@
                                           Math.abs(COS_R) * (settings.MAX_X - settings.MIN_X + settings.NODE_WIDTH);
       console.log('Container Width: ' + Math.round(settings.TREE_CONTAINER_WIDTH) + ' | Container Height: ' + Math.round(settings.TREE_CONTAINER_HEIGHT));
       
+      console.log('Completed the calculation of the tree container height and width');
       return {
         TREE_CONTAINER_HEIGHT: TREE_CONTAINER_HEIGHT,
         TREE_CONTAINER_WIDTH: TREE_CONTAINER_WIDTH
@@ -255,6 +269,8 @@
     /**************************** d3 Tree Layout Builder *****************************/
     // Build the layout of the tree, based on the structure of the JSON
     d3TreeLayoutBuilder: function(settings) {
+      console.log('Beginning to calculate the basic d3 tree layout');
+
       var d3Tree = d3.layout.tree()
         .size(null)
         .nodeSize([settings.NODE_WIDTH, settings.NODE_HEIGHT])  // Set this width and height of a rectangular node
@@ -280,6 +296,7 @@
         d.y = d.depth * (nodeDepthSize + settings.NODE_DEPTH_SPACING);
       });
 
+      console.log('Completed calculation of the basic d3 tree layout');
       return {'tree': d3Tree, 'nodes': d3ParsedNodes, 'links': d3ParsedLinks};
     },
     /*********************************************************************************/
@@ -287,6 +304,8 @@
     /*************************** SVG Helper Functions ********************************/
     // Use supplied HTML template to create content when SVG's foreignObject is supported
     svgForeignObjTemplate: function(settings, nodes) {
+      console.log('Beginning calculation of the tree node HTML template');
+
       // Background rectangle for each node. Can be styled with the class .node-background
       nodes.append('rect')
         .attr('width', settings.NODE_WIDTH)
@@ -305,10 +324,14 @@
         .html(function(d) {
           return settings.HTML_TEMPLATE(d);
         });
+
+      console.log('Completed calculation of the tree node HTML template');
     },
 
     // Wrap the text data line to line in each node when SVG's foreignObject is not supported
     svgForeignObjNotSupportedTemplate: function(settings, nodes) {
+      console.log('Beginning calculation of the tree node non-HTML template');
+
       // If foreignObjects are not supported, add a node with a default not-supported message
       nodes.append('rect')
         .attr('width', settings.NODE_WIDTH)
@@ -331,10 +354,14 @@
 
       console.log('textNodes: ');
       console.log(textNodes);
+
+      console.log('Completed calculation of the tree node non-HTML template');
     },
 
     // Define the markers at the end of each link pointing at the next node as an arrow
     svgDefineFixedMarkerArrows: function(settings, svg) {
+      console.log('Beginning calculation of the SVG marker arrows');
+
       // Define the markers to be added at the end of the treeLinks
       svg.append('defs')
         .append('marker')
@@ -348,12 +375,16 @@
           .attr('orient', 'auto')
         .append('path')
           .attr('d', 'M0,0 L4,2 0,4');  //SVG definition of the arrow shaped link marker
+
+      console.log('Completed calculation of the SVG marker arrows');
     },
     /**********************************************************************************/
 
     /********************************* d3 Link Strategies *****************************/
     // Elbow = Links that are at right angles and kink at a specified pct of distance btwn nodes
     elbowLinkStrategy: function(settings) {
+      console.log('Returning a calculated elbow link function for use in the SVG tree drawing function');
+
       // If you want to switch to a standard elbow connector, use this instead of the diagonal
       return function elbow(d, i) {
         //elbow link source base offset
@@ -402,6 +433,8 @@
 
     // Diagonal = Links that have curvature and arc from one node to another
     diagonalLinkStrategy: function(settings) {
+      console.log('Returning a calculated diagonal link function for use in the SVG tree drawing function');
+
       return d3.svg.diagonal()
         // PROJECTION: Used to map X and Y into a rotated plane by a specified multiple of 90 degrees
         //              To map from a vertical to horizontal orientation, map (x,y) -> (y,x)
@@ -443,6 +476,8 @@
     /********************************* SVG Builders ************************************/
     // Build the container SVG element that the node and link SVG elements will be appended within 
     svgContainerElBuilder: function(settings) {
+      console.log('Beginning construction of the the SVG Container that contains the tree layout');
+
       // Define the spatial container that the tree will be laid out in
       var svgContainer = d3.select(settings.TREE_CONTAINER_ID)
         .append('svg')
@@ -453,11 +488,14 @@
         .append('g')
           .attr('id', 'tree-container');
 
+      console.log('Completed construction of the SVG container that contains the tree layout');
       return svgContainer;
     },
 
     // Build the SVG node elements of the tree from the layout and current SVG object
     svgNodeBuilder: function(settings, svg, nodes) {
+      console.log('Beginning construction of the SVG tree nodes');
+
       var SIN_R = settings.SIN_R;
       var COS_R = settings.COS_R;
 
@@ -494,11 +532,14 @@
         return 'translate(' + xOriented + ',' + yOriented + ')';
       });
 
+      console.log('Completed construction of the SVG tree nodes');
       return svgInitializedNodes;
     },
 
     // Build the SVG link elements of the tree from the layout and current SVG object
     svgLinkBuilder: function(settings, svg, links) {
+      console.log('Beginning construction of the SVG tree links');
+
       // This block specifically selects all the treeLinks and adds an ID to each of them
       var svgInitializedLinks = svg.selectAll('path.link')
         .data(links, function (d) {
@@ -511,6 +552,7 @@
         .attr('stroke-width', 1)
         .attr('d', settings.LINK_FUNCTION);
 
+      console.log('Completed construction of the SVG tree links');
       return svgInitializedLinks;
     },
     /************************************************************************************/
@@ -518,7 +560,7 @@
     //Text wrapping backwards-compatibility function found at: http://bl.ocks.org/mbostock/7555321
     //Enables wrapping of a d3-not-supported message within the node bounds 
     wrap: function(text, width) {
-      console.log('Hit wrap function!! Value of text: ' + text + ' | Value of width: ' + width);
+      console.log('Beginning construction of the foreignObject-not-supported, text-wrapping backup function');
       text.each(function () {
         console.log('Hit the foreach loop!! Value of text: ' + text + ' | Value of element: ' + this);
         var text = d3.select(this),
@@ -570,6 +612,8 @@
             // lineNumber does not incremement for continuations of lines that are too long, preserving the bold weight
             lineNumber++;
           }
+
+          console.log('Completed construction of the foreignObject-not-supported, text-wrapping backup function');
         }
       });
     }
