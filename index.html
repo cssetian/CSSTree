@@ -9,66 +9,93 @@
 </head>
 
 <body>
-<div>
-  <button type="button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
-  <button type="button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
-  <button type="button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Data</button>
-</div>
-  <div id="options-container">
+  <div id="actions-container">
+    <button type="button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
+    <button type="button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
+    <button type="button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Plugin Data</button>
+  </div>
+
+  <div id="options-container" class="container-column">
+    <h1>Tree Options</h1>
     <table>
       <tr>
-        <td><label for="json-input">Input JSON string or endpoint URL here: </label></td>
-        <td><textarea id="json-input"></textarea></td>
+        <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
+        <td><input type="text" id="option-tree-container-id" /></td>
       </tr>
       <tr>
         <td><label for="option-orientation">Tree Orientation (degrees)</label></td>
-        <td><input id="option-orientation"></input></td>
+        <td><input type="text" id="option-orientation" /></td>
+      </tr>
+      <tr>
+        <td><label for="option-child-node-id">Child Node ID</label></td>
+        <td><input type="text" id="option-child-node-id" /></td>
+      </tr>
+      <tr>
+        <td><label for="option-link-strategy">Link Strategy</label></td>
+        <td><input type="text" id="option-link-strategy" /></td>
       </tr>
       <tr>
         <td><label for="option-node-width">Node Width (px)</label></td>
-        <td><input id="option-node-width"></input></td>
+        <td><input type="text" id="option-node-width" /></td>
       </tr>
       <tr>
         <td><label for="option-node-width">Node Height (px)</label></td>
-        <td><input id="option-node-height"></input></td>
+        <td><input type="text" id="option-node-height" /></td>
       </tr>
       <tr>
         <td><label for="option-node-depth-spacing">Node Depth Spacing (px)</label></td>
-        <td><input id="option-node-depth-spacing"></input></td>
+        <td><input type="text" id="option-node-depth-spacing" /></td>
       </tr>
       <tr>
         <td><label for="option-node-sibling-spacing">Node Sibling Spacing (px)</label></td>
-        <td><input id="option-node-sibling-spacing"></input></td>
-      </tr>
-      <tr>
-        <td><label for="option-node-id">Child Node ID</label></td>
-        <td><input id="option-child-node-id"></input></td>
-      </tr>
-      <tr>
-        <td><label for="option-link-classes">Link Classes</label></td>
-        <td><input id="option-link-classes"></input></td>
-      </tr>
-      <tr>
-        <td><label for="option-link-arrow-classes">Link Arrow Classes</label></td>
-        <td><input id="option-link-arrow-classes"></input></td>
+        <td><input type="text" id="option-node-sibling-spacing" /></td>
       </tr>
       <tr>
         <td><label for="option-node-background-classes">Node Background Classes</label></td>
-        <td><input id="option-node-background-classes"></input></td>
+        <td><input type="text" id="option-node-background-classes" /></td>
       </tr>
       <tr>
         <td><label for="option-node-html-classes">Node HTML Template Classes</label></td>
-        <td><input id="option-node-html-classes"></input></td>
+        <td><input type="text" id="option-node-html-classes" /></td>
+      </tr>
+      <tr>
+        <td><label for="option-link-body-classes">Link Body Classes</label></td>
+        <td><input type="text" id="option-link-body-classes" /></td>
+      </tr>
+      <tr>
+        <td><label for="option-link-arrow-classes">Link Arrow Classes</label></td>
+        <td><input type="text" id="option-link-arrow-classes" /></td>
+      </tr>
+      <tr>
+        <td><label for="option-forobj-not-supported">Foreign Obj Not Supported Msg</label></td>
+        <td><input type="text" id="option-forobj-not-supported" /></td>
       </tr>
     </table>
   </div>
-  <div id="legend-container">
+
+  <div id="data-container" class="container-column">
+    <h1>JSON Tree Data</h1>
+    <small>Paste either stringified JSON Tree data or a URL that links to your JSON</small><br>
+    <textarea id="json-input"></textarea>
+    <h1>Node HTML Template</h1>
+    <small>Add the HTML template to be used for each node</small><br>
+    <textarea id="html-template-input"></textarea>
+  </div>
+
+  <div id="legend-container" class="container-column">
+    <h1>Example Node Elements</h1>
     <div class="root-node"><div class="node-background">Root Node Background</div></div>
     <div class="node"><div class="node-background">Node Background</div></div>
   </div>
 
-  <div id="tree-container"></div>
-  <div id="json-container"></div>
+  <div class="output">
+    <h1>Tree Output</h1>
+    <div id="tree-container"></div>
+    <h1>JSON Output</h1>
+    <div id="json-container"></div>
+    <h1>Compiled User Options</h1>
+    <div id="compiled-options"></div>
+  </div>
 
 </body>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -77,34 +104,74 @@
 <script type="text/javascript" src="treedrawerplugin.js"></script>
 <script type="text/javascript">
 
-var userInput;
+  var userInput;
 
-var loadStringData = function() {
-  userInput = $.parseJSON($('#json-input').val());
+  var loadStringData = function() {
+    //userInput = $.parseJSON($('#json-input').val());
+    var userInput = buildOptions();
 
-  $('#json-container').text(JSON.stringify(userInput));
-  
-  var settings = {
-    node: userInput
+    $('#tree-container').text('');
+    $('#compiled-options').text(JSON.stringify(userInput));
+    
+    $('#tree-container').html('');
+    $('#tree-container').drawTree(userInput);
   };
-  $('#tree-container').html('');
-  $('#tree-container').drawTree(settings);
-};
 
-var loadRemoteData = function(url) {
-  alert('not implemented yet!');
-};
+  var loadRemoteData = function(url) {
+    alert('not implemented yet!');
+  };
 
-var loadDefaultData = function() {
-  $('#tree-container').html('');
-  $('#tree-container').drawTree({});
-}
+  var loadDefaultData = function() {
+    $('#tree-container').html('');
+    $('#tree-container').drawTree({});
+  };
 
-$(document).ready(function() {
-  //$("#tree-container").text("Hello World");
-  //
+  var buildOptions = function() {
+    var builtOptions = {};
+
+    if ($("#option-orientation").val() !== "") builtOptions.orientation = $("#option-orientation").val();
+    if ($("#option-child-node-id").val() !== "") builtOptions.childNodeName = $("#option-child-node-id").val();
+    if ($("#option-link-strategy").val() !== "") builtOptions.linkStrategy        = $("#option-link-strategy").val();
+    if ($("#option-node-width").val() !== "") {
+      if(!builtOptions.nodeSizing) {
+        builtOptions.nodeSizing = {};
+      }
+      builtOptions.nodeSizing.width = parseInt($("#option-node-width").val());
+    }
+    if ( $("#option-node-height").val() !== "" ) {
+      if ( !builtOptions.nodeSizing ) {
+        builtOptions.nodeSizing = {};
+      }
+      builtOptions.nodeSizing.height = parseInt($("#option-node-height").val());
+    }
+    if ( $("#option-node-depth-spacing").val() !== "" ) {
+      if ( !builtOptions.nodeSpacing ) {
+        builtOptions.nodeSpacing = {};
+      }
+      builtOptions.nodeSpacing.level = parseInt($("#option-node-depth-spacing").val());
+    }
+    if ( $("#option-node-sibling-spacing").val() !== "" ) {
+      if( !builtOptions.nodeSpacing ) {
+        builtOptions.nodeSpacing = {};
+      }
+      builtOptions.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
+    }
+    if ($("#option-node-background-classes").val() !== "") builtOptions.nodeBkndClasses     = $("#option-node-background-classes").val().split(", ");
+    if ($("#option-node-html-classes").val() !== "") builtOptions.nodeHTMLClasses     = $("#option-node-html-classes").val().split(", ");
+    if ($("#option-link-body-classes").val() !== "") builtOptions.linkClasses     = $("#option-link-body-classes").val().split(", ");
+    if ($("#option-link-arrow-classes").val() !== "") builtOptions.arrowClasses    = $("#option-link-arrow-classes").val().split(", ");;
+    if ($("#option-forobj-not-supported").val() !== "") builtOptions.notSupportedMessage = $("#option-forobj-not-supported").val();
+    if ($("#html-template-input").val() !== "") builtOptions.nodeHTMLTemplate        = $("#html-template-input").val();
+    if ($("#json-input").val() !== "") builtOptions.node            = $("#json-input").val();
+
+    return builtOptions;
+  };
+
+  $(document).ready(function() {
+    //$("#tree-container").text("Hello World");
+    //
 
 
-});
+  });
 </script>
 </html>

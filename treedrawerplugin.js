@@ -7,16 +7,21 @@
     var defaultSettings = {
       treeContainerId: '#tree-container',
       orientation: 0,
-      nodeSizing: {
-        width: 200,
-        height: 100
-      },
-      linkStrategy: 'elbow',
-      nodeSpacing: {
-        level: 100,
-        span: 10
-      },
       childNodeName: 'node',
+      linkStrategy: 'elbow',
+      nodeSizing: {
+        width: 25,
+        height: 25
+      },
+      nodeSpacing: {
+        level: 25,
+        span: 25
+      },
+      nodeBkndClasses: ['node-background'],
+      nodeHTMLClasses: ['node-html-container'],
+      linkClasses: ['link-html-container'],
+      arrowClasses: ['arrow-html-container'],
+      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
       nodeHTMLTemplate: function (d) {
         return '<div id="node-template">' + d.dataValue + '</div>';
       },
@@ -44,17 +49,12 @@
             dataValue: '9'
           }]
         }]
-      },
-      nodeBkndClasses: ['node-background'],
-      nodeHTMLClasses: ['node-html-container'],
-      linkClasses: ['link-html-container'],
-      arrowClasses: ['arrow-html-container'],
-      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.'
+      }
     };
 
     // We can use the extend method to merge settings as usual:
     // But with the added first parameter of TRUE to signify a DEEP COPY:
-    var mergedSettings = $.extend( {}, defaultSettings, userSettings );
+    var mergedSettings = $.extend( true, defaultSettings, userSettings );
 
     // After defining default settings, call the helper function to draw the actual tree
     _drawTree(mergedSettings);
@@ -69,10 +69,10 @@
     /**************************** Tree Layout Constants *********************************/
     var basicSettings = helpers.initializeConstants(settings);
 
-    /************************* Tree Layout Calculated Fields *****************************/
+    /************************* Tree Layout Calculated Fields ****************************/
     var treeSettings = helpers.addCalculatedSettings(basicSettings);
 
-    /*************************** Tree Layout Initialization ******************************/
+    /*************************** Tree Layout Initialization *****************************/
     // Generate the basic tree layout, given its logical structure - extract the nodes and links to feed into and calculate the display
     var d3TreeLayout  = helpers.d3TreeLayoutBuilder(treeSettings);
     var treeLayout    = d3TreeLayout.layout; // Never used
@@ -411,8 +411,8 @@
         var yTargetCalcCoord = settings.SIN_R * (d.target.y + yTargetBaseCoord + settings.ROOT_Y_OFFSET) +
                                 settings.COS_R * (d.target.x + xTargetBaseCoord + settings.ROOT_X_OFFSET);
 
-        var hy = (yTargetCalcCoord - ySourceCalcCoord) / 4;
-        var hx = (xTargetCalcCoord - xSourceCalcCoord) / 4;
+        var hy = (yTargetCalcCoord - ySourceCalcCoord) / 3;
+        var hx = (xTargetCalcCoord - xSourceCalcCoord) / 3;
 
         //Custom link drawing logic so link arrows are always pointing to the right
         if (settings.SIN_R < 0) {
