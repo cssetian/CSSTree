@@ -24,6 +24,10 @@
         <td><input type="text" id="option-tree-container-id" /></td>
       </tr>
       <tr>
+        <td><label for="option-child-node-name">Child Node JSON Name</label></td>
+        <td><input type="text" id="option-child-node-name" /></td>
+      </tr>
+      <tr>
         <td><label for="tree-orientation">Tree Orientation</label></td>
         <td>
             <input type="radio" name="tree-orientation" id="tree-orientation-0" value="0" />
@@ -37,10 +41,6 @@
         </td>
       </tr>
       <hr>
-      <tr>
-        <td><label for="option-child-node-id">Child Node ID</label></td>
-        <td><input type="text" id="option-child-node-id" /></td>
-      </tr>
       <tr>
         <td><label for="link-orientation">Link Orientation</label></td>
         <td>
@@ -160,11 +160,14 @@
 
   var buildOptions = function() {
     var builtOptions = {};
-
+    
+    if ($("#option-tree-container-id").val() !== "") builtOptions.childNodeName = $("#option-tree-container-id").val();
+    if ($("#option-child-node-name").val() !== "") builtOptions.childNodeName = $("#option-child-node-name").val();
+   
     if ($("input:radio[name='tree-orientation']:checked").val()) builtOptions.treeOrientation = $("input:radio[name='tree-orientation']:checked").val();
     if ($("input:radio[name='link-orientation']:checked").val()) builtOptions.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
-    if ($("#option-child-node-id").val() !== "") builtOptions.childNodeName = $("#option-child-node-id").val();
-   if ($("input:radio[name='option-link-strategy']:checked").val()) builtOptions.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
+    if ($("input:radio[name='option-link-strategy']:checked").val()) builtOptions.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
+    
     if ($("#option-node-width").val() !== "") {
       if(!builtOptions.nodeSizing) {
         builtOptions.nodeSizing = {};
@@ -189,6 +192,7 @@
       }
       builtOptions.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
     }
+    
     if ($("#option-node-background-classes").val() !== "") builtOptions.nodeBkndClasses = $("#option-node-background-classes").val().split(", ");
     if ($("#option-node-html-classes").val() !== "") builtOptions.nodeHTMLClasses = $("#option-node-html-classes").val().split(", ");
     if ($("#option-link-body-classes").val() !== "") builtOptions.linkClasses = $("#option-link-body-classes").val().split(", ");
