@@ -389,6 +389,35 @@
       // If you want to switch to a standard elbow connector, use this instead of the diagonal
       return function elbow(d, i) {
         //elbow link source base offset
+        var w = settings.NODE_WIDTH;
+        var h = settings.NODE_HEIGHT;
+        var dS = settings.ROTATION_ANGLE_DEGREES;
+        var dT = dS + 180;
+        
+        var xOffset = settings.ROOT_X_OFFSET;
+        var yOffset = settings.ROOT_Y_OFFSET;
+        
+        var xS = d.source.x;
+        var yS = d.source.y;
+        var xT = d.target.x;
+        var yT = d.target.y;
+        
+        var toRad = function (d) { return d * Math.PI / 180; }
+        var sinD = function(d) { return Math.sin(toRad(d)).toFixed(2); }
+        var cosD = function(d) { return Math.cos(toRad(d)).toFixed(2); }
+        
+        var xSourceBoxOffset = (sinD(dS) * 0.5 * w);
+        var ySourceBoxOffset = (cosD(dS) * 0.5 * h);
+        var xTargetBoxOffset = (sinD(dT) * 0.5 * w);
+        var yTargetBoxOffset = (cosD(dT) * 0.5 * h);
+        
+        var xSource = xSourceBoxOffset + xOffset + xS;
+        var ySource = ySourceBoxOffset + yOffset + yS;
+        var xTarget = xTargetBoxOffset + xOffset + xT;
+        var yTarget = yTargetBoxOffset + yOffset + yT;
+        console.log('Source Box Link Coords: (' + xSource + ', ' + ySource + ')');
+        console.log('Target Box Link Coords: (' + xTarget + ', ' + yTarget + ')');
+        
         /*
         var xSourceBaseCoord = Math.abs(settings.SIN_R) *  (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
                                 Math.abs(settings.COS_R) *  (settings.COS_R * (settings.NODE_WIDTH / 2));
@@ -411,7 +440,8 @@
                                 Math.abs(settings.COS_R) *  (settings.COS_R * (settings.NODE_WIDTH / 2));
         var yTargetBaseCoord = Math.abs(settings.SIN_R) * ((settings.SIN_R * (settings.NODE_WIDTH / 2))  + -1 * (settings.NODE_WIDTH / 2)) +
                                 Math.abs(settings.COS_R) * ((settings.COS_R * (settings.NODE_HEIGHT / 2)) + -1 * (settings.NODE_HEIGHT / 2));
-
+        
+        // SVG Elbow function flips x and y for all cases......I should be able to change them below and then 
         //elbow link source calculated offset
         var xSourceCalcCoord = settings.SIN_R * (d.source.x + xSourceBaseCoord + settings.ROOT_X_OFFSET) +
                                 settings.COS_R * (d.source.y + ySourceBaseCoord + settings.ROOT_Y_OFFSET);
@@ -427,6 +457,8 @@
         var hy = (yTargetCalcCoord - ySourceCalcCoord) / 3;
         var hx = (xTargetCalcCoord - xSourceCalcCoord) / 3;
 
+        console.log('Source Box Calced Coords: (' + ySourceCalcCoord + ', ' + xSourceCalcCoord + ')');
+        console.log('Target Box Calced Coords: (' + xTargetCalcCoord + ', ' + yTargetCalcCoord + ')');
         //Custom link drawing logic so link arrows are always pointing to the right
         if (settings.SIN_R !== 0) {
           // 90 / 270 Degrees - First move horizontally, then vertically, then horizontally
