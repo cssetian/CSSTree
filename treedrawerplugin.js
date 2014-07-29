@@ -6,7 +6,8 @@
     // Define default settings to be used for each setting the user doesn't specify 
     var defaultSettings = {
       treeContainerId: '#tree-container',
-      orientation: 0,
+      treeOrientation: 0,
+      linkOrientation: 'down',
       childNodeName: 'node',
       linkStrategy: 'elbow',
       nodeSizing: {
@@ -152,7 +153,7 @@
       treeSettings.LINK_CSS_CLASSES          = settings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
       treeSettings.ARROW_CSS_CLASSES         = settings.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
       treeSettings.D3_NOT_SUPPORTED_MSG      = settings.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
-      treeSettings.ROTATION_ANGLE_DEGREES    = settings.orientation;
+      treeSettings.ROTATION_ANGLE_DEGREES    = settings.treeOrientation;
       treeSettings.LINK_STRATEGY             = settings.linkStrategy;
 
       console.log('Completed constant initialization');
@@ -388,10 +389,22 @@
       // If you want to switch to a standard elbow connector, use this instead of the diagonal
       return function elbow(d, i) {
         //elbow link source base offset
+        /*
         var xSourceBaseCoord = Math.abs(settings.SIN_R) *  (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
                                 Math.abs(settings.COS_R) *  (settings.COS_R * (settings.NODE_WIDTH / 2));
+                                */
+        var xSourceBaseCoord =  ((settings.NODE_HEIGHT / 2) * (settings.SIN_R + settings.COS_R)); //+
+                                //((settings.NODE_WIDTH  / 2) * (settings.SIN_R * settings.COS_R));
+
+
         var ySourceBaseCoord = Math.abs(settings.SIN_R) * ((settings.SIN_R * (settings.NODE_WIDTH / 2))  + (settings.NODE_WIDTH / 2)) +
                                 Math.abs(settings.COS_R) * ((settings.COS_R * (settings.NODE_HEIGHT / 2)) + (settings.NODE_HEIGHT / 2));
+        /*                       
+        var ySourceBaseCoord =  ((settings.NODE_WIDTH  / 2) * (settings.SIN_R + settings.COS_R)) +
+                                ((settings.NODE_HEIGHT / 2) * (settings.SIN_R * settings.COS_R));
+        This needs to get somehow combined with the line drawing function to make the formula more reducable.
+        Because the coordinate starts from the upper left, it needs to be moved halfway across the node based on the +/- value of sin/cos                       
+        */
 
         //elbow link target base offset
         var xTargetBaseCoord = Math.abs(settings.SIN_R) *  (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
@@ -415,15 +428,13 @@
         var hx = (xTargetCalcCoord - xSourceCalcCoord) / 3;
 
         //Custom link drawing logic so link arrows are always pointing to the right
-        if (settings.SIN_R < 0) {
-          return 'M' + (yTargetCalcCoord) + ',' + (xTargetCalcCoord) +
-                  'H' + (yTargetCalcCoord - hy) +
-                  'V' + (xSourceCalcCoord) + 'H' + (ySourceCalcCoord);
-        } else if (settings.SIN_R > 0) {
+        if (settings.SIN_R !== 0) {
+          // 90 / 270 Degrees - First move horizontally, then vertically, then horizontally
           return 'M' + (ySourceCalcCoord) + ',' + (xSourceCalcCoord) +
                   'H' + (ySourceCalcCoord + hy) +
                   'V' + (xTargetCalcCoord) + 'H' + (yTargetCalcCoord);
         } else {
+          // 0 / 180 Degrees - First move vertically, then horizontally, then verically
           return 'M' + (ySourceCalcCoord) + ',' + (xSourceCalcCoord) +
                   'V' + (xSourceCalcCoord + hx) +
                   'H' + (yTargetCalcCoord) + 'V' + (xTargetCalcCoord);

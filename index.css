@@ -40,6 +40,17 @@ body {
   display: inline-block;
 }
 
+h2 {
+  margin-bottom: 5px;
+}
+
+p {
+  margin-top: 5px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: initial;
+}
+
 /***************** Custom Tree Styling For Demo ****************/
 /* Node Styling */
 .node .node-background {

@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  
   <div id="actions-container">
     <button type="button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
     <button type="button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
@@ -16,15 +17,33 @@
   </div>
 
   <div id="options-container" class="container-column">
-    <h1>Tree Options</h1>
+    <h2>Tree Options</h2>
     <table>
       <tr>
         <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
         <td><input type="text" id="option-tree-container-id" /></td>
       </tr>
       <tr>
-        <td><label for="option-orientation">Tree Orientation (degrees)</label></td>
-        <td><input type="text" id="option-orientation" /></td>
+        <td><label for="tree-orientation">Tree Orientation</label></td>
+        <td>
+            <input type="radio" name="tree-orientation" id="tree-orientation-0" value="0" />
+            <label for="tree-orientation-0">0 Degrees</label><br>
+            <input type="radio" name="tree-orientation" id="tree-orientation-90" value="90" />
+            <label for="tree-orientation-90">90 Degrees</label><br>
+            <input type="radio" name="tree-orientation" id="tree-orientation-180" value="180" />
+            <label for="tree-orientation-180">180 Degrees</label><br>
+            <input type="radio" name="tree-orientation" id="tree-orientation-270" value="270" />
+            <label for="tree-orientation-270">270 Degrees</label><br>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="link-orientation">Link Orientation</label></td>
+        <td>
+            <input type="radio" name="link-orientation" id="link-orientation-down" value="down" />
+            <label for="link-orientation-down">180 Degrees</label><br>
+            <input type="radio" name="link-orientation" id="link-orientation-up" value="up" />
+            <label for="link-orientation-up">270 Degrees</label><br>
+        </td>
       </tr>
       <tr>
         <td><label for="option-child-node-id">Child Node ID</label></td>
@@ -74,34 +93,41 @@
   </div>
 
   <div id="data-container" class="container-column">
-    <h1>JSON Tree Data</h1>
-    <small>Paste either stringified JSON Tree data or a URL that links to your JSON</small><br>
-    <textarea id="json-input"></textarea>
-    <h1>Node HTML Template</h1>
-    <small>Add the HTML template to be used for each node</small><br>
-    <textarea id="html-template-input"></textarea>
-  </div>
 
-  <div id="legend-container" class="container-column">
-    <h1>Example Node Elements</h1>
-    <div class="root-node"><div class="node-background">Root Node Background</div></div>
-    <div class="node"><div class="node-background">Node Background</div></div>
+    <h2>JSON Tree Data
+      <p>Paste either stringified JSON Tree data or a URL that links to your JSON</p>
+    </h2>
+    <textarea id="json-input"></textarea>
+
+    <h2>Node HTML Template
+      <p>Add the HTML template to be used for each node</p>
+    </h2>
+    <textarea id="html-template-input"></textarea>
+
   </div>
 
   <div class="output">
-    <h1>Tree Output</h1>
+
+    <h2>Tree Output</h2>
     <div id="tree-container"></div>
-    <h1>JSON Output</h1>
+
+    <h2>JSON Output</h2>
     <div id="json-container"></div>
-    <h1>Compiled User Options</h1>
+
+    <h2>Compiled User Options
+      <p>This json string can be copied and passed into the function call to reproduce the observed tree</p>
+    </h2>
     <div id="compiled-options"></div>
+
   </div>
 
 </body>
+
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 <script type="text/javascript" src="http://underscorejs.org/underscore.js"></script>
 <script type="text/javascript" src="treedrawerplugin.js"></script>
+
 <script type="text/javascript">
 
   var loadStringData = function() {
@@ -120,15 +146,18 @@
 
   var loadDefaultData = function() {
     $('#tree-container').html('');
+    $('#tree-container').text('');
+    $('#compiled-options').text(JSON.stringify({}));
     $('#tree-container').drawTree({});
   };
 
   var buildOptions = function() {
     var builtOptions = {};
 
-    if ($("#option-orientation").val() !== "") builtOptions.orientation = $("#option-orientation").val();
+    if ($("input:radio[name='tree-orientation']:checked").val()) builtOptions.treeOrientation = $("input:radio[name='tree-orientation']:checked").val();
+    if ($("input:radio[name='link-orientation']:checked").val()) builtOptions.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
     if ($("#option-child-node-id").val() !== "") builtOptions.childNodeName = $("#option-child-node-id").val();
-    if ($("#option-link-strategy").val() !== "") builtOptions.linkStrategy        = $("#option-link-strategy").val();
+    if ($("#option-link-strategy").val() !== "") builtOptions.linkStrategy = $("#option-link-strategy").val();
     if ($("#option-node-width").val() !== "") {
       if(!builtOptions.nodeSizing) {
         builtOptions.nodeSizing = {};
@@ -153,13 +182,13 @@
       }
       builtOptions.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
     }
-    if ($("#option-node-background-classes").val() !== "") builtOptions.nodeBkndClasses     = $("#option-node-background-classes").val().split(", ");
-    if ($("#option-node-html-classes").val() !== "") builtOptions.nodeHTMLClasses     = $("#option-node-html-classes").val().split(", ");
-    if ($("#option-link-body-classes").val() !== "") builtOptions.linkClasses     = $("#option-link-body-classes").val().split(", ");
-    if ($("#option-link-arrow-classes").val() !== "") builtOptions.arrowClasses    = $("#option-link-arrow-classes").val().split(", ");;
+    if ($("#option-node-background-classes").val() !== "") builtOptions.nodeBkndClasses = $("#option-node-background-classes").val().split(", ");
+    if ($("#option-node-html-classes").val() !== "") builtOptions.nodeHTMLClasses = $("#option-node-html-classes").val().split(", ");
+    if ($("#option-link-body-classes").val() !== "") builtOptions.linkClasses = $("#option-link-body-classes").val().split(", ");
+    if ($("#option-link-arrow-classes").val() !== "") builtOptions.arrowClasses = $("#option-link-arrow-classes").val().split(", ");;
     if ($("#option-forobj-not-supported").val() !== "") builtOptions.notSupportedMessage = $("#option-forobj-not-supported").val();
-    if ($("#html-template-input").val() !== "") builtOptions.nodeHTMLTemplate        = $("#html-template-input").val();
-    if ($("#json-input").val() !== "") builtOptions.node            = $("#json-input").val();
+    if ($("#html-template-input").val() !== "") builtOptions.nodeHTMLTemplate = $("#html-template-input").val();
+    if ($("#json-input").val() !== "") builtOptions.node = $("#json-input").val();
 
     return builtOptions;
   };
