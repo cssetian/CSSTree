@@ -36,6 +36,11 @@
             <label for="tree-orientation-270">270 Degrees</label><br>
         </td>
       </tr>
+      <hr>
+      <tr>
+        <td><label for="option-child-node-id">Child Node ID</label></td>
+        <td><input type="text" id="option-child-node-id" /></td>
+      </tr>
       <tr>
         <td><label for="link-orientation">Link Orientation</label></td>
         <td>
@@ -45,13 +50,15 @@
             <label for="link-orientation-up">270 Degrees</label><br>
         </td>
       </tr>
-      <tr>
-        <td><label for="option-child-node-id">Child Node ID</label></td>
-        <td><input type="text" id="option-child-node-id" /></td>
-      </tr>
+      <hr>
       <tr>
         <td><label for="option-link-strategy">Link Strategy</label></td>
-        <td><input type="text" id="option-link-strategy" /></td>
+        <td>
+            <input type="radio" name="option-link-strategy" id="option-link-strategy-elbow" value="elbow" />
+            <label for="option-link-strategy-elbow">Elbow Links</label><br>
+            <input type="radio" name="option-link-strategy" id="option-link-strategy-diag" value="diagonal" />
+            <label for="option-link-strategy-diag">Diagonal Links</label><br>
+        </td>
       </tr>
       <tr>
         <td><label for="option-node-width">Node Width (px)</label></td>
@@ -157,7 +164,7 @@
     if ($("input:radio[name='tree-orientation']:checked").val()) builtOptions.treeOrientation = $("input:radio[name='tree-orientation']:checked").val();
     if ($("input:radio[name='link-orientation']:checked").val()) builtOptions.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
     if ($("#option-child-node-id").val() !== "") builtOptions.childNodeName = $("#option-child-node-id").val();
-    if ($("#option-link-strategy").val() !== "") builtOptions.linkStrategy = $("#option-link-strategy").val();
+   if ($("input:radio[name='option-link-strategy']:checked").val()) builtOptions.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
     if ($("#option-node-width").val() !== "") {
       if(!builtOptions.nodeSizing) {
         builtOptions.nodeSizing = {};
