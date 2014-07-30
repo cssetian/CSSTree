@@ -407,7 +407,7 @@
         };
 
         var rotateY = function(x, y, d) {
-          return (-1 * x * sinD(d) + y * cosD(d));
+          return ( x * sinD(d) + y * cosD(d));
         };
 
         var translate = function(x, t) {
@@ -416,10 +416,10 @@
         
         // x,y start at upper left of node box for both source and target
         // Apply this offset to center the 
-        var xSourceBoxOffset = (sinD(dS) * 0.5 * w);
-        var ySourceBoxOffset = (cosD(dS) * 0.5 * h);
-        var xTargetBoxOffset = (sinD(dS) * 0.5 * w);
-        var yTargetBoxOffset = (cosD(dS) * 0.5 * h);
+        var xSourceBoxOffset = ((sinD(dS) + cosD(dS)) * 0.5 * w);
+        var ySourceBoxOffset = ((sinD(dS) + cosD(dS)) * 0.5 * h);
+        var xTargetBoxOffset = ((sinD(dS) - cosD(dS)) * 0.5 * w);
+        var yTargetBoxOffset = ((-1 * sinD(dS) + cosD(dS)) * 0.5 * h);
         
         var xS = d.source.x;
         var yS = d.source.y;
@@ -452,11 +452,21 @@
         console.log('Target Box Link Coords: (' + xTRotated + ', ' + yTRotated + ')');
         console.log('----');
 
-        var hdepth = ((yTRotated - ySRotated) / 3);
-        var kink = (ySRotated + hdepth).toFixed(0);
-        return 'M' + (xSRotated) + ',' + (ySRotated) +
-                  'V' + kink +
-                  'H' + (xTRotated) + 'V' + (yTRotated);
+        var vdepth = ((yTRotated - ySRotated) / 3);
+        var vkink = (ySRotated + vdepth).toFixed(0);
+
+        var hdepth = ((xTRotated - xSRotated) / 3);
+        var hkink = (xSRotated + hdepth).toFixed(0);
+
+        if(dS === 0 || dS === 180) {
+          return 'M' + (xSRotated) + ',' + (ySRotated) +
+                    'V' + vkink +
+                    'H' + (xTRotated) + 'V' + (yTRotated);
+        } else {
+          return 'M' + (xSRotated) + ',' + (ySRotated) +
+                    'H' + hkink +
+                    'V' + (yTRotated) + 'H' + (xTRotated);
+        }
 
       
 
