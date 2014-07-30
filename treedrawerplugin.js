@@ -388,150 +388,111 @@
 
       // If you want to switch to a standard elbow connector, use this instead of the diagonal
       return function elbow(d, i) {
-        //elbow link source base offset
-        var w = settings.NODE_WIDTH;
-        var h = settings.NODE_HEIGHT;
-        var dS = settings.ROTATION_ANGLE_DEGREES;
-        var dT = dS + 180;
-        
-        var xOffset = settings.ROOT_X_OFFSET;
-        var yOffset = settings.ROOT_Y_OFFSET;
-        
-        
-        var toRad = function (d) { return d * Math.PI / 180; };
-        var sinD = function(d) { return parseInt(Math.sin(toRad(d))); };
-        var cosD = function(d) { return parseInt(Math.cos(toRad(d))); };
+            var containerWidth = settings.TREE_CONTAINER_WIDTH;
+            var containerHeight = settings.TREE_CONTAINER_HEIGHT;
+            var w = settings.NODE_WIDTH;
+            var h = settings.NODE_HEIGHT;
+            var dS = settings.ROTATION_ANGLE_DEGREES;
+            var dT = dS + 180;
 
-        var rotateX = function(x, y, d) {
-          return (x * cosD(d) + y * sinD(d));
-        };
+            var xRootOffset = settings.ROOT_X_OFFSET;
+            var yRootOffset = settings.ROOT_Y_OFFSET;
 
-        var rotateY = function(x, y, d) {
-          return ( x * sinD(d) + y * cosD(d));
-        };
+            var toRad = function (d) { return d * Math.PI / 180; };
+            var sinD = function (d) { return Math.round(Math.sin(toRad(d))); };
+            var cosD = function (d) { return Math.round(Math.cos(toRad(d))); };
 
-        var translate = function(x, t) {
-          return x + t;
-        };
-        
-        // x,y start at upper left of node box for both source and target
-        // Apply this offset to center the 
-        var xSourceBoxOffset = ((sinD(dS) + cosD(dS)) * 0.5 * w);
-        var ySourceBoxOffset = ((sinD(dS) + cosD(dS)) * 0.5 * h);
-        var xTargetBoxOffset = ((sinD(dS) - cosD(dS)) * 0.5 * w);
-        var yTargetBoxOffset = ((-1 * sinD(dS) + cosD(dS)) * 0.5 * h);
-        
-        var xS = d.source.x;
-        var yS = d.source.y;
-        var xT = d.target.x;
-        var yT = d.target.y;
+            var rotateX = function (x, y, d) {
+                return (x * cosD(d) + y * sinD(d));
+            };
 
-        var xSCenter = translate(xS, 0.5 * w);
-        var ySCenter = translate(yS, 0.5 * h);
-        var xTCenter = translate(xT, 0.5 * w);
-        var yTCenter = translate(yT, 0.5 * h);
+            var rotateY = function (x, y, d) {
+                return (x * sinD(d) + y * cosD(d));
+            };
 
-        var xSEdge = translate(xSCenter, xSourceBoxOffset);
-        var ySEdge = translate(ySCenter, ySourceBoxOffset);
-        var xTEdge = translate(xTCenter, xTargetBoxOffset);
-        var yTEdge = translate(yTCenter, yTargetBoxOffset);
+            var translate = function (x, t) {
+                return x + t;
+            };
 
-        var xSPositioned = translate(xSEdge, xOffset);
-        var ySPositioned = translate(ySEdge, yOffset);
-        var xTPositioned = translate(xTEdge, xOffset);
-        var yTPositioned = translate(yTEdge, yOffset);
+            // x,y start at upper left of node box for both source and target
+            // This offset will center the coordinate within the bounds of the box
+            var xSourceBoxOffset = 0.5 * w * sinD(dS);
+            var ySourceBoxOffset = 0.5 * h * cosD(dS);
+            var xTargetBoxOffset = 0.5 * w * sinD(dT);
+            var yTargetBoxOffset = 0.5 * h * cosD(dT);
 
-        var xSRotated = rotateX(xSPositioned, ySPositioned, dS);
-        var ySRotated = rotateY(xSPositioned, ySPositioned, dS);
-        var xTRotated = rotateX(xTPositioned, yTPositioned, dS);
-        var yTRotated = rotateY(xTPositioned, yTPositioned, dS);
+            // Source and target coordinates originate at the top left corner of each node
+            var xS = d.source.x;
+            var yS = d.source.y;
+            var xT = d.target.x;
+            var yT = d.target.y;
+
+            // Translate the coordinates first to center within the container element
+            var xSFramed = translate(xS, xRootOffset);
+            var ySFramed = translate(yS, yRootOffset);
+            var xTFramed = translate(xT, xRootOffset);
+            var yTFramed = translate(yT, yRootOffset);
 
 
-        console.log('Source -> Target: (' + d.source.dataValue + ' -> ' + d.target.dataValue + ')');
-        console.log('Source Box Link Coords: (' + xSRotated + ', ' + ySRotated + ')');
-        console.log('Target Box Link Coords: (' + xTRotated + ', ' + yTRotated + ')');
-        console.log('----');
+            // Rotate coordinate space so that links are oriented in direction of the angle of rotation
+            var xSRotated = rotateX(xSFramed, ySFramed, dS);
+            var ySRotated = rotateY(xSFramed, ySFramed, dS);
+            var xTRotated = rotateX(xTFramed, yTFramed, dS);
+            var yTRotated = rotateY(xTFramed, yTFramed, dS);
 
-        var vdepth = ((yTRotated - ySRotated) / 3);
-        var vkink = (ySRotated + vdepth).toFixed(0);
+            // Center the coordinates from top left to center of node
+            // Nodes always have 1 orientation for readability so centering offset is static
+            var xSNodeCentered = translate(xSRotated, 0.5 * w);
+            var ySNodeCentered = translate(ySRotated, 0.5 * h);
+            var xTNodeCentered = translate(xTRotated, 0.5 * w);
+            var yTNodeCentered = translate(yTRotated, 0.5 * h);
 
-        var hdepth = ((xTRotated - xSRotated) / 3);
-        var hkink = (xSRotated + hdepth).toFixed(0);
+            // Translate each coordinate to the edge of the node based on angle of rotation
+            // Source and target inner box offsets are 180 degrees offset (i.e. opposite edges)
+            var xSNodeEdgePositioned = translate(xSNodeCentered, xSourceBoxOffset);
+            var ySNodeEdgePositioned = translate(ySNodeCentered, ySourceBoxOffset);
+            var xTNodeEdgePositioned = translate(xTNodeCentered, xTargetBoxOffset);
+            var yTNodeEdgePositioned = translate(yTNodeCentered, yTargetBoxOffset);
 
-        if(dS === 0 || dS === 180) {
-          return 'M' + (xSRotated) + ',' + (ySRotated) +
-                    'V' + vkink +
-                    'H' + (xTRotated) + 'V' + (yTRotated);
-        } else {
-          return 'M' + (xSRotated) + ',' + (ySRotated) +
-                    'H' + hkink +
-                    'V' + (yTRotated) + 'H' + (xTRotated);
-        }
+            var kinkY = (yTNodeEdgePositioned - ySNodeEdgePositioned) / 4;
+            var kinkX = (xTNodeEdgePositioned - xSNodeEdgePositioned) / 4;
 
-      
+            console.log('----');
+            console.log('----');
+            console.log('Rotation Angle: ' + dS);
+            console.log('dS: sin- ' + sinD(dS) + ' cos- ' + cosD(dS));
+            console.log('dT: sin- ' + sinD(dT) + ' cos- ' + cosD(dT));
+            console.log('Node Dims: (W: ' + w + ', H: ' + h + ')');
+            console.log('Container Dims: (W: ' + containerWidth + ', H: ' + containerHeight + ')');
+
+            console.log('Root Offsets: (' + xRootOffset + ', ' + yRootOffset + ')');
+            console.log('Source Box Inner Coord Offset: (' + xSourceBoxOffset + ', ' + ySourceBoxOffset + ')');
+            console.log('Target Box Inner Coord Offset: (' + xTargetBoxOffset + ', ' + yTargetBoxOffset + ')');
+            console.log('----');
+            console.log('Orig Source Box Link Coords: (' + xS + ', ' + yS + ')');
+            console.log('Orig Target Box Link Coords: (' + xT + ', ' + yT + ')');
+            console.log('Offset Source Box Link Coords: (' + xSFramed + ', ' + ySFramed + ')');
+            console.log('Offset Target Box Link Coords: (' + xTFramed + ', ' + yTFramed + ')');
+            console.log('Rotated Source Box Link Coords: (' + xSRotated + ', ' + ySRotated + ')');
+            console.log('Rotated Target Box Link Coords: (' + xTRotated + ', ' + yTRotated + ')');
+            console.log('Centered Source Box Link Coords: (' + xSNodeCentered + ', ' + ySNodeCentered + ')');
+            console.log('Centered Target Box Link Coords: (' + xTNodeCentered + ', ' + yTNodeCentered + ')');
+            console.log('Calc Source Box Link Coords: (' + xSNodeEdgePositioned + ', ' + ySNodeEdgePositioned + ')');
+            console.log('Calc Target Box Link Coords: (' + xTNodeEdgePositioned + ', ' + yTNodeEdgePositioned + ')');
+            console.log('----');
+            console.log('----');
 
 
-        /*
-        var xSourceBaseCoord = Math.abs(settings.SIN_R) *  (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
-                                Math.abs(settings.COS_R) *  (settings.COS_R * (settings.NODE_WIDTH / 2));
-                                */
-        var xSourceBaseCoord =  ((settings.NODE_HEIGHT / 2) * (settings.SIN_R + settings.COS_R)); //+
-                                //((settings.NODE_WIDTH  / 2) * (settings.SIN_R * settings.COS_R));
+            if (self(dS) != 0) {
+                return "M" + (xSNodeEdgePositioned) + "," + (ySNodeEdgePositioned)
+                    + "H" + (xSNodeEdgePositioned + kinkX)
+                    + "V" + (yTNodeEdgePositioned) + "H" + (xTNodeEdgePositioned);
 
-
-        var ySourceBaseCoord = Math.abs(settings.SIN_R) * ((settings.SIN_R * (settings.NODE_WIDTH / 2))  + (settings.NODE_WIDTH / 2)) +
-                                Math.abs(settings.COS_R) * ((settings.COS_R * (settings.NODE_HEIGHT / 2)) + (settings.NODE_HEIGHT / 2));
-        /*                       
-        var ySourceBaseCoord =  ((settings.NODE_WIDTH  / 2) * (settings.SIN_R + settings.COS_R)) +
-                                ((settings.NODE_HEIGHT / 2) * (settings.SIN_R * settings.COS_R));
-        This needs to get somehow combined with the line drawing function to make the formula more reducable.
-        Because the coordinate starts from the upper left, it needs to be moved halfway across the node based on the +/- value of sin/cos                       
-        */
-
-        //elbow link target base offset
-        var xTargetBaseCoord = Math.abs(settings.SIN_R) *  (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
-                                Math.abs(settings.COS_R) *  (settings.COS_R * (settings.NODE_WIDTH / 2));
-        var yTargetBaseCoord = Math.abs(settings.SIN_R) * ((settings.SIN_R * (settings.NODE_WIDTH / 2))  + -1 * (settings.NODE_WIDTH / 2)) +
-                                Math.abs(settings.COS_R) * ((settings.COS_R * (settings.NODE_HEIGHT / 2)) + -1 * (settings.NODE_HEIGHT / 2));
-        
-        // SVG Elbow function flips x and y for all cases......I should be able to change them below and then 
-        //elbow link source calculated offset
-        var xSourceCalcCoord = settings.SIN_R * (d.source.x + xSourceBaseCoord + settings.ROOT_X_OFFSET) +
-                                settings.COS_R * (d.source.y + ySourceBaseCoord + settings.ROOT_Y_OFFSET);
-        var ySourceCalcCoord = settings.SIN_R * (d.source.y + ySourceBaseCoord + settings.ROOT_Y_OFFSET) +
-                                settings.COS_R * (d.source.x + xSourceBaseCoord + settings.ROOT_X_OFFSET);
-
-        //elbow link target calculcated offset
-        var xTargetCalcCoord = settings.SIN_R * (d.target.x + xTargetBaseCoord + settings.ROOT_X_OFFSET) +
-                                settings.COS_R * (d.target.y + yTargetBaseCoord + settings.ROOT_Y_OFFSET);
-        var yTargetCalcCoord = settings.SIN_R * (d.target.y + yTargetBaseCoord + settings.ROOT_Y_OFFSET) +
-                                settings.COS_R * (d.target.x + xTargetBaseCoord + settings.ROOT_X_OFFSET);
-
-        var hy = (yTargetCalcCoord - ySourceCalcCoord) / 3;
-        var hx = (xTargetCalcCoord - xSourceCalcCoord) / 3;
-
-        /*
-        console.log('Source Box Calced Coords: (' + ySourceCalcCoord + ', ' + xSourceCalcCoord + ')');
-        console.log('Target Box Calced Coords: (' + xTargetCalcCoord + ', ' + yTargetCalcCoord + ')');
-        //Custom link drawing logic so link arrows are always pointing to the right
-        if (settings.SIN_R !== 0) {
-          // 90 / 270 Degrees - First move horizontally, then vertically, then horizontally
-          return 'M' + (ySourceCalcCoord) + ',' + (xSourceCalcCoord) +
-                  'H' + (ySourceCalcCoord + hy) +
-                  'V' + (xTargetCalcCoord) + 'H' + (yTargetCalcCoord);
-        } else {
-          // 0 / 180 Degrees - First move vertically, then horizontally, then verically
-          return 'M' + (ySourceCalcCoord) + ',' + (xSourceCalcCoord) +
-                  'V' + (xSourceCalcCoord + hx) +
-                  'H' + (yTargetCalcCoord) + 'V' + (xTargetCalcCoord);
-        }
-        */
-
-        var hx = (xTarget - xSource) / 3;
-        return 'M' + (xSource) + ',' + (ySource) +
-                'V' + (xSource + hx) +
-                'H' + (xTarget) + 'V' + (yTarget);
-
+            } else {
+                return "M" + (xSNodeEdgePositioned) + "," + (ySNodeEdgePositioned)
+                    + "V" + (ySNodeEdgePositioned + kinkY)
+                    + "H" + (xTNodeEdgePositioned) + "V" + (yTNodeEdgePositioned);
+            }
       };
     },
 
