@@ -11,12 +11,12 @@
       childNodeName: 'node',
       linkStrategy: 'elbow',
       nodeSizing: {
-        width: 25,
-        height: 25
+        width: 20,
+        height: 20
       },
       nodeSpacing: {
-        level: 25,
-        span: 25
+        level: 20,
+        span: 20
       },
       nodeBkndClasses: ['node-background'],
       nodeHTMLClasses: ['node-html-container'],
@@ -397,27 +397,70 @@
         var xOffset = settings.ROOT_X_OFFSET;
         var yOffset = settings.ROOT_Y_OFFSET;
         
+        
+        var toRad = function (d) { return d * Math.PI / 180; };
+        var sinD = function(d) { return parseInt(Math.sin(toRad(d))); };
+        var cosD = function(d) { return parseInt(Math.cos(toRad(d))); };
+
+        var rotateX = function(x, y, d) {
+          return (x * cosD(d) + y * sinD(d));
+        };
+
+        var rotateY = function(x, y, d) {
+          return (-1 * x * sinD(d) + y * cosD(d));
+        };
+
+        var translate = function(x, t) {
+          return x + t;
+        };
+        
+        // x,y start at upper left of node box for both source and target
+        // Apply this offset to center the 
+        var xSourceBoxOffset = (sinD(dS) * 0.5 * w);
+        var ySourceBoxOffset = (cosD(dS) * 0.5 * h);
+        var xTargetBoxOffset = (sinD(dS) * 0.5 * w);
+        var yTargetBoxOffset = (cosD(dS) * 0.5 * h);
+        
         var xS = d.source.x;
         var yS = d.source.y;
         var xT = d.target.x;
         var yT = d.target.y;
-        
-        var toRad = function (d) { return d * Math.PI / 180; }
-        var sinD = function(d) { return Math.sin(toRad(d)).toFixed(2); }
-        var cosD = function(d) { return Math.cos(toRad(d)).toFixed(2); }
-        
-        var xSourceBoxOffset = (sinD(dS) * 0.5 * w);
-        var ySourceBoxOffset = (cosD(dS) * 0.5 * h);
-        var xTargetBoxOffset = (sinD(dT) * 0.5 * w);
-        var yTargetBoxOffset = (cosD(dT) * 0.5 * h);
-        
-        var xSource = xSourceBoxOffset + xOffset + xS;
-        var ySource = ySourceBoxOffset + yOffset + yS;
-        var xTarget = xTargetBoxOffset + xOffset + xT;
-        var yTarget = yTargetBoxOffset + yOffset + yT;
-        console.log('Source Box Link Coords: (' + xSource + ', ' + ySource + ')');
-        console.log('Target Box Link Coords: (' + xTarget + ', ' + yTarget + ')');
-        
+
+        var xSCenter = translate(xS, 0.5 * w);
+        var ySCenter = translate(yS, 0.5 * h);
+        var xTCenter = translate(xT, 0.5 * w);
+        var yTCenter = translate(yT, 0.5 * h);
+
+        var xSEdge = translate(xSCenter, xSourceBoxOffset);
+        var ySEdge = translate(ySCenter, ySourceBoxOffset);
+        var xTEdge = translate(xTCenter, xTargetBoxOffset);
+        var yTEdge = translate(yTCenter, yTargetBoxOffset);
+
+        var xSPositioned = translate(xSEdge, xOffset);
+        var ySPositioned = translate(ySEdge, yOffset);
+        var xTPositioned = translate(xTEdge, xOffset);
+        var yTPositioned = translate(yTEdge, yOffset);
+
+        var xSRotated = rotateX(xSPositioned, ySPositioned, dS);
+        var ySRotated = rotateY(xSPositioned, ySPositioned, dS);
+        var xTRotated = rotateX(xTPositioned, yTPositioned, dS);
+        var yTRotated = rotateY(xTPositioned, yTPositioned, dS);
+
+
+        console.log('Source -> Target: (' + d.source.dataValue + ' -> ' + d.target.dataValue + ')');
+        console.log('Source Box Link Coords: (' + xSRotated + ', ' + ySRotated + ')');
+        console.log('Target Box Link Coords: (' + xTRotated + ', ' + yTRotated + ')');
+        console.log('----');
+
+        var hdepth = ((yTRotated - ySRotated) / 3);
+        var kink = (ySRotated + hdepth).toFixed(0);
+        return 'M' + (xSRotated) + ',' + (ySRotated) +
+                  'V' + kink +
+                  'H' + (xTRotated) + 'V' + (yTRotated);
+
+      
+
+
         /*
         var xSourceBaseCoord = Math.abs(settings.SIN_R) *  (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
                                 Math.abs(settings.COS_R) *  (settings.COS_R * (settings.NODE_WIDTH / 2));
@@ -457,6 +500,7 @@
         var hy = (yTargetCalcCoord - ySourceCalcCoord) / 3;
         var hx = (xTargetCalcCoord - xSourceCalcCoord) / 3;
 
+        /*
         console.log('Source Box Calced Coords: (' + ySourceCalcCoord + ', ' + xSourceCalcCoord + ')');
         console.log('Target Box Calced Coords: (' + xTargetCalcCoord + ', ' + yTargetCalcCoord + ')');
         //Custom link drawing logic so link arrows are always pointing to the right
@@ -471,6 +515,13 @@
                   'V' + (xSourceCalcCoord + hx) +
                   'H' + (yTargetCalcCoord) + 'V' + (xTargetCalcCoord);
         }
+        */
+
+        var hx = (xTarget - xSource) / 3;
+        return 'M' + (xSource) + ',' + (ySource) +
+                'V' + (xSource + hx) +
+                'H' + (xTarget) + 'V' + (yTarget);
+
       };
     },
 
