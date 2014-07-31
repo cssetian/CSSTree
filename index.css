@@ -27,6 +27,11 @@ body {
   text-overflow: wrap;
 }
 
+.options-module {
+  border-style: solid;
+  border-width: 1px;
+}
+
 /* Apply a fixed sizing to the demo nodes */
 #legend-container .node {
   width: 200px;

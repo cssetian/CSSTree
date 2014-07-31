@@ -16,6 +16,11 @@
     <button type="button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Plugin Data</button>
   </div>
 
+  <div class="output">
+    <h2>Tree Output</h2>
+    <div id="tree-container"></div>
+  </div>
+
   <div id="options-container" class="container-column">
     <h2>Tree Options</h2>
     <table>
@@ -29,7 +34,7 @@
       </tr>
       <tr>
         <td><label for="tree-orientation">Tree Orientation</label></td>
-        <td>
+        <td class="options-module">
             <input type="radio" name="tree-orientation" id="tree-orientation-0" value="0" />
             <label for="tree-orientation-0">0 Degrees</label><br>
             <input type="radio" name="tree-orientation" id="tree-orientation-90" value="90" />
@@ -40,24 +45,22 @@
             <label for="tree-orientation-270">270 Degrees</label><br>
         </td>
       </tr>
-      <hr>
       <tr>
         <td><label for="link-orientation">Link Orientation</label></td>
-        <td>
+        <td class="options-module">
             <input type="radio" name="link-orientation" id="link-orientation-down" value="down" />
             <label for="link-orientation-down">180 Degrees</label><br>
             <input type="radio" name="link-orientation" id="link-orientation-up" value="up" />
             <label for="link-orientation-up">270 Degrees</label><br>
         </td>
       </tr>
-      <hr>
       <tr>
         <td><label for="option-link-strategy">Link Strategy</label></td>
-        <td>
+        <td class="options-module">
             <input type="radio" name="option-link-strategy" id="option-link-strategy-elbow" value="elbow" />
             <label for="option-link-strategy-elbow">Elbow Links</label><br>
             <input type="radio" name="option-link-strategy" id="option-link-strategy-diag" value="diagonal" />
-            <label for="option-link-strategy-diag">Diagonal Links</label><br>
+            <label for="option-link-strategy-diag">Curved Links</label><br>
         </td>
       </tr>
       <tr>
@@ -115,9 +118,6 @@
 
   <div class="output">
 
-    <h2>Tree Output</h2>
-    <div id="tree-container"></div>
-
     <h2>JSON Output</h2>
     <div id="json-container"></div>
 
@@ -164,8 +164,8 @@
     if ($("#option-tree-container-id").val() !== "") builtOptions.childNodeName = $("#option-tree-container-id").val();
     if ($("#option-child-node-name").val() !== "") builtOptions.childNodeName = $("#option-child-node-name").val();
    
-    if ($("input:radio[name='tree-orientation']:checked").val()) builtOptions.treeOrientation = $("input:radio[name='tree-orientation']:checked").val();
-    if ($("input:radio[name='link-orientation']:checked").val()) builtOptions.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
+    if ($("input:radio[name='tree-orientation']:checked").val()) builtOptions.treeOrientation = parseInt($("input:radio[name='tree-orientation']:checked").val());
+    if ($("input:radio[name='link-orientation']:checked").val()) builtOptions.linkOrientation = parseInt($("input:radio[name='link-orientation']:checked").val());
     if ($("input:radio[name='option-link-strategy']:checked").val()) builtOptions.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
     
     if ($("#option-node-width").val() !== "") {

@@ -35,7 +35,7 @@
           }, {
             dataValue: '6'
           }]
-        }, {
+        }/*, {
           dataValue: '3'
         }, {
           dataValue: '4',
@@ -49,7 +49,7 @@
           }, {
             dataValue: '9'
           }]
-        }]
+        }*/]
       }
     };
 
@@ -483,7 +483,7 @@
             console.log('----');
 
 
-            if (self(dS) != 0) {
+            if (sinD(dS) !== 0) {
                 return "M" + (xSNodeEdgePositioned) + "," + (ySNodeEdgePositioned)
                     + "H" + (xSNodeEdgePositioned + kinkX)
                     + "V" + (yTNodeEdgePositioned) + "H" + (xTNodeEdgePositioned);
