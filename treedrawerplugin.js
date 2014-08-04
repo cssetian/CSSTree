@@ -18,10 +18,6 @@
         level: 20,
         span: 20
       },
-      nodeBkndClasses: ['node-background'],
-      nodeHTMLClasses: ['node-html-container'],
-      linkClasses: ['link-html-container'],
-      arrowClasses: ['arrow-html-container'],
       notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
       nodeHTMLTemplate: function (d) {
         return '<div id="node-template">' + d.dataValue + '</div>';
@@ -52,6 +48,11 @@
         }*/]
       }
     };
+
+    $.merge(userSettings.nodeBkndClasses, ['node-background']);
+    $.merge(userSettings.nodeHTMLClasses, ['node-html-container']);
+    $.merge(userSettings.linkClasses, ['link-html-container']);
+    $.merge(userSettings.arrowClasses, ['arrow-html-container']);
 
     // We can use the extend method to merge settings as usual:
     // But with the added first parameter of TRUE to signify a DEEP COPY:

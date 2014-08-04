@@ -4,12 +4,27 @@ body {
   font-family: sans-serif;
 }
 
+h2 {
+  margin-bottom: 5px;
+}
+
+p {
+  margin-top: 5px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
+}
+
 /* Dynamically resize the containers, but overflow when below 300px */
 .container-column  {
   display: inline-block;
   vertical-align: top;
   width: 30%;
   min-width: 300px;
+  margin: 10px;
+}
+
+.output-container {
   margin: 10px;
 }
 
@@ -45,15 +60,30 @@ body {
   display: inline-block;
 }
 
-h2 {
-  margin-bottom: 5px;
+.add-row-button {
+  font-size: 12px;
+  cursor: pointer;
 }
 
-p {
-  margin-top: 5px;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: initial;
+.action-button {
+  margin: 5px;
+  width: 225px;
+}
+
+
+.option-label-column {
+  vertical-align: top;
+}
+
+.option-input-column {
+  vertical-align: top;
+}
+
+.option-list {
+  list-style-type: none;
+  padding-left: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 /***************** Custom Tree Styling For Demo ****************/

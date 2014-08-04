@@ -11,12 +11,12 @@
 <body>
   
   <div id="actions-container">
-    <button type="button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
-    <button type="button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
-    <button type="button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Plugin Data</button>
+    <button type="button" class="action-button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
+    <button type="button" class="action-button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
+    <button type="button" class="action-button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Plugin Data</button>
   </div>
 
-  <div class="output">
+  <div class="output-container">
     <h2>Tree Output</h2>
     <div id="tree-container"></div>
   </div>
@@ -80,20 +80,56 @@
         <td><input type="text" id="option-node-sibling-spacing" /></td>
       </tr>
       <tr>
-        <td><label for="option-node-background-classes">Node Background Classes</label></td>
-        <td><input type="text" id="option-node-background-classes" /></td>
+        <td class="option-label-column">
+          <label for="option-node-background-classes">Node Background Classes</label><br>
+          <span class="add-row-button disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
+        </td>
+        <td class="option-input-column">
+          <ul id="option-node-background-classes" class="option-list">
+            <li class="option-list-item">
+              <input type="text" id="option-node-background-item-0" class="option-list-item-input" />
+            </li>
+          </ul>
+        </td>
       </tr>
       <tr>
-        <td><label for="option-node-html-classes">Node HTML Template Classes</label></td>
-        <td><input type="text" id="option-node-html-classes" /></td>
+        <td class="option-label-column">
+          <label for="option-node-html-classes">Node HTML Template Classes</label><br>
+          <span class="add-row-button disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
+        </td>
+        <td class="option-input-column">
+          <ul id="option-node-html-classes" class="option-list">
+            <li class="option-list-item">
+              <input type="text" id="option-node-html-item-0" class="option-list-item-input" />
+            </li>
+          </ul>
+        </td>
       </tr>
       <tr>
-        <td><label for="option-link-body-classes">Link Body Classes</label></td>
-        <td><input type="text" id="option-link-body-classes" /></td>
+        <td class="option-label-column">
+          <label for="option-link-body-classes">Link Body Classes</label><br>
+          <span class="add-row-button disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
+        </td>
+        <td class="option-input-column">
+          <ul id="option-link-body-classes" class="option-list">
+            <li class="option-list-item">
+              <input type="text" id="option-link-body-item-0" class="option-list-item-input" />
+            </li>
+          </ul>
+        </td>
       </tr>
       <tr>
-        <td><label for="option-link-arrow-classes">Link Arrow Classes</label></td>
-        <td><input type="text" id="option-link-arrow-classes" /></td>
+        <td class="option-label-column">
+          <label for="option-link-arrow-classes">Link Arrow Classes</label><br>
+          <span class="add-row-button disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
+        </td>
+        <td class="option-input-column">
+          <ul id="option-link-arrow-classes" class="option-list">
+            <li class="option-list-item">
+              <input type="text" id="option-link-arrow-item-0" class="option-list-item-input" />
+            </li>
+          </ul>
+        </td>
       </tr>
       <tr>
         <td><label for="option-forobj-not-supported">Foreign Obj Not Supported Msg</label></td>
@@ -104,31 +140,34 @@
 
   <div id="data-container" class="container-column">
 
-    <h2>JSON Tree Data
+    <h2>JSON Tree Data Input
       <p>Paste either stringified JSON Tree data or a URL that links to your JSON</p>
     </h2>
     <textarea id="json-input"></textarea>
 
-    <h2>Node HTML Template
+    <h2>Node-Body HTML Template
       <p>Add the HTML template to be used for each node</p>
     </h2>
     <textarea id="html-template-input"></textarea>
 
   </div>
 
-  <div class="output">
+  <div class="output-container">
 
-    <h2>JSON Formatted Output</h2>
+    <h2>JSON User Options (Unformtatted String)
+      <p>This json string can be copied and passed into the function call as user options to reproduce the manually configured tree.</p>
+    </h2>
+    <code>
+        <div id="compiled-options"></div>
+      </code>
+
+    <h2>JSON User Options (Formatted Object)
+      <p>This json string contains the above user-specified options, formatted for human readability.</p>
+    </h2>
     <pre>
-      <code>
-        <div id="json-container"></div>
+      <code id="json-formatted-options">
       </code>
     </pre>
-
-    <h2>Compiled User Options
-      <p>This json string can be copied and passed into the function call to reproduce the observed tree</p>
-    </h2>
-    <div id="compiled-options"></div>
 
   </div>
 
@@ -141,11 +180,13 @@
 
 <script type="text/javascript">
 
+
   var loadStringData = function() {
     var userInput = buildOptions();
 
     $('#tree-container').text('');
     $('#compiled-options').text(JSON.stringify(userInput));
+    $('#json-formatted-options').text(JSON.stringify(userInput, undefined, 2));
     
     $('#tree-container').html('');
     $('#tree-container').drawTree(userInput);
@@ -156,11 +197,47 @@
   };
 
   var loadDefaultData = function() {
-    $('#tree-container').html('');
-    $('#tree-container').text('');
+
     $('#compiled-options').text(JSON.stringify({}));
+
+    $('#tree-container').html('');
     $('#tree-container').drawTree({});
   };
+
+  $(".add-row-button").click(function(e) {
+    var self = this;
+    var ul = $(self.dataset.listid);
+
+    var li = document.createElement("li");
+    li.className = "option-list-item";
+
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "option-list-item-input";
+
+    li.appendChild(input);
+    ul.append(li);
+  });
+
+  $('.disableDblClick').bind('dblclick',function(e){
+    e.preventDefault();
+  });
+
+  var buildClassArray = function(listId) {
+    var listItemsEl = document.getElementById(listId).getElementsByTagName('li');
+    var outputList = [];
+    for(var i = 0; i < listItemsEl.length; i++) {
+      var listItemEl = listItemsEl[i];
+      var itemInputEl = listItemEl.getElementsByTagName('input')[0];
+      var listItemValue = itemInputEl.value;
+
+      if(listItemValue !== "") {
+        outputList.push(listItemValue);
+      }
+
+    }
+    return outputList;
+  }
 
   var buildOptions = function() {
     var builtOptions = {};
@@ -196,11 +273,12 @@
       }
       builtOptions.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
     }
-    
-    if ($("#option-node-background-classes").val() !== "") builtOptions.nodeBkndClasses = $("#option-node-background-classes").val().split(", ");
-    if ($("#option-node-html-classes").val() !== "") builtOptions.nodeHTMLClasses = $("#option-node-html-classes").val().split(", ");
-    if ($("#option-link-body-classes").val() !== "") builtOptions.linkClasses = $("#option-link-body-classes").val().split(", ");
-    if ($("#option-link-arrow-classes").val() !== "") builtOptions.arrowClasses = $("#option-link-arrow-classes").val().split(", ");;
+
+    builtOptions.nodeBkndClasses = buildClassArray("option-node-background-classes");
+    builtOptions.nodeHTMLClasses = buildClassArray("option-node-html-classes");
+    builtOptions.linkClasses = buildClassArray("option-link-body-classes");
+    builtOptions.arrowClasses = buildClassArray("option-link-arrow-classes");
+
     if ($("#option-forobj-not-supported").val() !== "") builtOptions.notSupportedMessage = $("#option-forobj-not-supported").val();
     if ($("#html-template-input").val() !== "") builtOptions.nodeHTMLTemplate = $("#html-template-input").val();
     if ($("#json-input").val() !== "") builtOptions.node = $("#json-input").val();
