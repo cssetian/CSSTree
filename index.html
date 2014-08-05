@@ -278,6 +278,10 @@
     builtOptions.nodeHTMLClasses = buildClassArray("option-node-html-classes");
     builtOptions.linkClasses = buildClassArray("option-link-body-classes");
     builtOptions.arrowClasses = buildClassArray("option-link-arrow-classes");
+    if (builtOptions.nodeBkndClasses.length === 0) { delete builtOptions.nodeBkndClasses; }
+    if (builtOptions.nodeHTMLClasses.length === 0) { delete builtOptions.nodeHTMLClasses; }
+    if (builtOptions.linkClasses.length === 0) { delete builtOptions.linkClasses; }
+    if (builtOptions.arrowClasses.length === 0) { delete builtOptions.arrowClasses; }
 
     if ($("#option-forobj-not-supported").val() !== "") builtOptions.notSupportedMessage = $("#option-forobj-not-supported").val();
     if ($("#html-template-input").val() !== "") builtOptions.nodeHTMLTemplate = $("#html-template-input").val();

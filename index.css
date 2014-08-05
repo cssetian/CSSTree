@@ -15,6 +15,10 @@ p {
   font-weight: normal;
 }
 
+table {
+  border-spacing: 10px;
+}
+
 /* Dynamically resize the containers, but overflow when below 300px */
 .container-column  {
   display: inline-block;

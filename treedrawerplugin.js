@@ -18,6 +18,10 @@
         level: 20,
         span: 20
       },
+      nodeBkndClasses: [],
+      nodeHTMLClasses: [],
+      linkClasses: [],
+      arrowClasses: [],
       notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
       nodeHTMLTemplate: function (d) {
         return '<div id="node-template">' + d.dataValue + '</div>';
@@ -31,7 +35,7 @@
           }, {
             dataValue: '6'
           }]
-        }/*, {
+        }, {
           dataValue: '3'
         }, {
           dataValue: '4',
@@ -45,18 +49,18 @@
           }, {
             dataValue: '9'
           }]
-        }*/]
+        }]
       }
     };
-
-    $.merge(userSettings.nodeBkndClasses, ['node-background']);
-    $.merge(userSettings.nodeHTMLClasses, ['node-html-container']);
-    $.merge(userSettings.linkClasses, ['link-html-container']);
-    $.merge(userSettings.arrowClasses, ['arrow-html-container']);
 
     // We can use the extend method to merge settings as usual:
     // But with the added first parameter of TRUE to signify a DEEP COPY:
     var mergedSettings = $.extend( true, defaultSettings, userSettings );
+
+    mergedSettings.nodeBkndClasses.push('node-background');
+    mergedSettings.nodeHTMLClasses.push('node-html-container');
+    mergedSettings.linkClasses.push('link-html-container');
+    mergedSettings.arrowClasses.push('arrow-html-container');
 
     // After defining default settings, call the helper function to draw the actual tree
     _drawTree(mergedSettings);
