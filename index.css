@@ -19,6 +19,11 @@ table {
   border-spacing: 10px;
 }
 
+textarea {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 /* Dynamically resize the containers, but overflow when below 300px */
 .container-column  {
   display: inline-block;
@@ -27,8 +32,8 @@ table {
   min-width: 300px;
   margin: 10px;
 
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /* Set size of the JSON input textarea */
