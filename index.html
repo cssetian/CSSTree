@@ -9,191 +9,191 @@
 </head>
 
 <body>
-  <h1>Tree Drawer Demo Site</h1>
-
-  <div id="actions-container">
-    <button type="button" class="action-button" id="draw-tree-button" onclick="drawTreeOnPage()">Draw Tree</button>
-    <button type="button" class="action-button" id="json-text-button" onclick="drawSettings()">Refresh Settings Displayed</button>
-  </div>
-
-  <div class="actions-options">
-    <div class="container-column">
-      <h2>Choose Settings Source</h2>
-      <div class="options-module">
-        <input type="radio" name="settings-source" id="settings-source-0" value="default" checked />
-        <label for="settings-source-0">Default Settings</label><br>
-        <input type="radio" name="settings-source" id="settings-source-1" value="user" />
-        <label for="settings-source-1">User Selected Settings</label>
+  <div role="main" class="main-container">
+    <h1>Tree Drawer Demo Site</h1>
+    <div id="actions-container">
+      <button type="button" class="action-button" id="draw-tree-button" onclick="drawTreeOnPage()">Draw Tree</button>
+      <button type="button" class="action-button" id="json-text-button" onclick="drawSettings()">Refresh Settings Displayed</button>
+    </div>
+  
+    <div class="actions-options">
+      <div class="container-column">
+        <h2>Choose Settings Source</h2>
+        <div class="options-module">
+          <input type="radio" name="settings-source" id="settings-source-0" value="default" checked />
+          <label for="settings-source-0">Default Settings</label><br>
+          <input type="radio" name="settings-source" id="settings-source-1" value="user" />
+          <label for="settings-source-1">User Selected Settings</label>
+        </div>
+      </div>
+      <div class="container-column">
+        <h2>Choose Data Source</h2>
+        <div class="options-module">
+          <input type="radio" name="data-source" id="data-source-0" value="default" checked />
+          <label for="data-source-0">Default Data</label><br>
+          <input type="radio" name="data-source" id="data-source-1" value="user" />
+          <label for="data-source-1">User Input Data</label>
+        </div>
       </div>
     </div>
-    <div class="container-column">
-      <h2>Choose Data Source</h2>
-      <div class="options-module">
-        <input type="radio" name="data-source" id="data-source-0" value="default" checked />
-        <label for="data-source-0">Default Data</label><br>
-        <input type="radio" name="data-source" id="data-source-1" value="user" />
-        <label for="data-source-1">User Input Data</label>
+  
+    <div class="tree-output">
+      <div class="container-column">
+        <h2>Tree Output</h2>
+        <div id="tree-container"></div>
       </div>
     </div>
-  </div>
-
-  <div class="tree-output">
+  
+    <div id="options-container" class="container-column">
+      <h2>Tree Options</h2>
+      <table>
+        <tr>
+          <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
+          <td><input type="text" id="option-tree-container-id" /></td>
+        </tr>
+        <tr>
+          <td><label for="option-child-node-name">Child Node JSON Name</label></td>
+          <td><input type="text" id="option-child-node-name" /></td>
+        </tr>
+        <tr>
+          <td><label for="tree-orientation">Tree Orientation</label></td>
+          <td class="options-module">
+              <input type="radio" name="tree-orientation" id="tree-orientation-0" value="0" />
+              <label for="tree-orientation-0">0 &#176</label><br>
+              <input type="radio" name="tree-orientation" id="tree-orientation-90" value="90" />
+              <label for="tree-orientation-90">90 &#176</label><br>
+              <input type="radio" name="tree-orientation" id="tree-orientation-180" value="180" />
+              <label for="tree-orientation-180">180 &#176</label><br>
+              <input type="radio" name="tree-orientation" id="tree-orientation-270" value="270" />
+              <label for="tree-orientation-270">270 &#176</label>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="link-orientation">Link Orientation</label></td>
+          <td class="options-module">
+              <input type="radio" name="link-orientation" id="link-orientation-down" value="down" />
+              <label for="link-orientation-down">Down Tree</label><br>
+              <input type="radio" name="link-orientation" id="link-orientation-up" value="up" />
+              <label for="link-orientation-up">Up Tree</label>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="option-link-strategy">Link Strategy</label></td>
+          <td class="options-module">
+              <input type="radio" name="option-link-strategy" id="option-link-strategy-elbow" value="elbow" />
+              <label for="option-link-strategy-elbow">Elbow Links</label><br>
+              <input type="radio" name="option-link-strategy" id="option-link-strategy-diag" value="diagonal" />
+              <label for="option-link-strategy-diag">Curved Links</label><br>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="option-node-width">Node Width (px)</label></td>
+          <td><input type="text" id="option-node-width" /></td>
+        </tr>
+        <tr>
+          <td><label for="option-node-width">Node Height (px)</label></td>
+          <td><input type="text" id="option-node-height" /></td>
+        </tr>
+        <tr>
+          <td><label for="option-node-depth-spacing">Node Depth Spacing (px)</label></td>
+          <td><input type="text" id="option-node-depth-spacing" /></td>
+        </tr>
+        <tr>
+          <td><label for="option-node-sibling-spacing">Node Sibling Spacing (px)</label></td>
+          <td><input type="text" id="option-node-sibling-spacing" /></td>
+        </tr>
+        <tr>
+          <td class="option-label-column">
+            <label for="option-node-background-classes">Node Background Classes</label><br>
+            <span class="add-row-button disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
+          </td>
+          <td class="option-input-column">
+            <ul id="option-node-background-classes" class="option-list">
+              <li class="option-list-item">
+                <input type="text" id="option-node-background-item-0" class="option-list-item-input" />
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="option-label-column">
+            <label for="option-node-html-classes">Node HTML Template Classes</label><br>
+            <span class="add-row-button disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
+          </td>
+          <td class="option-input-column">
+            <ul id="option-node-html-classes" class="option-list">
+              <li class="option-list-item">
+                <input type="text" id="option-node-html-item-0" class="option-list-item-input" />
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="option-label-column">
+            <label for="option-link-body-classes">Link Body Classes</label><br>
+            <span class="add-row-button disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
+          </td>
+          <td class="option-input-column">
+            <ul id="option-link-body-classes" class="option-list">
+              <li class="option-list-item">
+                <input type="text" id="option-link-body-item-0" class="option-list-item-input" />
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="option-label-column">
+            <label for="option-link-arrow-classes">Link Arrow Classes</label><br>
+            <span class="add-row-button disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
+          </td>
+          <td class="option-input-column">
+            <ul id="option-link-arrow-classes" class="option-list">
+              <li class="option-list-item">
+                <input type="text" id="option-link-arrow-item-0" class="option-list-item-input" />
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="option-forobj-not-supported">Foreign Obj Not Supported Msg</label></td>
+          <td><input type="text" id="option-forobj-not-supported" /></td>
+        </tr>
+      </table>
+    </div>
+  
+    <div id="data-container" class="container-column">
+  
+      <h2>JSON Tree Data Input
+        <p>Paste either stringified JSON Tree data or a URL that links to your JSON</p>
+      </h2>
+      <textarea id="json-input"></textarea>
+  
+      <h2>Node-Body HTML Template
+        <p>Add the HTML template to be used for each node</p>
+      </h2>
+      <textarea id="html-template-input"></textarea>
+  
+    </div>
+  
     <div class="container-column">
-      <h2>Tree Output</h2>
-      <div id="tree-container"></div>
+  
+      <h2>JSON User Settings (Unformtatted String)
+        <p>This json string can be copied and passed into the function call as user settings to reproduce the manually configured tree.</p>
+      </h2>
+      <code>
+          <div id="compiled-options"></div>
+        </code>
+  
+      <h2>JSON User Settings (Formatted Object)
+        <p>This json string contains the above user-specified settings, formatted for human readability.</p>
+      </h2>
+      <pre>
+        <code id="json-formatted-options">
+        </code>
+      </pre>
+  
     </div>
   </div>
-
-  <div id="options-container" class="container-column">
-    <h2>Tree Options</h2>
-    <table>
-      <tr>
-        <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
-        <td><input type="text" id="option-tree-container-id" /></td>
-      </tr>
-      <tr>
-        <td><label for="option-child-node-name">Child Node JSON Name</label></td>
-        <td><input type="text" id="option-child-node-name" /></td>
-      </tr>
-      <tr>
-        <td><label for="tree-orientation">Tree Orientation</label></td>
-        <td class="options-module">
-            <input type="radio" name="tree-orientation" id="tree-orientation-0" value="0" />
-            <label for="tree-orientation-0">0 &#176</label><br>
-            <input type="radio" name="tree-orientation" id="tree-orientation-90" value="90" />
-            <label for="tree-orientation-90">90 &#176</label><br>
-            <input type="radio" name="tree-orientation" id="tree-orientation-180" value="180" />
-            <label for="tree-orientation-180">180 &#176</label><br>
-            <input type="radio" name="tree-orientation" id="tree-orientation-270" value="270" />
-            <label for="tree-orientation-270">270 &#176</label>
-        </td>
-      </tr>
-      <tr>
-        <td><label for="link-orientation">Link Orientation</label></td>
-        <td class="options-module">
-            <input type="radio" name="link-orientation" id="link-orientation-down" value="down" />
-            <label for="link-orientation-down">Down Tree</label><br>
-            <input type="radio" name="link-orientation" id="link-orientation-up" value="up" />
-            <label for="link-orientation-up">Up Tree</label>
-        </td>
-      </tr>
-      <tr>
-        <td><label for="option-link-strategy">Link Strategy</label></td>
-        <td class="options-module">
-            <input type="radio" name="option-link-strategy" id="option-link-strategy-elbow" value="elbow" />
-            <label for="option-link-strategy-elbow">Elbow Links</label><br>
-            <input type="radio" name="option-link-strategy" id="option-link-strategy-diag" value="diagonal" />
-            <label for="option-link-strategy-diag">Curved Links</label><br>
-        </td>
-      </tr>
-      <tr>
-        <td><label for="option-node-width">Node Width (px)</label></td>
-        <td><input type="text" id="option-node-width" /></td>
-      </tr>
-      <tr>
-        <td><label for="option-node-width">Node Height (px)</label></td>
-        <td><input type="text" id="option-node-height" /></td>
-      </tr>
-      <tr>
-        <td><label for="option-node-depth-spacing">Node Depth Spacing (px)</label></td>
-        <td><input type="text" id="option-node-depth-spacing" /></td>
-      </tr>
-      <tr>
-        <td><label for="option-node-sibling-spacing">Node Sibling Spacing (px)</label></td>
-        <td><input type="text" id="option-node-sibling-spacing" /></td>
-      </tr>
-      <tr>
-        <td class="option-label-column">
-          <label for="option-node-background-classes">Node Background Classes</label><br>
-          <span class="add-row-button disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
-        </td>
-        <td class="option-input-column">
-          <ul id="option-node-background-classes" class="option-list">
-            <li class="option-list-item">
-              <input type="text" id="option-node-background-item-0" class="option-list-item-input" />
-            </li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td class="option-label-column">
-          <label for="option-node-html-classes">Node HTML Template Classes</label><br>
-          <span class="add-row-button disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
-        </td>
-        <td class="option-input-column">
-          <ul id="option-node-html-classes" class="option-list">
-            <li class="option-list-item">
-              <input type="text" id="option-node-html-item-0" class="option-list-item-input" />
-            </li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td class="option-label-column">
-          <label for="option-link-body-classes">Link Body Classes</label><br>
-          <span class="add-row-button disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
-        </td>
-        <td class="option-input-column">
-          <ul id="option-link-body-classes" class="option-list">
-            <li class="option-list-item">
-              <input type="text" id="option-link-body-item-0" class="option-list-item-input" />
-            </li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td class="option-label-column">
-          <label for="option-link-arrow-classes">Link Arrow Classes</label><br>
-          <span class="add-row-button disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
-        </td>
-        <td class="option-input-column">
-          <ul id="option-link-arrow-classes" class="option-list">
-            <li class="option-list-item">
-              <input type="text" id="option-link-arrow-item-0" class="option-list-item-input" />
-            </li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td><label for="option-forobj-not-supported">Foreign Obj Not Supported Msg</label></td>
-        <td><input type="text" id="option-forobj-not-supported" /></td>
-      </tr>
-    </table>
-  </div>
-
-  <div id="data-container" class="container-column">
-
-    <h2>JSON Tree Data Input
-      <p>Paste either stringified JSON Tree data or a URL that links to your JSON</p>
-    </h2>
-    <textarea id="json-input"></textarea>
-
-    <h2>Node-Body HTML Template
-      <p>Add the HTML template to be used for each node</p>
-    </h2>
-    <textarea id="html-template-input"></textarea>
-
-  </div>
-
-  <div class="container-column">
-
-    <h2>JSON User Settings (Unformtatted String)
-      <p>This json string can be copied and passed into the function call as user settings to reproduce the manually configured tree.</p>
-    </h2>
-    <code>
-        <div id="compiled-options"></div>
-      </code>
-
-    <h2>JSON User Settings (Formatted Object)
-      <p>This json string contains the above user-specified settings, formatted for human readability.</p>
-    </h2>
-    <pre>
-      <code id="json-formatted-options">
-      </code>
-    </pre>
-
-  </div>
-
 </body>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
