@@ -121,7 +121,9 @@ table {
 
 /* Top Level Node HTML Container Styling */
 .node-html-container { 
-  padding: 5px; 
-  display: block;
+  padding: 2px; 
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
 }
 
