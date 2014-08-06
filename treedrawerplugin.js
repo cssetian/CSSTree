@@ -158,8 +158,9 @@
       treeSettings.LINK_CSS_CLASSES          = settings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
       treeSettings.ARROW_CSS_CLASSES         = settings.arrowClasses;             // Any classes to be added onto the link arrows at the end of each link
       treeSettings.D3_NOT_SUPPORTED_MSG      = settings.notSupportedMessage;      // Message to be displayed when d3 is not supported by the user's browser
-      treeSettings.ROTATION_ANGLE_DEGREES    = settings.treeOrientation;
+      treeSettings.TREE_ORIENTATION          = settings.treeOrientation;
       treeSettings.LINK_STRATEGY             = settings.linkStrategy;
+      treeSettings.LINK_ORIENTATION          = settings.linkOrientation;
 
       console.log('Completed constant initialization');
       return treeSettings;
@@ -169,11 +170,20 @@
       console.log('Beginning to add calculated settings');
 
       // Calculates the rotation angle in radians for the tree, with an angle of 0 having a downward direction
-      settings.ROTATION_ANGLE_RADIANS    = settings.ROTATION_ANGLE_DEGREES * (Math.PI / 180);
+      settings.ROTATION_ANGLE_RADIANS    = settings.TREE_ORIENTATION * (Math.PI / 180);
 
       // Calculates the sin and cos of the rotation angle for various projection calculations throughout the function
-      settings.SIN_R                     = Math.round(Math.sin(settings.ROTATION_ANGLE_RADIANS));
-      settings.COS_R                     = Math.round(Math.cos(settings.ROTATION_ANGLE_RADIANS));
+      settings.SIN_R = Math.round(Math.sin(settings.ROTATION_ANGLE_RADIANS));
+      settings.COS_R = Math.round(Math.cos(settings.ROTATION_ANGLE_RADIANS));
+
+      settings.NODE_X_ANCHOR  = Math.abs(settings.SIN_R) * (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
+                                  Math.abs(settings.COS_R) * (settings.COS_R * (settings.NODE_WIDTH  / 2));
+
+      settings.NODE_Y_SOURCE_ANCHOR  = Math.abs(settings.SIN_R) * ( (settings.NODE_WIDTH  / 2) + (settings.SIN_R * (settings.NODE_WIDTH  / 2)) ) +
+                                  Math.abs(settings.COS_R) * ( (settings.NODE_HEIGHT / 2) + (settings.COS_R * (settings.NODE_HEIGHT / 2)) );
+
+      settings.NODE_Y_TARGET_ANCHOR  = Math.abs(settings.SIN_R) * ( -1 * (settings.NODE_WIDTH  / 2) + (settings.SIN_R * (settings.NODE_WIDTH  / 2)) ) +
+                                  Math.abs(settings.COS_R) * ( -1 * (settings.NODE_HEIGHT / 2) + (settings.COS_R * (settings.NODE_HEIGHT / 2)) );
 
       // The H/W ratio via H_W_RATIO scales so that it always results in d3ParsedNodes being adjacent when horizontal spacing is 0.
       settings.H_W_RATIO = (settings.NODE_HEIGHT / settings.NODE_WIDTH);
@@ -397,7 +407,7 @@
             var containerHeight = settings.TREE_CONTAINER_HEIGHT;
             var w = settings.NODE_WIDTH;
             var h = settings.NODE_HEIGHT;
-            var dS = settings.ROTATION_ANGLE_DEGREES;
+            var dS = settings.TREE_ORIENTATION;
             var dT = dS + 180;
 
             var xRootOffset = settings.ROOT_X_OFFSET;
@@ -523,23 +533,28 @@
           // Link Source, 90 Degrees  - Right Middle of Node
           // Link Source, 180 Degrees - Top Middle of Node
           // Link Source, 270 Degrees - Left Middle of Node
-          var xAnchor =  Math.abs(settings.SIN_R) * (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
-                          Math.abs(settings.COS_R) * (settings.COS_R * (settings.NODE_WIDTH  / 2));
-          var yAnchor =  Math.abs(settings.SIN_R) * ((settings.NODE_WIDTH  / 2) + (settings.SIN_R * (settings.NODE_WIDTH  / 2))) +
-                          Math.abs(settings.COS_R) * ((settings.NODE_HEIGHT / 2) + (settings.COS_R * (settings.NODE_HEIGHT / 2)));
-          return { x: (d.source.x + xAnchor), y: (d.source.y + yAnchor) };
+
+          if(settings.LINK_ORIENTATION === 'down') {
+            return { x: (d.source.x + settings.NODE_X_ANCHOR), y: (d.source.y + settings.NODE_Y_SOURCE_ANCHOR) };
+          } else {
+            return { x: (d.target.x + settings.NODE_X_ANCHOR), y: (d.target.y + settings.NODE_Y_TARGET_ANCHOR) };
+          }
+          
         })
         .target(function (d) {
           // Link Target, 0 Degrees   - Top Middle of Node
           // Link Target, 90 Degrees  - Left Middle of Node
           // Link Target, 180 Degrees - Bottom Middle of Node
           // Link Target, 270 Degrees - Right Middle of Node
-          var xAnchor =  Math.abs(settings.SIN_R) * (settings.SIN_R * (settings.NODE_HEIGHT / 2)) +
-                          Math.abs(settings.COS_R) * (settings.COS_R * (settings.NODE_WIDTH  / 2));
-          var yAnchor =  Math.abs(settings.SIN_R) * (-1 * (settings.NODE_WIDTH  / 2) + (settings.SIN_R * (settings.NODE_WIDTH  / 2))) +
-                          Math.abs(settings.COS_R) * (-1 * (settings.NODE_HEIGHT / 2) + (settings.COS_R * (settings.NODE_HEIGHT / 2)));
-          return { x: (d.target.x + xAnchor), y: (d.target.y + yAnchor) };
+          
+          if(settings.LINK_ORIENTATION === 'down') {
+            return { x: (d.target.x + settings.NODE_X_ANCHOR), y: (d.target.y + settings.NODE_Y_TARGET_ANCHOR) };
+          } else {
+            return { x: (d.source.x + settings.NODE_X_ANCHOR), y: (d.source.y + settings.NODE_Y_SOURCE_ANCHOR) };
+          }
+
         });
+      
     },
     /***********************************************************************************/
 

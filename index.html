@@ -9,11 +9,32 @@
 </head>
 
 <body>
-  
+  <h1>Tree Drawer Demo Site</h1>
+
   <div id="actions-container">
-    <button type="button" class="action-button" id="json-text-button" onclick="loadStringData()">Draw Tree with JSON In Text Box</button>
-    <button type="button" class="action-button" id="json-url-button" onclick="loadRemoteData()">Draw Tree With JSON From URL</button>
-    <button type="button" class="action-button" id="json-default-button" onclick="loadDefaultData()">Draw Tree With Default Plugin Data</button>
+    <button type="button" class="action-button" id="draw-tree-button" onclick="drawTreeOnPage()">Draw Tree</button>
+    <button type="button" class="action-button" id="json-text-button" onclick="drawSettings()">Refresh Settings Displayed</button>
+  </div>
+
+  <div class="actions-options">
+    <div class="container-column">
+      <h2>Choose Settings Source</h2>
+      <div class="options-module">
+        <input type="radio" name="settings-source" id="settings-source-0" value="default" checked />
+        <label for="settings-source-0">Default Settings</label><br>
+        <input type="radio" name="settings-source" id="settings-source-1" value="user" />
+        <label for="settings-source-1">User Selected Settings</label>
+      </div>
+    </div>
+    <div class="container-column">
+      <h2>Choose Data Source</h2>
+      <div class="options-module">
+        <input type="radio" name="data-source" id="data-source-0" value="default" checked />
+        <label for="data-source-0">Default Data</label><br>
+        <input type="radio" name="data-source" id="data-source-1" value="user" />
+        <label for="data-source-1">User Input Data</label>
+      </div>
+    </div>
   </div>
 
   <div class="output-container">
@@ -36,22 +57,22 @@
         <td><label for="tree-orientation">Tree Orientation</label></td>
         <td class="options-module">
             <input type="radio" name="tree-orientation" id="tree-orientation-0" value="0" />
-            <label for="tree-orientation-0">0 Degrees</label><br>
+            <label for="tree-orientation-0">0 &#176</label><br>
             <input type="radio" name="tree-orientation" id="tree-orientation-90" value="90" />
-            <label for="tree-orientation-90">90 Degrees</label><br>
+            <label for="tree-orientation-90">90 &#176</label><br>
             <input type="radio" name="tree-orientation" id="tree-orientation-180" value="180" />
-            <label for="tree-orientation-180">180 Degrees</label><br>
+            <label for="tree-orientation-180">180 &#176</label><br>
             <input type="radio" name="tree-orientation" id="tree-orientation-270" value="270" />
-            <label for="tree-orientation-270">270 Degrees</label><br>
+            <label for="tree-orientation-270">270 &#176</label>
         </td>
       </tr>
       <tr>
         <td><label for="link-orientation">Link Orientation</label></td>
         <td class="options-module">
             <input type="radio" name="link-orientation" id="link-orientation-down" value="down" />
-            <label for="link-orientation-down">180 Degrees</label><br>
+            <label for="link-orientation-down">Down Tree</label><br>
             <input type="radio" name="link-orientation" id="link-orientation-up" value="up" />
-            <label for="link-orientation-up">270 Degrees</label><br>
+            <label for="link-orientation-up">Up Tree</label>
         </td>
       </tr>
       <tr>
@@ -152,17 +173,17 @@
 
   </div>
 
-  <div class="output-container">
+  <div class="output-container container-column">
 
-    <h2>JSON User Options (Unformtatted String)
-      <p>This json string can be copied and passed into the function call as user options to reproduce the manually configured tree.</p>
+    <h2>JSON User Settings (Unformtatted String)
+      <p>This json string can be copied and passed into the function call as user settings to reproduce the manually configured tree.</p>
     </h2>
     <code>
         <div id="compiled-options"></div>
       </code>
 
-    <h2>JSON User Options (Formatted Object)
-      <p>This json string contains the above user-specified options, formatted for human readability.</p>
+    <h2>JSON User Settings (Formatted Object)
+      <p>This json string contains the above user-specified settings, formatted for human readability.</p>
     </h2>
     <pre>
       <code id="json-formatted-options">
@@ -180,30 +201,49 @@
 
 <script type="text/javascript">
 
+  var buildSettings = function() {
+    var userSettings;
 
-  var loadStringData = function() {
-    var userInput = buildOptions();
+    if($("input:radio[name='settings-source']:checked").val() === "default") {
+      userSettings = buildDefaultSettings();
+    } else {
+      userSettings = buildUserSettings();
+    }
+
+    return userSettings;
+  };
+
+  var refreshSettingsEls = function(settings) {
+    $('#compiled-options').text('');
+    $('#json-formatted-options').text('');
+    $('#compiled-options').text(JSON.stringify(settings));
+    $('#json-formatted-options').text(JSON.stringify(settings, undefined, 2));
+  };
+
+  var drawSettings = function() {
+    var settings = buildSettings();
+    refreshSettingsEls(settings);
+
+    return settings;
+  };
+
+  var drawTreeOnPage = function() {
+    var userSettings;
+
+    userSettings = drawSettings();
+
+    if ($("input:radio[name='data-source']:checked").val() !== "default" && $("#json-input").val() !== "") {
+      userSettings.node = $("#json-input").val();
+    }
 
     $('#tree-container').text('');
-    $('#compiled-options').text(JSON.stringify(userInput));
-    $('#json-formatted-options').text(JSON.stringify(userInput, undefined, 2));
-    
-    $('#tree-container').html('');
-    $('#tree-container').drawTree(userInput);
+    $('#tree-container').drawTree(userSettings);
   };
 
-  var loadRemoteData = function(url) {
-    alert('not implemented yet!');
-  };
-
-  var loadDefaultData = function() {
-
-    $('#compiled-options').text(JSON.stringify({}));
-
-    $('#tree-container').html('');
-    $('#tree-container').drawTree({});
-  };
-
+  // Add a click event to each addRow button
+  //    - Adds a new element to the text input list
+  //    - Each item in group included when compiling settings
+  //    - When options are compiled, all empty boxes are ignored
   $(".add-row-button").click(function(e) {
     var self = this;
     var ul = $(self.dataset.listid);
@@ -217,10 +257,6 @@
 
     li.appendChild(input);
     ul.append(li);
-  });
-
-  $('.disableDblClick').bind('dblclick',function(e){
-    e.preventDefault();
   });
 
   var buildClassArray = function(listId) {
@@ -239,55 +275,87 @@
     return outputList;
   }
 
-  var buildOptions = function() {
-    var builtOptions = {};
+  var buildUserSettings = function() {
+    var settings = {};
     
-    if ($("#option-tree-container-id").val() !== "") builtOptions.childNodeName = $("#option-tree-container-id").val();
-    if ($("#option-child-node-name").val() !== "") builtOptions.childNodeName = $("#option-child-node-name").val();
+    if ($("#option-tree-container-id").val() !== "") settings.childNodeName = $("#option-tree-container-id").val();
+    if ($("#option-child-node-name").val() !== "") settings.childNodeName = $("#option-child-node-name").val();
    
-    if ($("input:radio[name='tree-orientation']:checked").val()) builtOptions.treeOrientation = parseInt($("input:radio[name='tree-orientation']:checked").val());
-    if ($("input:radio[name='link-orientation']:checked").val()) builtOptions.linkOrientation = parseInt($("input:radio[name='link-orientation']:checked").val());
-    if ($("input:radio[name='option-link-strategy']:checked").val()) builtOptions.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
+    if ($("input:radio[name='tree-orientation']:checked").val()) settings.treeOrientation = parseInt($("input:radio[name='tree-orientation']:checked").val());
+    if ($("input:radio[name='link-orientation']:checked").val()) settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
+    if ($("input:radio[name='option-link-strategy']:checked").val()) settings.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
     
     if ($("#option-node-width").val() !== "") {
-      if(!builtOptions.nodeSizing) {
-        builtOptions.nodeSizing = {};
+      if(!settings.nodeSizing) {
+        settings.nodeSizing = {};
       }
-      builtOptions.nodeSizing.width = parseInt($("#option-node-width").val());
+      settings.nodeSizing.width = parseInt($("#option-node-width").val());
     }
     if ( $("#option-node-height").val() !== "" ) {
-      if ( !builtOptions.nodeSizing ) {
-        builtOptions.nodeSizing = {};
+      if ( !settings.nodeSizing ) {
+        settings.nodeSizing = {};
       }
-      builtOptions.nodeSizing.height = parseInt($("#option-node-height").val());
+      settings.nodeSizing.height = parseInt($("#option-node-height").val());
     }
     if ( $("#option-node-depth-spacing").val() !== "" ) {
-      if ( !builtOptions.nodeSpacing ) {
-        builtOptions.nodeSpacing = {};
+      if ( !settings.nodeSpacing ) {
+        settings.nodeSpacing = {};
       }
-      builtOptions.nodeSpacing.level = parseInt($("#option-node-depth-spacing").val());
+      settings.nodeSpacing.level = parseInt($("#option-node-depth-spacing").val());
     }
     if ( $("#option-node-sibling-spacing").val() !== "" ) {
-      if( !builtOptions.nodeSpacing ) {
-        builtOptions.nodeSpacing = {};
+      if( !settings.nodeSpacing ) {
+        settings.nodeSpacing = {};
       }
-      builtOptions.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
+      settings.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
     }
 
-    builtOptions.nodeBkndClasses = buildClassArray("option-node-background-classes");
-    builtOptions.nodeHTMLClasses = buildClassArray("option-node-html-classes");
-    builtOptions.linkClasses = buildClassArray("option-link-body-classes");
-    builtOptions.arrowClasses = buildClassArray("option-link-arrow-classes");
-    if (builtOptions.nodeBkndClasses.length === 0) { delete builtOptions.nodeBkndClasses; }
-    if (builtOptions.nodeHTMLClasses.length === 0) { delete builtOptions.nodeHTMLClasses; }
-    if (builtOptions.linkClasses.length === 0) { delete builtOptions.linkClasses; }
-    if (builtOptions.arrowClasses.length === 0) { delete builtOptions.arrowClasses; }
+    settings.nodeBkndClasses = buildClassArray("option-node-background-classes");
+    settings.nodeHTMLClasses = buildClassArray("option-node-html-classes");
+    settings.linkClasses = buildClassArray("option-link-body-classes");
+    settings.arrowClasses = buildClassArray("option-link-arrow-classes");
+    if (settings.nodeBkndClasses.length === 0) { delete settings.nodeBkndClasses; }
+    if (settings.nodeHTMLClasses.length === 0) { delete settings.nodeHTMLClasses; }
+    if (settings.linkClasses.length === 0) { delete settings.linkClasses; }
+    if (settings.arrowClasses.length === 0) { delete settings.arrowClasses; }
 
-    if ($("#option-forobj-not-supported").val() !== "") builtOptions.notSupportedMessage = $("#option-forobj-not-supported").val();
-    if ($("#html-template-input").val() !== "") builtOptions.nodeHTMLTemplate = $("#html-template-input").val();
-    if ($("#json-input").val() !== "") builtOptions.node = $("#json-input").val();
+    if ($("#option-forobj-not-supported").val() !== "") settings.notSupportedMessage = $("#option-forobj-not-supported").val();
+    if ($("#html-template-input").val() !== "") settings.nodeHTMLTemplate = $("#html-template-input").val();
 
-    return builtOptions;
+    return settings;
+  };
+
+  var buildDefaultSettings = function() {
+    var defaultSettings = {
+      treeContainerId: '#tree-container',
+      treeOrientation: 0,
+      linkOrientation: 'down',
+      childNodeName: 'node',
+      linkStrategy: 'elbow',
+      nodeSizing: {
+        width: 20,
+        height: 20
+      },
+      nodeSpacing: {
+        level: 20,
+        span: 20
+      },
+      nodeBkndClasses: [],
+      nodeHTMLClasses: [],
+      linkClasses: [],
+      arrowClasses: [],
+      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
+      nodeHTMLTemplate: function (d) {
+        return '<div id="node-template">' + d.dataValue + '</div>';
+      }
+    };
+
+    defaultSettings.nodeBkndClasses.push('node-background');
+    defaultSettings.nodeHTMLClasses.push('node-html-container');
+    defaultSettings.linkClasses.push('link-html-container');
+    defaultSettings.arrowClasses.push('arrow-html-container');
+
+    return defaultSettings;
   };
 
 </script>
