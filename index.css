@@ -24,18 +24,41 @@ textarea {
   box-sizing: border-box;
 }
 
-/* Dynamically resize the containers, but overflow when below 300px */
-.container-column  {
-  display: inline-block;
-  vertical-align: top;
-  max-width: 100%;
-  min-width: 300px;
-  margin: 10px;
+.main-container {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
 
+.container-column {
+  width: 100%;
+  vertical-align: top;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
+@media (min-width: 800px) {
+  /* Dynamically resize the containers, but overflow when below 300px */
+  .container-column  {
+    display: inline-block;
+    vertical-align: top;
+    max-width: 100%;
+    min-width: 300px;
+    margin: 10px;
+  
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+}
+
+@media (min-width: 800px) {
+  .main-container {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 /* Set size of the JSON input textarea */
 #json-input {
   height: 100px;
