@@ -23,13 +23,12 @@ table {
 .container-column  {
   display: inline-block;
   vertical-align: top;
-  width: 30%;
+  max-width: 100%;
   min-width: 300px;
   margin: 10px;
-}
 
-.output-container {
-  margin: 10px;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 
 /* Set size of the JSON input textarea */
@@ -90,6 +89,16 @@ table {
   padding-left: 0px;
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+#compiled-options {
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+#json-formatted-options {
+  width: 100%;
+  overflow-wrap: break-word;
 }
 
 /***************** Custom Tree Styling For Demo ****************/
