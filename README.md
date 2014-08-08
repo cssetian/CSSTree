@@ -22,8 +22,6 @@ USAGE
 
 STILL TODO
 ------------
-* Wire up inputs to the tree options on the example page
-* Design example page so that all tree options can be specified, and then extracted into a JSON string that can be copy/pasted into implementing code for easy tree customization
 * Better reduce the CSS class specifications into a number of descriptive, necessary classes that encompass all use cases
 * Add more link types
 * With the diagonal link type, define the link arrow header markers such that they are aligned to the angle of the diagonal
