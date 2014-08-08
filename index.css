@@ -1,9 +1,4 @@
 /******************* Demo Page Styling *********************/
-
-body {
-  font-family: sans-serif;
-}
-
 h2 {
   margin-bottom: 5px;
 }
@@ -15,13 +10,19 @@ p {
   font-weight: normal;
 }
 
-table {
-  border-spacing: 10px;
+body {
+  font-family: sans-serif;
+  padding-top: 100px;
 }
 
-textarea {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+@media (min-width: 768px) {
+  body {
+    padding-top: 50px;
+  }
+}
+
+.navbar li {
+  float: none;
 }
 
 .main-container {
@@ -31,74 +32,20 @@ textarea {
     flex-flow: row wrap;
 }
 
-.container-column {
-  width: 100%;
-  vertical-align: top;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-@media (min-width: 800px) {
-  /* Dynamically resize the containers, but overflow when below 300px */
-  .container-column  {
-    display: inline-block;
-    vertical-align: top;
-    max-width: 100%;
-    min-width: 300px;
-    margin: 10px;
-  
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-}
-
-@media (min-width: 800px) {
+@media (min-width: 1000px) {
   .main-container {
-    width: 800px;
+    width: 1000px;
     margin-left: auto;
     margin-right: auto;
   }
+
 }
-
-
-/* Nav Bar */
-#nav {display: block; text-align: left; line-height: 1.6;}
-#nav ul{margin:0;width: 100%;}
-#nav ul li { float: left; width: 25%; margin-right: 0; list-style-type: none;}
-#nav ul li:last-child, #nav ul li#search-link{margin-right: 0;}
-#nav ul li a {padding: 1em 0;}
-#nav a {color: #3a3a3a; text-decoration: none; display: inline-block;}
-#nav a:hover {color: #EE4938;}
-#nav .draw-tree {width: 30%;}
-#nav .draw-tree a{margin-left: 0.5%;}
-#nav .draw-json {width: 24%;}
-/* End Nav Bar */
 
 /* Set size of the JSON input textarea */
-#json-input {
+.textarea-input {
   height: 100px;
   width: 100%;
-  text-overflow: wrap;
-}
-
-/* Set size of the HTML Template input textarea */
-#html-template-input {
-  height: 100px;
-  width: 100%;
-  text-overflow: wrap;
-}
-
-/* Apply a fixed sizing to the demo nodes */
-#legend-container .node {
-  width: 200px;
-  height: 100px;
-  display: inline-block;
-}
-
-#legend-container .root-node {
-  width: 200px;
-  height: 100px;
-  display: inline-block;
+  box-sizing: border-box;
 }
 
 .add-row-button {
@@ -113,34 +60,18 @@ textarea {
   user-select: none;
 }
 
-.action-button {
-  margin: 5px;
-  width: 225px;
-}
-
-
-.option-label-column {
-  vertical-align: top;
-}
-
-.option-input-column {
-  vertical-align: top;
-}
-
 .option-list {
   list-style-type: none;
-  padding-left: 0px;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
-#compiled-options {
-  width: 100%;
-  overflow-wrap: break-word;
+.option-list-item {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
-#json-formatted-options {
-  width: 100%;
+.code-container {
   overflow-wrap: break-word;
 }
 

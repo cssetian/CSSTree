@@ -5,27 +5,30 @@
   <title>
   Tree Drawer Tester
   </title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
   <link rel="stylesheet" type="text/css" href="index.css" />
 </head>
 
 <body>
-  <div id="nav">
-    <ul>
-      <li class="draw-tree-button">
-        <a href="javascript:void(0)" class="action-button draw-tree" id="draw-tree-button" onclick="drawTreeOnPage()">Draw Tree</a>
-        <a href="javascript:void(0)" class="action-button draw-json" id="json-text-button" onclick="drawSettings()">Refresh Settings Displayed</a>
-      </li>
-    </ul>
-  </div>
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <ul class="nav nav-justified navbar-nav">
+        <li class="">
+          <a href="javascript:void(0)" id="draw-tree-button" onclick="drawTreeOnPage()">Draw Tree</a>
+        </li>
+        <li class="">
+          <a href="javascript:void(0)" id="json-text-button" onclick="drawSettings()">Refresh Settings Displayed</a>
+        </li>
+      </ul>
+    <div>
+  </nav>
   <div role="main" class="main-container">
-    <h1>Tree Drawer Demo Site</h1>
-    <div id="actions-container">
-      <button type="button" class="action-button" id="draw-tree-button-old" onclick="drawTreeOnPage()">Draw Tree</button>
-      <button type="button" class="action-button" id="json-text-button-old" onclick="drawSettings()">Refresh Settings Displayed</button>
-    </div>
+    <h1 class="col-md-12 col-sm-12 col-xs-12">Tree Drawer Demo Site</h1>
   
-    <div class="actions-options">
-      <div class="container-column">
+      <div class="col-md-6">
         <h2>Choose Settings Source</h2>
         <div class="options-module">
           <input type="radio" name="settings-source" id="settings-source-0" value="default" checked />
@@ -34,7 +37,7 @@
           <label for="settings-source-1">User Selected Settings</label>
         </div>
       </div>
-      <div class="container-column">
+      <div class="col-md-6">
         <h2>Choose Data Source</h2>
         <div class="options-module">
           <input type="radio" name="data-source" id="data-source-0" value="default" checked />
@@ -43,18 +46,15 @@
           <label for="data-source-1">User Input Data</label>
         </div>
       </div>
-    </div>
   
-    <div class="tree-output">
-      <div class="container-column">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <h2>Tree Output</h2>
         <div id="tree-container"></div>
       </div>
-    </div>
   
-    <div id="options-container" class="container-column">
-      <h2>Tree Options</h2>
-      <table>
+    <div id="options-container" class="col-xs-12 col-sm-12 col-md-12">
+      <h2>Tree Settings</h2>
+      <table class="table">
         <tr>
           <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
           <td><input type="text" id="option-tree-container-id" /></td>
@@ -169,34 +169,37 @@
       </table>
     </div>
   
-    <div id="data-container" class="container-column">
-  
+    <div id="data-container" class="col-xs-12 col-sm-6 col-md-6 data-container">
       <h2>JSON Tree Data Input
-        <p>Paste either stringified JSON Tree data or a URL that links to your JSON</p>
+        <p>Add either stringified JSON data or a URL that links to your JSON</p>
       </h2>
-      <textarea id="json-input"></textarea>
-  
-      <h2>Node-Body HTML Template
+      <textarea class="textarea-input"></textarea>
+
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 data-container">
+      <h2>Node HTML Template
         <p>Add the HTML template to be used for each node</p>
       </h2>
-      <textarea id="html-template-input"></textarea>
+      <textarea class="textarea-input"></textarea>
   
     </div>
   
-    <div class="container-column">
-  
+    <div class="col-xs-12 col-sm-6 col-md-6">
       <h2>JSON User Settings (Unformtatted String)
         <p>This json string can be copied and passed into the function call as user settings to reproduce the manually configured tree.</p>
       </h2>
-      <code>
-          <div id="compiled-options"></div>
+      <pre>
+        <code id="compiled-options" class="code-container">
         </code>
-  
+      </pre>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6">
       <h2>JSON User Settings (Formatted Object)
         <p>This json string contains the above user-specified settings, formatted for human readability.</p>
       </h2>
       <pre>
-        <code id="json-formatted-options">
+        <code id="json-formatted-options" class="code-container">
         </code>
       </pre>
   
