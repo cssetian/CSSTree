@@ -186,7 +186,7 @@
   
     <div class="col-xs-12 col-sm-6 col-md-6">
       <h2>JSON User Settings (Unformtatted String)
-        <p>This json string can be copied and passed into the function call as user settings to reproduce the manually configured tree.</p>
+        <p>This unformatted json string can be copied and passed into the function call as user settings to reproduce the manually configured tree.</p>
       </h2>
       <pre>
         <code id="compiled-options" class="code-container">
@@ -331,10 +331,13 @@
       settings.nodeSpacing.span = parseInt($.trim($("#option-node-sibling-spacing").val()));
     }
 
+    // Build class lists from groups of list entries 
     settings.nodeBkndClasses = buildClassArray("option-node-background-classes");
     settings.nodeHTMLClasses = buildClassArray("option-node-html-classes");
     settings.linkClasses = buildClassArray("option-link-body-classes");
     settings.arrowClasses = buildClassArray("option-link-arrow-classes");
+
+    // Delete a class list if no text is added by the user
     if (settings.nodeBkndClasses.length === 0) { delete settings.nodeBkndClasses; }
     if (settings.nodeHTMLClasses.length === 0) { delete settings.nodeHTMLClasses; }
     if (settings.linkClasses.length === 0) { delete settings.linkClasses; }
