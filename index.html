@@ -278,12 +278,10 @@
     for(var i = 0; i < listItemsEl.length; i++) {
       var listItemEl = listItemsEl[i];
       var itemInputEl = listItemEl.getElementsByTagName('input')[0];
-      var listItemValue = itemInputEl.value;
-
+      var listItemValue = $.trim(itemInputEl.value);
       if(listItemValue !== "") {
         outputList.push(listItemValue);
       }
-
     }
     return outputList;
   }
@@ -291,36 +289,46 @@
   var buildUserSettings = function() {
     var settings = {};
     
-    if ($("#option-tree-container-id").val() !== "") settings.childNodeName = $("#option-tree-container-id").val();
-    if ($("#option-child-node-name").val() !== "") settings.childNodeName = $("#option-child-node-name").val();
+    if ($.trim($("#option-tree-container-id").val()) !== "") { 
+      settings.childNodeName = $.trim($("#option-tree-container-id").val()); 
+    }
+    if ($.trim($("#option-child-node-name").val()) !== "") { 
+      settings.childNodeName = $.trim($("#option-child-node-name").val()); 
+    }
    
-    if ($("input:radio[name='tree-orientation']:checked").val()) settings.treeOrientation = parseInt($("input:radio[name='tree-orientation']:checked").val());
-    if ($("input:radio[name='link-orientation']:checked").val()) settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
-    if ($("input:radio[name='option-link-strategy']:checked").val()) settings.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val();
+    if ($("input:radio[name='tree-orientation']:checked").val()) { 
+      settings.treeOrientation = parseInt($("input:radio[name='tree-orientation']:checked").val()); 
+    }
+    if ($("input:radio[name='link-orientation']:checked").val()) { 
+      settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val(); 
+    }
+    if ($("input:radio[name='option-link-strategy']:checked").val()) { 
+      settings.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val(); 
+    }
     
-    if ($("#option-node-width").val() !== "") {
+    if ($.trim($("#option-node-width").val()) !== "") {
       if(!settings.nodeSizing) {
         settings.nodeSizing = {};
       }
-      settings.nodeSizing.width = parseInt($("#option-node-width").val());
+      settings.nodeSizing.width = parseInt($.trim($("#option-node-width").val()));
     }
-    if ( $("#option-node-height").val() !== "" ) {
+    if ($.trim($("#option-node-height").val()) !== "" ) {
       if ( !settings.nodeSizing ) {
         settings.nodeSizing = {};
       }
-      settings.nodeSizing.height = parseInt($("#option-node-height").val());
+      settings.nodeSizing.height = parseInt($.trim($("#option-node-height").val()));
     }
-    if ( $("#option-node-depth-spacing").val() !== "" ) {
+    if ( $.trim($("#option-node-depth-spacing").val()) !== "" ) {
       if ( !settings.nodeSpacing ) {
         settings.nodeSpacing = {};
       }
-      settings.nodeSpacing.level = parseInt($("#option-node-depth-spacing").val());
+      settings.nodeSpacing.level = parseInt($.trim($("#option-node-depth-spacing").val()));
     }
-    if ( $("#option-node-sibling-spacing").val() !== "" ) {
+    if ( $.trim($("#option-node-sibling-spacing").val()) !== "" ) {
       if( !settings.nodeSpacing ) {
         settings.nodeSpacing = {};
       }
-      settings.nodeSpacing.span = parseInt($("#option-node-sibling-spacing").val());
+      settings.nodeSpacing.span = parseInt($.trim($("#option-node-sibling-spacing").val()));
     }
 
     settings.nodeBkndClasses = buildClassArray("option-node-background-classes");
@@ -332,8 +340,8 @@
     if (settings.linkClasses.length === 0) { delete settings.linkClasses; }
     if (settings.arrowClasses.length === 0) { delete settings.arrowClasses; }
 
-    if ($("#option-forobj-not-supported").val() !== "") settings.notSupportedMessage = $("#option-forobj-not-supported").val();
-    if ($("#html-template-input").val() !== "") settings.nodeHTMLTemplate = $("#html-template-input").val();
+    if ($.trim($("#option-forobj-not-supported").val()) !== "") settings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val());
+    if ($.trim($("#html-template-input").val()) !== "") settings.nodeHTMLTemplate = $.trim($("#html-template-input").val());
 
     return settings;
   };
