@@ -2,7 +2,7 @@ Generic Tree-Drawer
 ===================
 This plugin is designed to take a JSON formatted tree of data and create a visual representation using a customization of the tree layout in d3.js. 
 
-The benefit of this particular implementation is that it-
+The benefit of this particular implementation is that it
 
 1.  Extracted a number of different options into configurable settings
 2.  Allows the user to inject a generic HTML template into each node
