@@ -6,7 +6,7 @@ The benefit of this particular implementation is that it
 
 1.  Extracted a number of different options into configurable settings
 2.  Allows the user to inject a generic HTML template into each node
-3.  The HTML template function is passed the JSON data object for each node in the tree as a parameter, and is used to inject the unique data into the template of each node.
+3.  Passes the JSON data object as a parameter to the HTML template function of each node in the tree, and is used to inject data from the tree data structure into the node templates.
 
 The Demo Site included gives users the ability to configure speicfic settings and customize the tree. The user can define a root HTML element, height, width, and template for each node of the tree, and additionally include any number of classes to customize the node backgrounds, node templates, link body elements, and link arrow elements. This plugin will then compile these options and display both a formatted and unformatted JSON object for viewing and copying. The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The element container will automatically expand to a size that is determined by an aggregation of the node size, node spacing, and general structure of the data tree. 
 
