@@ -24,30 +24,30 @@
       arrowClasses: [],
       notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
       nodeHTMLTemplate: function (d) {
-        return '<div id="node-template">' + d.dataValue + '</div>';
+        return '<div id="node-template">' + d.data + '</div>';
       },
       node: {
-        dataValue: '1',
+        data: '1',
         node: [{
-          dataValue: '2',
+          data: '2',
           node: [{
-            dataValue: '5'
+            data: '5'
           }, {
-            dataValue: '6'
+            data: '6'
           }]
         }, {
-          dataValue: '3'
+          data: '3'
         }, {
-          dataValue: '4',
+          data: '4',
           node: [{
-            dataValue: '7',
+            data: '7',
             node: [{
-              dataValue: '10'
+              data: '10'
             }]
           }, {
-            dataValue: '8'
+            data: '8'
           }, {
-            dataValue: '9'
+            data: '9'
           }]
         }]
       }

@@ -109,6 +109,10 @@ body {
   margin-bottom: 5px;
 }
 
+.output-container {
+  min-height: 50px;
+}
+
 .code-container {
   overflow-wrap: break-word;
 }
