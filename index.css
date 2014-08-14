@@ -10,10 +10,17 @@ h2 {
   font-size: 24px;
   font-weight: bold;
 }
+
 p {
+  margin-top: 5px;
   font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
 }
+
 body {
+  font-family: sans-serif;
+  padding-top: 100px;
   font-size: 12px;
 }
 
@@ -36,21 +43,10 @@ li>a {
   body {
     font-size: 1vw;
   }
-}
 
-h2 {
-  margin-bottom: 5px;
 }
-p {
-  margin-top: 5px;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: normal;
-}
-
-body {
-  font-family: sans-serif;
-  padding-top: 100px;
+.col-xs-12 > .header-with-desc {
+  min-height: 80px;
 }
 
 @media (min-width: 768px) {
@@ -116,6 +112,7 @@ body {
 .code-container {
   overflow-wrap: break-word;
 }
+
 
 /***************** Custom Tree Styling For Demo ****************/
 /* Node Styling */

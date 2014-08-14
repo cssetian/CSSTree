@@ -9,6 +9,7 @@
       treeOrientation: 0,
       linkOrientation: 'down',
       childNodeName: 'node',
+      nodeDataName: 'data',
       linkStrategy: 'elbow',
       nodeSizing: {
         width: 20,
@@ -581,7 +582,7 @@
           .attr('width', settings.TREE_CONTAINER_WIDTH + settings.G_EL_TREE_PADDING)
           .attr('height', settings.TREE_CONTAINER_HEIGHT + settings.G_EL_TREE_PADDING)
         .append('g')
-          .attr('id', 'tree-container');
+          .attr('id', 'tree-container-g');
 
       console.log('Completed construction of the SVG container that contains the tree layout');
       return svgContainer;

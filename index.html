@@ -76,8 +76,12 @@
           <td><input type="text" id="option-tree-container-id" /></td>
         </tr>
         <tr>
-          <td><label for="option-child-node-name">Child Node JSON Name</label></td>
+          <td><label for="option-child-node-name">Child Node Prop Name</label></td>
           <td><input type="text" id="option-child-node-name" /></td>
+        </tr>
+        <tr>
+          <td><label for="option-node-data-name">Node Data Prop Name</label></td>
+          <td><input type="text" id="option-node-data-name" /></td>
         </tr>
         <tr>
           <td><label for="tree-orientation">Tree Orientation</label></td>
@@ -219,56 +223,58 @@
   
     <div id="data-container" class="col-xs-12 col-sm-6 col-md-6 data-container">
       <h3>JSON Tree Data Input
-        <p>Add either stringified JSON data or a URL that links to your JSON</p>
+        <p>Add either stringified JSON data or a URL that links to your JSON. Example Data: 
+          <pre><code>{
+  node: {
+    data
+  }            
+}</code></pre></p>
       </h3>
       <textarea class="textarea-input" id="node-data-input"></textarea>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6 data-container">
       <h3>Node HTML Template
-        <p>Add the HTML template to be used for each node</p>
+        <p>Add the HTML template to be used for each node. Should be of the following format: 
+          <pre><code>function(node) { 
+  var htmlString = "";
+
+  /* Build Template String */ 
+  htmlString = htmlString + "&ltdiv&gt" + node.dataValue1 + "&lt/div&gt";
+  htmlString = htmlString + "&ltdiv&gt" + node.dataValue2 + "&lt/div&gt";
+
+  return htmlString; 
+}</code></pre></p>
       </h3>
       <textarea class="textarea-input" id="node-html-template"></textarea>
     </div>
   
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3>Unformatted User Settings
+      <h3 class="header-with-desc">Unformatted User Settings
         <p>This unformatted json string can be copied and passed into your call to this plugin as user settings, in order to reproduce the manually configured tree.</p>
       </h3>
-      <pre>
-        <code id="user-unformatted-settings" class="code-container">
-        </code>
-      </pre>
+      <pre><code id="user-unformatted-settings" class="code-container"></code></pre>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3>Formatted User Settings
+      <h3 class="header-with-desc">Formatted User Settings
         <p>This formatted json string contains the above user-specified settings, formatted for human readability.</p>
       </h3>
-      <pre>
-        <code id="user-formatted-settings" class="code-container">
-        </code>
-      </pre>
+      <pre><code id="user-formatted-settings" class="code-container"></code></pre>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3>Formatted Default Settings
+      <h3 class="header-with-desc">Formatted Default Settings
         <p>This formatted json string contains the above user-specified settings, formatted for human readability.</p>
       </h3>
-      <pre>
-        <code id="default-formatted-settings" class="code-container">
-        </code>
-      </pre>
+      <pre><code id="default-formatted-settings" class="code-container"></code></pre>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3>Formatted Compiled Settings
+      <h3 class="header-with-desc">Formatted Compiled Settings
         <p>This formatted json string contains a combination of the above default and user settings, with any user settings overriding the corresponding default settings except for classes, which are just added.</p>
       </h3>
-      <pre>
-        <code id="compiled-formatted-settings" class="code-container">
-        </code>
-      </pre>
+      <pre><code id="compiled-formatted-settings" class="code-container"></code></pre>
     </div>
 
   </div>
@@ -372,11 +378,13 @@
       var newTreeContainerId = $.trim($("#option-tree-container-id").val()); 
       settings.treeContainerId = newTreeContainerId;
     }
-
     if ($.trim($("#option-child-node-name").val()) !== "") { 
       settings.childNodeName = $.trim($("#option-child-node-name").val()); 
     }
-   
+    if ($.trim($("#option-node-data-name").val()) !== "") { 
+      settings.nodeDataName = $.trim($("#option-node-data-name").val()); 
+    }
+
     if ($("input:radio[name='tree-orientation']:checked").val()) { 
       settings.treeOrientation = parseInt($("input:radio[name='tree-orientation']:checked").val()); 
     }
@@ -439,6 +447,7 @@
       treeOrientation: 0,
       linkOrientation: 'down',
       childNodeName: 'node',
+      nodeDataName: 'data',
       linkStrategy: 'elbow',
       nodeSizing: {
         width: 20,
