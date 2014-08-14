@@ -226,7 +226,13 @@
         <p>Add either stringified JSON data or a URL that links to your JSON. Example Data: 
           <pre><code>{
   node: {
-    data
+    data: {
+      dataValue1: "testValue1",
+      dataValue2: "testValue2"
+    },
+    node {
+
+    }
   }            
 }</code></pre></p>
       </h3>
@@ -307,17 +313,16 @@
   var buildAndRefreshSettings = function() {
     var defaultObjSettings = buildDefaultObjSettings();
     var defaultSettings = addDefaultClassArraySettings(defaultObjSettings);
+    refreshDataEl('#default-formatted-settings', defaultSettings, true);
 
     var userSettings = {};
     if($("input:radio[name='settings-source']:checked").val() === "user") {
       userSettings = buildUserSettings();
     }
-
-    var mergedSettings = mergeSettings(defaultSettings, userSettings);
-
     refreshDataEl('#user-unformatted-settings', userSettings, false);
     refreshDataEl('#user-formatted-settings', userSettings, true);
-    refreshDataEl('#default-formatted-settings', defaultSettings, true);
+
+    var mergedSettings = mergeSettings(defaultSettings, userSettings);
     refreshDataEl('#compiled-formatted-settings', mergedSettings, true);
 
     return userSettings;
