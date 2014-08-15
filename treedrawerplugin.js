@@ -6,7 +6,7 @@
     // Define default settings to be used for each setting the user doesn't specify 
     var defaultSettings = {
       treeContainerId: '#tree-container',
-      treeOrientation: 0,
+      treeOrientation: 'down',
       linkOrientation: 'down',
       childNodeName: 'node',
       nodeDataName: 'data',
@@ -162,6 +162,21 @@
       treeSettings.TREE_ORIENTATION          = settings.treeOrientation;
       treeSettings.LINK_STRATEGY             = settings.linkStrategy;
       treeSettings.LINK_ORIENTATION          = settings.linkOrientation;
+
+      switch(settings.treeOrientation) {
+      case 'down':
+        treeSettings.TREE_ORIENTATION = 0;
+        break;
+      case 'right':
+        treeSettings.TREE_ORIENTATION = 90;
+        break;
+      case 'up':
+        treeSettings.TREE_ORIENTATION = 180;
+        break;
+      case 'left':
+        treeSettings.TREE_ORIENTATION = 270;
+        break;
+      }
 
       console.log('Completed constant initialization');
       return treeSettings;
