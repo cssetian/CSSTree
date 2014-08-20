@@ -68,7 +68,9 @@
     </div>
   
     <div id="options-container" class="col-xs-12 col-sm-12 col-md-12">
-      <h3>Tree Customization</h3>
+      <h3>Tree Customization
+        <div class="sub-title-button"><a id="toggle-settings-modules">Toggle All Modules</a></div>
+      </h3>
       <div class="panel panel-default">
         <div class="panel-heading" data-toggle="collapse" href="#tree-settings-collapse">
           <h4 class="panel-title">
@@ -78,7 +80,7 @@
           </h4>
         </div>
         <div id="tree-settings-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body settings-panel-body">
           <table class="table">
             <tr>
               <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
@@ -174,7 +176,7 @@
             <tr>
               <td class="option-label-column">
                 <label for="option-node-background-classes">Node Background Classes</label><br>
-                <span class="add-row-button disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
+                <span class="sub-title-button add-row disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-node-background-classes" class="option-list">
@@ -187,7 +189,7 @@
             <tr>
               <td class="option-label-column">
                 <label for="option-node-html-classes">Node HTML Template Classes</label><br>
-                <span class="add-row-button disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
+                <span class="sub-title-button add-row disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-node-html-classes" class="option-list">
@@ -200,7 +202,7 @@
             <tr>
               <td class="option-label-column">
                 <label for="option-link-body-classes">Link Body Classes</label><br>
-                <span class="add-row-button disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
+                <span class="sub-title-button add-row disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-link-body-classes" class="option-list">
@@ -213,7 +215,7 @@
             <tr>
               <td class="option-label-column">
                 <label for="option-link-arrow-classes">Link Arrow Classes</label><br>
-                <span class="add-row-button disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
+                <span class="sub-title-button add-row disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-link-arrow-classes" class="option-list">
@@ -243,7 +245,7 @@
           </h4>
         </div>
         <div id="html-template-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body settings-panel-body">
             <p>Add the HTML template to be used for each node. Should be of the following format: 
         <pre><code>function(node) { 
 var htmlString = "";
@@ -270,7 +272,7 @@ return htmlString;
           </h4>
         </div>
         <div id="json-tree-data-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body settings-panel-body">
             <p>Add either stringified JSON data or a URL that links to your JSON. Example Data: 
         <pre><code>{
 node: {
@@ -291,7 +293,9 @@ node: {
 
     <!-- output sections with collapsable content -->
     <div class="col-xs-12 col-sm-12 col-md-12">
-      <h3>Output</h3>
+      <h3>Output
+        <div class="sub-title-button"><a id="toggle-output-modules">Toggle All Modules</a></div>
+      </h3>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
@@ -304,7 +308,7 @@ node: {
           </h4>
         </div>
         <div id="user-unformatted-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body output-panel-body">
             <p>This unformatted json string can be copied and passed into your call to this plugin as user settings, in order to reproduce the manually configured tree.</p>
             <pre><code id="user-unformatted-settings" class="code-container"></code></pre>
           </div>
@@ -322,7 +326,7 @@ node: {
           </h4>
         </div>
         <div id="user-formatted-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body output-panel-body">
             <p>This formatted json string contains the above user-specified settings, formatted for human readability.</p>
             <pre><code id="user-formatted-settings" class="code-container"></code></pre>
           </div>
@@ -340,7 +344,7 @@ node: {
           </h4>
         </div>
         <div id="default-formatted-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body output-panel-body">
             <p>This formatted json string contains the default tree settings, formatted for human readability.</p>
             <pre><code id="default-formatted-settings" class="code-container"></code></pre>
           </div>
@@ -358,7 +362,7 @@ node: {
           </h4>
         </div>
         <div id="compiled-formatted-collapse" class="panel-collapse collapse in">
-          <div class="panel-body">
+          <div class="panel-body output-panel-body">
             <p>This formatted json string contains a combination of the above default and user settings, with any user settings overriding the corresponding default settings except for classes, which are just added.</p>
             <pre><code id="compiled-formatted-settings" class="code-container"></code></pre>
           </div>
@@ -377,6 +381,8 @@ node: {
 <script type="text/javascript" src="treedrawerplugin.js"></script>
 
 <script type="text/javascript">
+  var closeOutput = true;
+  var closeSettings = true;
 
   var refreshDataEl = function(el, data, formatted) {
     $(el).html('');
@@ -431,7 +437,7 @@ node: {
   //    - Adds a new element to the text input list
   //    - Each item in group included when compiling settings
   //    - When options are compiled, all empty boxes are ignored
-  $(".add-row-button").click(function(e) {
+  $(".add-row").click(function(e) {
     var self = this;
     var ul = $(self.dataset.listid);
 
@@ -445,6 +451,29 @@ node: {
     li.appendChild(input);
     ul.append(li);
   });
+
+  $("#toggle-settings-modules").click(function(e) {
+    var self = this;
+    if(closeSettings) {
+      $(".settings-panel-body").slideUp();
+      closeSettings = false;
+    } else {
+      $(".settings-panel-body").slideDown();
+      closeSettings = true;
+    }
+  });
+
+  $("#toggle-output-modules").click(function(e) {
+    var self = this;
+    if(closeOutput) {
+      $(".output-panel-body").slideUp();
+      closeOutput = false;
+    } else {
+      $(".output-panel-body").slideDown();
+      closeOutput = true;
+    }
+  });
+
 
   // Builds array of strings from a given unordered list ID
   var buildArrayFromList = function(listId) {

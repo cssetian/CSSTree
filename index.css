@@ -1,4 +1,8 @@
-/******************* Demo Page Styling *********************/
+/* DEMO PAGE STYLING */
+
+/******************** Basic Element Styles **********************/
+/****************************************************************/
+
 /* make page title thicker font */
 h1 {
   font-size: 36px;
@@ -56,7 +60,24 @@ tbody>tr:not(:first-child) {
 
 }
 
+/* max-width and centering for large viewports */
+@media (min-width: 1000px) {
+  .main-container {
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+/****************************************************************/
+
+
+
+/********************* Button Styles ****************************/
+/****************************************************************/
+
 /* Make clickable area of nav button take up the full H & W of view */
+/********************/
 .navbar .container {
   padding: 0px;
   margin: 0px;
@@ -86,25 +107,18 @@ tbody>tr:not(:first-child) {
 }
 /********************/
 
-/* max-width and centering for large viewports */
-@media (min-width: 1000px) {
-  .main-container {
-    width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-}
-
-/* Set size of the JSON input textarea */
-.textarea-input {
-  height: 100px;
-  width: 100%;
-  box-sizing: border-box;
+/* format the toggle modules links */
+h3>div>a {
+  margin-top: 5px;
+  font-size:11px;
+  font-weight: normal;
+  vertical-align: top;
+  display: inline-block;
 }
 
 /* Set cursor to pointer for span used to add class input rows */
-.add-row-button {
+.sub-title-button>a {
+  padding-left: 5px;
   font-size: 12px;
   cursor: pointer;
 
@@ -123,18 +137,32 @@ tbody>tr:not(:first-child) {
   margin: 0;
 }
 
+/* Spacing for options in a select input */
 .option-list-item {
   margin-top: 5px;
   margin-bottom: 5px;
 }
 
-.output-container {
-  min-height: 50px;
-}
-
 /* Make cursor a pointer on entirety of collapsable panel headings */
 .panel-heading {
     cursor: pointer;
+}
+/****************************************************************/
+
+
+
+/********************* Random Inputs ****************************/
+/****************************************************************/
+
+/* Set size of the JSON input textarea */
+.textarea-input {
+  height: 100px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.output-container {
+  min-height: 50px;
 }
 
 .code-container {
@@ -149,9 +177,13 @@ tbody>tr:not(:first-child) {
   -webkit-flex-flow: row wrap;
   
 }
+/****************************************************************/
 
 
-/***************** Custom Tree Styling For Demo ****************/
+
+
+/*************** Custom Tree Styling For Demo Page **************/
+/****************************************************************/
 /* Node Styling */
 .node .node-background {
   fill: #F5F5F5;
@@ -185,4 +217,5 @@ tbody>tr:not(:first-child) {
   font-weight: bold;
   text-align: center;
 }
+/****************************************************************/
 
