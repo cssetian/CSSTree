@@ -136,6 +136,10 @@ li>a {
   min-height: 50px;
 }
 
+.panel-heading {
+    cursor: pointer;
+}
+
 .code-container {
   overflow-wrap: break-word;
 }

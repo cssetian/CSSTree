@@ -218,72 +218,145 @@
       </table>
     </div>
   
+    <div id="html-template-container" class="col-xs-12 col-sm-6 col-md-6 data-container">
+      <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#html-template-collapse">
+          <h4 class="panel-title">
+            <a>
+              Node HTML Template
+            </a>
+          </h4>
+        </div>
+        <div id="html-template-collapse" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <p>Add the HTML template to be used for each node. Should be of the following format: 
+        <pre><code>function(node) { 
+var htmlString = "";
+
+/* Build Template String */ 
+htmlString = htmlString + "&ltdiv&gt" + node.dataValue1 + "&lt/div&gt";
+htmlString = htmlString + "&ltdiv&gt" + node.dataValue2 + "&lt/div&gt";
+
+return htmlString; 
+}</code></pre></p>
+          <textarea class="textarea-input" id="node-html-template"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="data-container" class="col-xs-12 col-sm-6 col-md-6 data-container">
-      <h3>JSON Tree Data Input
-        <p>Add either stringified JSON data or a URL that links to your JSON. Example Data: 
-          <pre><code>{
-  node: {
-    data: {
-      dataValue1: "testValue1",
-      dataValue2: "testValue2"
-    },
-    node {
+      <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#json-tree-data-collapse">
+          <h4 class="panel-title">
+            <a>
+              JSON Tree Data Input
+            </a>
+          </h4>
+        </div>
+        <div id="json-tree-data-collapse" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <p>Add either stringified JSON data or a URL that links to your JSON. Example Data: 
+        <pre><code>{
+node: {
+  data: {
+    dataValue1: "testValue1",
+    dataValue2: "testValue2"
+  },
+  node {
 
-    }
-  }            
+  }
+}            
 }</code></pre></p>
-      </h3>
-      <textarea class="textarea-input" id="node-data-input"></textarea>
+          <textarea class="textarea-input" id="node-data-input"></textarea>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-6 data-container">
-      <h3>Node HTML Template
-        <p>Add the HTML template to be used for each node. Should be of the following format: 
-          <pre><code>function(node) { 
-  var htmlString = "";
-
-  /* Build Template String */ 
-  htmlString = htmlString + "&ltdiv&gt" + node.dataValue1 + "&lt/div&gt";
-  htmlString = htmlString + "&ltdiv&gt" + node.dataValue2 + "&lt/div&gt";
-
-  return htmlString; 
-}</code></pre></p>
-      </h3>
-      <textarea class="textarea-input" id="node-html-template"></textarea>
-    </div>
-  
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3 class="header-with-desc">Unformatted User Settings
-        <p>This unformatted json string can be copied and passed into your call to this plugin as user settings, in order to reproduce the manually configured tree.</p>
-      </h3>
-      <pre><code id="user-unformatted-settings" class="code-container"></code></pre>
+    <!-- output sections with collapsable content -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <h3>Output</h3>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3 class="header-with-desc">Formatted User Settings
-        <p>This formatted json string contains the above user-specified settings, formatted for human readability.</p>
-      </h3>
-      <pre><code id="user-formatted-settings" class="code-container"></code></pre>
+      <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#user-unformatted-collapse">
+          <h4 class="panel-title">
+            <a>
+              Unformatted User Settings
+            </a>
+          </h4>
+        </div>
+        <div id="user-unformatted-collapse" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <p>This unformatted json string can be copied and passed into your call to this plugin as user settings, in order to reproduce the manually configured tree.</p>
+            <pre><code id="user-unformatted-settings" class="code-container"></code></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3 class="header-with-desc">Formatted Default Settings
-        <p>This formatted json string contains the above user-specified settings, formatted for human readability.</p>
-      </h3>
-      <pre><code id="default-formatted-settings" class="code-container"></code></pre>
+      <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#user-formatted-collapse">
+          <h4 class="panel-title">
+            <a>
+              Formatted User Settings
+            </a>
+          </h4>
+        </div>
+        <div id="user-formatted-collapse" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <p>This formatted json string contains the above user-specified settings, formatted for human readability.</p>
+            <pre><code id="user-formatted-settings" class="code-container"></code></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3 class="header-with-desc">Formatted Compiled Settings
-        <p>This formatted json string contains a combination of the above default and user settings, with any user settings overriding the corresponding default settings except for classes, which are just added.</p>
-      </h3>
-      <pre><code id="compiled-formatted-settings" class="code-container"></code></pre>
+      <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#default-formatted-collapse">
+          <h4 class="panel-title">
+            <a>
+              Formatted Default Settings
+            </a>
+          </h4>
+        </div>
+        <div id="default-formatted-collapse" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <p>This formatted json string contains the default tree settings, formatted for human readability.</p>
+            <pre><code id="default-formatted-settings" class="code-container"></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#compiled-formatted-collapse">
+          <h4 class="panel-title">
+            <a>
+              Formatted Compiled Settings
+            </a>
+          </h4>
+        </div>
+        <div id="compiled-formatted-collapse" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <p>This formatted json string contains a combination of the above default and user settings, with any user settings overriding the corresponding default settings except for classes, which are just added.</p>
+            <pre><code id="compiled-formatted-settings" class="code-container"></code></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
 </body>
 
+<!-- Latest compiled and minified JavaScript -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 <script type="text/javascript" src="http://underscorejs.org/underscore.js"></script>
 <script type="text/javascript" src="treedrawerplugin.js"></script>
