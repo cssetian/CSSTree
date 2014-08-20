@@ -26,6 +26,7 @@
   <div role="main" class="main-container">
     <h1 class="col-xs-12 col-sm-12 col-md-12">Tree-Drawing jQuery Plugin Demo Site</h1>
   
+    <!-- Configure Input Sources -->
     <div class="col-xs-6 col-sm-6 col-md-6">
       <h3>Choose Settings Source</h3>
       <div class="options-module">
@@ -62,11 +63,13 @@
       </div>
     </div>
 
+    <!-- Container for displaying drawn Tree -->
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h3>Generated Tree Output</h3>
       <div class="output-container" id="tree-container"></div>
     </div>
   
+    <!-- Custom Inputs for Configuring Tree -->
     <div id="options-container" class="col-xs-12 col-sm-12 col-md-12">
       <h3>Tree Customization
         <div class="sub-title-button"><a id="toggle-settings-modules">Toggle All Modules</a></div>
@@ -235,6 +238,7 @@
       </div>
     </div>
   
+    <!-- Container for inputting an HTML Template to apply to each node -->
     <div id="html-template-container" class="col-xs-12 col-sm-6 col-md-6 data-container">
       <div class="panel panel-default">
         <div class="panel-heading" data-toggle="collapse" href="#html-template-collapse">
@@ -262,6 +266,7 @@ return htmlString;
       </div>
     </div>
 
+    <!-- Container for inputting the JSON data representing the logical structure of the tree data -->
     <div id="data-container" class="col-xs-12 col-sm-6 col-md-6 data-container">
       <div class="panel panel-default">
         <div class="panel-heading" data-toggle="collapse" href="#json-tree-data-collapse">
@@ -291,7 +296,7 @@ node: {
       </div>
     </div>
 
-    <!-- output sections with collapsable content -->
+    <!-- Output sections with collapsable content -->
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h3>Output
         <div class="sub-title-button"><a id="toggle-output-modules">Toggle All Modules</a></div>
