@@ -30,6 +30,7 @@ USAGE
 
 STILL TODO
 ------------
+* Rewrite data setup, calculations, and tree drawing functions to better leverage prototypes and design patterns
 * Add more link types
 * With the diagonal link type, define the link arrow header markers such that they are aligned to the angle of the diagonal
 * Support for different node shapes?
