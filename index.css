@@ -17,6 +17,14 @@ h2 {
   font-weight: bold;
 }
 
+/* Styling to center output tree on the page */
+svg {
+  display: block; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 /* padding-top to buffer for navbar */
 /* default text font size and weight */
 body {
@@ -39,6 +47,27 @@ tbody>tr>td {
 }
 tbody>tr:not(:first-child) {
   border-top: 1px solid #ddd !important;
+}
+
+/* Clear the margin on the table so that it doesn't add on an extra padding to the bottom of inside the module body */
+table {
+  margin-bottom: 0px !important;
+}
+
+/* Clear the bottom margin on labels of the table. Better centers the labels within each row */
+label {
+  margin-bottom: 0px !important;
+}
+
+/* So the table has regular spacing within the module */
+.panel-body {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+/* Override bootstrap vertical align to center settings labels between rows */
+tbody>tr>td {
+  vertical-align: middle !important;
 }
 
 /* for larger widths, font sizes scale with width */
