@@ -35,7 +35,7 @@
     <!-- Custom Inputs for Configuring Tree -->
     <div id="options-container" class="col-xs-12 col-sm-12 col-md-12">
       <h3>Tree Customization
-        <div class="sub-title-button"><a id="toggle-settings-modules">Toggle All Modules Open / Closed</a></div>
+        <div class="sub-title-button"><a id="toggle-settings-modules">Close / Open All Modules</a></div>
       </h3>
       <div class="panel panel-default">
         <div class="panel-heading" data-toggle="collapse" href="#tree-settings-collapse">
@@ -328,7 +328,7 @@ node: {
     <!-- Output sections with collapsable content -->
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h3>Output
-        <div class="sub-title-button"><a id="toggle-output-modules">Toggle All Modules Open / Closed</a></div>
+        <div class="sub-title-button"><a id="toggle-output-modules">Close / Open All Modules</a></div>
       </h3>
     </div>
 
@@ -417,6 +417,12 @@ node: {
 <script type="text/javascript">
   var closeOutput = true;
   var closeSettings = true;
+  $(function () { $('.output-panel-body').collapse({
+    toggle: false
+  })});
+  $(function () { $('.settings-panel-body').collapse({
+    toggle: false
+  })});
 
   var refreshDataEl = function(el, data, formatted) {
     $(el).html('');
@@ -489,10 +495,14 @@ node: {
   $("#toggle-settings-modules").click(function(e) {
     var self = this;
     if(closeSettings) {
-      $(".settings-panel-body").slideUp();
+      $("#html-template-collapse").collapse('show');
+      $("#json-tree-data-collapse").collapse('show');
+      $("#tree-settings-collapse").collapse('show');
       closeSettings = false;
     } else {
-      $(".settings-panel-body").slideDown();
+      $("#html-template-collapse").collapse('hide');
+      $("#json-tree-data-collapse").collapse('hide');
+      $("#tree-settings-collapse").collapse('hide');
       closeSettings = true;
     }
   });
@@ -500,10 +510,20 @@ node: {
   $("#toggle-output-modules").click(function(e) {
     var self = this;
     if(closeOutput) {
-      $(".output-panel-body").slideUp();
+      $("#default-formatted-collapse").collapse('show');
+      $("#compiled-formatted-collapse").collapse('show');
+      $("#user-unformatted-collapse").collapse('show');
+      $("#user-formatted-collapse").collapse('show');
+
+      //$(".output-panel-body").slideUp();
       closeOutput = false;
     } else {
-      $(".output-panel-body").slideDown();
+      $("#default-formatted-collapse").collapse('hide');
+      $("#compiled-formatted-collapse").collapse('hide');
+      $("#user-unformatted-collapse").collapse('hide');
+      $("#user-formatted-collapse").collapse('hide');
+
+      //$(".output-panel-body").slideDown();
       closeOutput = true;
     }
   });
