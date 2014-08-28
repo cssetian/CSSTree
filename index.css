@@ -136,6 +136,11 @@ tbody>tr>td {
 }
 /********************/
 
+.text-muted {
+  text-align: center;
+  font-size: 14px;
+}
+
 /* format the toggle modules links */
 h3>div>a {
   margin-top: 5px;
