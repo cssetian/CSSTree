@@ -56,7 +56,7 @@
                   <div class="radio">
                     <label>
                       <input type="radio" name="settings-source" id="settings-source-0" value="default" checked>
-                      Default Settings (Copied Below)
+                      Default Settings (Auto-Populated Below)
                     </label>
                   </div>
                   <div class="radio">
@@ -75,7 +75,7 @@
                   <div class="radio">
                     <label>
                       <input type="radio" name="data-source" id="data-source-0" value="default" checked>
-                      Default Data (Copied Below)
+                      Default Data (Auto-Populated Below)
                     </label>
                   </div>
                   <div class="radio">
@@ -252,17 +252,20 @@
         </div>
         <div id="html-template-collapse" class="panel-collapse collapse in">
           <div class="panel-body settings-panel-body">
-            <p>Add the HTML template to be used for each node. Should be of the following format: 
+            <p>Add the HTML template to be used for each node. Delete the default template copied below and replace with your own if supplying custom template. Example Usage: 
         <pre><code>function(node) { 
 var htmlString = "";
 
 /* Build Template String */ 
-htmlString = htmlString + "&ltdiv&gt" + node.dataValue1 + "&lt/div&gt";
-htmlString = htmlString + "&ltdiv&gt" + node.dataValue2 + "&lt/div&gt";
+htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue1 + "&lt/div&gt";
+htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue2 + "&lt/div&gt";
 
 return htmlString; 
 }</code></pre></p>
-          <textarea class="textarea-input" id="node-html-template"></textarea>
+          <textarea class="textarea-input" id="node-html-template">function (d) {
+    return '<div id="node-template">' + d.data  + '</div>';
+  }
+}</textarea>
           </div>
         </div>
       </div>
@@ -280,7 +283,7 @@ return htmlString;
         </div>
         <div id="json-tree-data-collapse" class="panel-collapse collapse in">
           <div class="panel-body settings-panel-body">
-            <p>Add either stringified JSON data or a URL that links to your JSON. Example Data: 
+            <p>Add stringified JSON data. Delete the default data copied below and replace with your own. Example Usage: 
         <pre><code>{
 node: {
   data: {
@@ -292,7 +295,31 @@ node: {
   }
 }            
 }</code></pre></p>
-          <textarea class="textarea-input" id="node-data-input"></textarea>
+          <textarea class="textarea-input" id="node-data-input">node: {
+  data: '1',
+  node: [{
+    data: '2',
+    node: [{
+      data: '5'
+    }, {
+      data: '6'
+    }]
+  }, {
+    data: '3'
+  }, {
+    data: '4',
+    node: [{
+      data: '7',
+      node: [{
+        data: '10'
+      }]
+    }, {
+      data: '8'
+    }, {
+      data: '9'
+    }]
+  }]
+  }</textarea>
           </div>
         </div>
       </div>
