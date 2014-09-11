@@ -28,7 +28,7 @@ function ChrisTree(options) {
   self.nodeTmplClasses = options.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
   self.nodeBkndClasses = options.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
   
-  // Declare calc'ed values
+  // Declare calc'ed values - Unnecessary, but useful to lay them all out
   self.linkStrategy = '';
   self.linkFunction = '';
   self.treeOrientationRad = '';
@@ -45,10 +45,11 @@ function ChrisTree(options) {
   self.treeContainerHeight = '';
   self.treeContainerWidth = '';
 
-  self.calcVars();
+  self.refreshTree();
 
 }
 
+// Recalculate tree layout and coordinates, then redraw tree
 ChrisTree.prototype.refreshTree = function() {
   'use strict';
 
@@ -56,7 +57,7 @@ ChrisTree.prototype.refreshTree = function() {
   self.drawTree();
 };
 
-// Redraw the entire tree, first recalculating the coordinates and then redrawing the elements
+// Replace the root element with a newly drawn tree
 ChrisTree.prototype.drawTree = function() {
   'use strict';
 
@@ -65,6 +66,7 @@ ChrisTree.prototype.drawTree = function() {
   self.drawLinks();
 };
 
+// Recalculate the layout and coordinates of the tree - does not redraw
 ChrisTree.prototype.calcTree = function() {
   'use strict';
 
@@ -73,6 +75,7 @@ ChrisTree.prototype.calcTree = function() {
   self.calcMinMax();
 };
 
+// Calculate all dependent variables necessary to determine layout and coordinates of tree
 ChrisTree.prototype.calcVars = function() {
   'use strict';
 
@@ -138,6 +141,7 @@ ChrisTree.prototype.calcVars = function() {
   }
 };
 
+// Calculate the layout of the tree based on current properties
 ChrisTree.prototype.calcLayout = function() {
   'use strict';
 
@@ -168,6 +172,7 @@ ChrisTree.prototype.calcLayout = function() {
 
 };
 
+// Draw the SVG container element on the root tree node
 ChrisTree.prototype.drawContainer = function() {
   'use strict';
 
@@ -184,6 +189,7 @@ ChrisTree.prototype.drawContainer = function() {
   return svgContainer;
 };
 
+// Draw the background and HTML templates for each node
 ChrisTree.prototype.drawNodes = function() {
   'use strict';
 
@@ -234,6 +240,7 @@ ChrisTree.prototype.drawNodes = function() {
   return svgTemplatedNodes;
 };
 
+// Draw the SVG links connecting each node
 ChrisTree.prototype.drawLinks = function() {
   'use strict';
 
@@ -252,6 +259,7 @@ ChrisTree.prototype.drawLinks = function() {
   return svgInitializedLinks;
 };
 
+// Returns a function that is used to draw the links as curved SVG paths between nodes
 ChrisTree.prototype.diagonalLinkStrategy = function() {
   'use strict';
 
@@ -285,6 +293,7 @@ ChrisTree.prototype.diagonalLinkStrategy = function() {
     });
 };
 
+// Returns a an elbow link function that is used to draw right-angled SVG paths between nodes
 ChrisTree.prototype.elbowLinkStrategy = function() {
   'use strict';
 
@@ -387,21 +396,32 @@ ChrisTree.prototype.calcMinMax = function() {
   self.maxY = d3.max(self.nodes, function (node) { return node.y; });
 };
 
-
+// Convert an angle from degrees to radians
 ChrisTree.prototype.toRad = function(degAngle) {
   'use strict';
   return degAngle * (Math.PI / 180);
 };
 
+// Redraw tree at specified orientation
 ChrisTree.prototype.setOrientation = function(newAngle) {
   'use strict';
   self.treeOrientation = newAngle;
-  self.treeOrientationRad = self.toRad(self.treeOrientation);
-
-
+  self.refreshTree();
 };
 
-ChrisTree.prototype.setData = function(newJSON) {
+// Redraw links with new specified link type
+ChrisTree.prototype.setLinkType = function(newLinkType) {
+  'use strict';
+  self.linkStrategy = newLinkType;
+  self.calcVars();
+  self.drawLinks();
+};
 
+// Refresh the node JSON data and then redraw the nodes
+ChrisTree.prototype.updateJSON = function(newNodeData) {
+  'use strict';
+  self.nodeData = newNodeData;
+  self.calcLayout();
+  self.drawNodes();
 };
 
