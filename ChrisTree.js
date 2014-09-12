@@ -5,25 +5,22 @@
 
     // Define default settings to be used for each setting the user doesn't specify 
     var defaultSettings = {
-      treeContainerId: '#tree-container',
-      treeOrientation: 'down',
+      treeContainer: '#tree-container',
+      treeOrientation: 0,
       linkOrientation: 'down',
-      childNodeName: 'node',
+      nodeChildName: 'node',
       nodeDataName: 'data',
-      linkStrategy: 'elbow',
-      nodeSizing: {
-        width: 20,
-        height: 20
-      },
-      nodeSpacing: {
-        level: 20,
-        span: 20
-      },
+      nodeType: '',
+      linkType: 'elbow',
+      nodeWidth: 20,
+      nodeHeight: 20,
+      depthSpacing: 20,
+      widthSpacing: 20,
       nodeBkndClasses: [],
-      nodeHTMLClasses: [],
+      nodeTmplClasses: [],
       linkClasses: [],
       arrowClasses: [],
-      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
+      notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
       nodeHTMLTemplate: function (d) {
         return '<div id="node-template">' + d.data + '</div>';
       },
@@ -59,7 +56,7 @@
     var mergedSettings = $.extend( true, defaultSettings, userSettings );
 
     mergedSettings.nodeBkndClasses.push('node-background');
-    mergedSettings.nodeHTMLClasses.push('node-html-container');
+    mergedSettings.nodeTmplClasses.push('node-html-container');
     mergedSettings.linkClasses.push('link-html-container');
     mergedSettings.arrowClasses.push('arrow-html-container');
 
@@ -77,21 +74,21 @@ function ChrisTree(options) {
 
   self.treePadding = 8;
 
-  self.containerId = options.containerId;
+  self.treeContainer = options.treeContainer;
+
+  self.treeOrientation = options.treeOrientation;
+  self.linkOrientation = options.linkOrientation;
+
+  self.nodeType = options.nodeType;
+  self.linkType = options.linkType;
+
+  self.nodeWidth = options.nodeWidth;
+  self.nodeHeight = options.nodeHeight;
 
   self.nodeData = options.nodeData;
   self.nodeDataName = options.nodeDataName;
   self.nodeChildName = options.nodeChildName;
   self.nodeHTMLTemplate = options.nodeHTMLTemplate;
-
-  self.nodeType = options.nodeType;
-  self.linkType = options.linkType;
-
-  self.treeOrientation = options.treeOrientation;
-  self.linkOrientation = options.linkOrientation;
-
-  self.nodeWidth = options.nodeWidth;
-  self.nodeHeight = options.nodeHeight;
  
   self.depthSpacing = options.depthSpacing;
   self.widthSpacing = options.widthSpacing;
@@ -99,11 +96,11 @@ function ChrisTree(options) {
   self.notSupportedMsg = options.notSupportedMsg;
 
   self.linkClasses = options.linkClasses;              // Any classes to be added onto the links between each pair of nodes
+  self.arrowClasses = options.arrowClasses;
   self.nodeTmplClasses = options.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
   self.nodeBkndClasses = options.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
   
   // Declare calc'ed values - Unnecessary, but useful to lay them all out
-  self.linkStrategy = '';
   self.linkFunction = '';
   self.treeOrientationRad = '';
   self.sinR = '';
@@ -137,9 +134,10 @@ ChrisTree.prototype.drawTree = function() {
   'use strict';
   var self = this;
 
-  self.drawContainer();
-  self.drawNodes();
-  self.drawLinks();
+  var newContainer = self.drawContainer();
+  self.drawNodes(newContainer);
+  self.drawLinkMarkerDef(newContainer);
+  self.drawLinks(newContainer);
 };
 
 // Recalculate the layout and coordinates of the tree - does not redraw
@@ -147,13 +145,14 @@ ChrisTree.prototype.calcTree = function() {
   'use strict';
   var self = this;
 
-  self.calcVars();
+  self.calcTreeVars();
   self.calcLayout();
   self.calcMinMax();
+  self.calcContainerVars();
 };
 
 // Calculate all dependent variables necessary to determine layout and coordinates of tree
-ChrisTree.prototype.calcVars = function() {
+ChrisTree.prototype.calcTreeVars = function() {
   'use strict';
   var self = this;
 
@@ -183,6 +182,21 @@ ChrisTree.prototype.calcVars = function() {
   // Use nodeWidth if tree is vertically orientated, nodeHeight if tree is horizontal
   self.nodeSpanSpacingPct = (1 / self.nodeWidth) * ( (self.nodeHeight * Math.abs(self.sinR)) + (self.nodeWidth * Math.abs(self.cosR)) + self.widthSpacing );
   
+  // Generate the different link types we can use for drawing links between nodes
+  switch(self.linkType) {
+  case 'diagonal':
+    self.linkFunction = self.diagonalLinkStrategy();
+    break;
+  case 'elbow':
+    self.linkFunction = self.elbowLinkStrategy();
+    break;
+  }
+};
+
+ChrisTree.prototype.calcContainerVars = function() {
+  'use strict';
+  var self = this;
+
   // Calculate the root node X offset based on the min and max layout positionings, along with offsets based on orientation
   // The X offset is always the offset of the tree in the SPAN (horizontal) direction
   self.rootOffsetX = 0;    // By default no X offset
@@ -208,15 +222,6 @@ ChrisTree.prototype.calcVars = function() {
   self.treeContainerWidth =  Math.abs(self.sinR) * (self.maxY - self.minY + self.nodeHeight) +
                                       Math.abs(self.cosR) * (self.maxX - self.minX + self.nodeWidth);
 
-  // Generate the different link types we can use for drawing links between nodes
-  switch(self.linkStrategy) {
-  case 'diagonal':
-    self.linkFunction = self.diagonalLinkStrategy();
-    break;
-  case 'elbow':
-    self.linkFunction = self.elbowLinkStrategy();
-    break;
-  }
 };
 
 // Calculate the layout of the tree based on current properties
@@ -246,7 +251,7 @@ ChrisTree.prototype.calcLayout = function() {
                         Math.abs(self.cosR) * self.nodeHeight;
 
     // Find the total depth of this particular node by multiplying its depth level by the sum of its depth size + depth spacing
-    d.y = d.depth * (nodeDepthSize + self.nodeSpacing);
+    d.y = d.depth * (nodeDepthSize + self.depthSpacing);
   });
 
 };
@@ -270,11 +275,11 @@ ChrisTree.prototype.drawContainer = function() {
 };
 
 // Draw the background and HTML templates for each node
-ChrisTree.prototype.drawNodes = function() {
+ChrisTree.prototype.drawNodes = function(treeContainerEl) {
   'use strict';
   var self = this;
 
-  var nodeData = self.drawContainer().selectAll('g.node')
+  var nodeData = treeContainerEl.selectAll('g.node')
     .data(self.nodes, function (d, i) {
       return d.id || (d.id = ++i);
     });
@@ -300,7 +305,7 @@ ChrisTree.prototype.drawNodes = function() {
   });
 
   // Background rectangle for each node. Can be styled with the class .node-background
-  var svgTemplatedNodes = svgInitializedNodes.append('rect')
+  var svgRectangleNodes = svgInitializedNodes.append('rect')
     .attr('width', self.nodeWidth)
     .attr('height', self.nodeHeight)
     .attr('class', function(d, i) { return self.nodeBkndClasses.join(' '); });
@@ -308,7 +313,7 @@ ChrisTree.prototype.drawNodes = function() {
   // The foreignObject which allows the user to inject HTML templates into the tree node
   // Appends the requiredFeatures property as a further guard to make sure d3 is supported
   // Then appends the XHTML object and the HTML template onto that
-  svgTemplatedNodes.append('foreignObject')
+  var svgTemplatedNodes = svgInitializedNodes.append('foreignObject')
     .attr('requiredFeatures', 'http://www.w3.org/TR/SVG11/feature#Extensibility')
     .attr('width', self.nodeWidth)
     .attr('height', self.nodeHeight)
@@ -318,16 +323,16 @@ ChrisTree.prototype.drawNodes = function() {
       return self.nodeHTMLTemplate(d);
     });
 
-  return svgTemplatedNodes;
+  return svgInitializedNodes;
 };
 
 // Draw the SVG links connecting each node
-ChrisTree.prototype.drawLinks = function() {
+ChrisTree.prototype.drawLinks = function(treeContainerEl) {
   'use strict';
   var self = this;
 
   // This block specifically selects all the treeLinks and adds an ID to each of them
-  var svgInitializedLinks = self.drawContainer().selectAll('path.link')
+  var svgInitializedLinks = treeContainerEl.selectAll('path.link')
     .data(self.links, function (d) {
       return d.target.id;
     });
@@ -341,9 +346,30 @@ ChrisTree.prototype.drawLinks = function() {
   return svgInitializedLinks;
 };
 
+ChrisTree.prototype.drawLinkMarkerDef = function(treeContainerEl) {
+  'use strict';
+  var self = this;
+
+      // Define the markers to be added at the end of the treeLinks
+      treeContainerEl.append('defs')
+        .append('marker')
+          .attr('id', 'end-arrow')
+          .attr('class', function(d, i) { return self.arrowClasses.join(' '); })
+          //.attr('viewBox', '-5 -5 10 10') //Shrinks the size of the arrow via a transformation of the viewBox
+          .attr('refY', 2)
+          .attr('refX', 5)
+          .attr('markerWidth', 6)
+          .attr('markerHeight', 20)
+          .attr('orient', 'auto')
+        .append('path')
+          .attr('d', 'M0,0 L4,2 0,4');  //SVG definition of the arrow shaped link marker
+
+}
+
 // Returns a function that is used to draw the links as curved SVG paths between nodes
 ChrisTree.prototype.diagonalLinkStrategy = function() {
   'use strict';
+  var self = this;
 
   return d3.svg.diagonal()
     // PROJECTION: Used to map X and Y into a rotated plane by a specified multiple of 90 degrees
@@ -501,7 +527,7 @@ ChrisTree.prototype.setLinkType = function(newLinkType) {
   'use strict';
   var self = this;
 
-  self.linkStrategy = newLinkType;
+  self.linkType = newLinkType;
   self.calcVars();
   self.drawLinks();
 };
