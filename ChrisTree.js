@@ -1,104 +1,86 @@
-(function( $, _, d3 ) {
+// ChrisTree Source
+// github: https://github.com/cssetian
 
-  $.fn.drawTree = function( userSettings ) {
-    var self = this;
-
-    // Define default settings to be used for each setting the user doesn't specify 
-    var defaultSettings = {
-      treeContainer: '#tree-container',
-      treeOrientation: 0,
-      linkOrientation: 'down',
-      nodeChildName: 'node',
-      nodeDataName: 'data',
-      nodeType: '',
-      linkType: 'elbow',
-      nodeWidth: 20,
-      nodeHeight: 20,
-      depthSpacing: 20,
-      widthSpacing: 20,
-      nodeBkndClasses: [],
-      nodeTmplClasses: [],
-      linkClasses: [],
-      arrowClasses: [],
-      notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
-      nodeHTMLTemplate: function (d) {
-        return '<div id="node-template">' + d.data + '</div>';
-      },
-      nodeData: {
-        data: '1',
-        node: [{
-          data: '2',
-          node: [{
-            data: '5'
-          }, {
-            data: '6'
-          }]
-        }, {
-          data: '3'
-        }, {
-          data: '4',
-          node: [{
-            data: '7',
-            node: [{
-              data: '10'
-            }]
-          }, {
-            data: '8'
-          }, {
-            data: '9'
-          }]
-        }]
-      }
-    };
-
-    // We can use the extend method to merge settings as usual:
-    // But with the added first parameter of TRUE to signify a DEEP COPY:
-    var mergedSettings = $.extend( true, defaultSettings, userSettings );
-
-    mergedSettings.nodeBkndClasses.push('node-background');
-    mergedSettings.nodeTmplClasses.push('node-html-container');
-    mergedSettings.linkClasses.push('link-html-container');
-    mergedSettings.arrowClasses.push('arrow-html-container');
-
-    // After defining default settings, call the helper function to draw the actual tree
-    var customTree = new ChrisTree(mergedSettings);
-
-    return self;
-  };
-
-
-
-function ChrisTree(options) {
+function ChrisTree(userSettings) {
   'use strict';
   var self = this;
 
-  self.treePadding = 8;
+  // Define default settings to be used for each setting the user doesn't specify 
+  self.defaultSettings = {
+    treeContainer: '#tree-container',
+    treeContainerPadding: 8,
+    treeOrientation: 0,
+    linkOrientation: 'down',
+    nodeChildName: 'node',
+    nodeDataName: 'data',
+    nodeType: '',
+    linkType: 'elbow',
+    nodeWidth: 40,
+    nodeHeight: 40,
+    depthSpacing: 40,
+    widthSpacing: 40,
+    nodeBkndClasses: ['node-background'],
+    nodeTmplClasses: ['node-html-container'],
+    linkClasses: ['link-html-container'],
+    arrowClasses: ['arrow-html-container'],
+    notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
+    nodeHTMLTemplate: function (d) {
+      return '<div id="node-template">' + d.data + '</div>';
+    },
+    nodeData: {
+      data: '1',
+      node: [{
+        data: '2',
+        node: [{
+          data: '5'
+        }, {
+          data: '6'
+        }]
+      }, {
+        data: '3'
+      }, {
+        data: '4',
+        node: [{
+          data: '7',
+          node: [{
+            data: '10'
+          }]
+        }, {
+          data: '8'
+        }, {
+          data: '9'
+        }]
+      }]
+    }
+  };
 
-  self.treeContainer = options.treeContainer;
+  self.treeContainerPadding = userSettings.treeContainerPadding || self.defaultSettings.treeContainerPadding;
 
-  self.treeOrientation = options.treeOrientation;
-  self.linkOrientation = options.linkOrientation;
+  self.treeContainer = userSettings.treeContainer || self.defaultSettings.treeContainer;
 
-  self.nodeType = options.nodeType;
-  self.linkType = options.linkType;
+  self.treeOrientation = userSettings.treeOrientation || self.defaultSettings.treeOrientation;
+  self.linkOrientation = userSettings.linkOrientation || self.defaultSettings.linkOrientation;
 
-  self.nodeWidth = options.nodeWidth;
-  self.nodeHeight = options.nodeHeight;
+  self.nodeType = userSettings.nodeType || self.defaultSettings.nodeType;
+  self.linkType = userSettings.linkType || self.defaultSettings.linkType;
 
-  self.nodeData = options.nodeData;
-  self.nodeDataName = options.nodeDataName;
-  self.nodeChildName = options.nodeChildName;
-  self.nodeHTMLTemplate = options.nodeHTMLTemplate;
+  self.nodeWidth = userSettings.nodeWidth || self.defaultSettings.nodeWidth;
+  self.nodeHeight = userSettings.nodeHeight || self.defaultSettings.nodeHeight;
+
+  self.nodeData = userSettings.nodeData || self.defaultSettings.nodeData;
+  self.nodeDataName = userSettings.nodeDataName || self.defaultSettings.nodeDataName;
+  self.nodeChildName = userSettings.nodeChildName || self.defaultSettings.nodeChildName;
+  self.nodeHTMLTemplate = userSettings.nodeHTMLTemplate || self.defaultSettings.nodeHTMLTemplate;
  
-  self.depthSpacing = options.depthSpacing;
-  self.widthSpacing = options.widthSpacing;
+  self.depthSpacing = userSettings.depthSpacing || self.defaultSettings.depthSpacing;
+  self.widthSpacing = userSettings.widthSpacing || self.defaultSettings.widthSpacing;
 
-  self.notSupportedMsg = options.notSupportedMsg;
+  self.notSupportedMsg = userSettings.notSupportedMsg || self.defaultSettings.notSupportedMsg;
 
-  self.linkClasses = options.linkClasses;              // Any classes to be added onto the links between each pair of nodes
-  self.arrowClasses = options.arrowClasses;
-  self.nodeTmplClasses = options.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
-  self.nodeBkndClasses = options.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
+  self.linkClasses = userSettings.linkClasses || self.defaultSettings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
+  self.arrowClasses = userSettings.arrowClasses || self.defaultSettings.arrowClasses;
+  self.nodeTmplClasses = userSettings.nodeTmplClasses || self.defaultSettings.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
+  self.nodeBkndClasses = userSettings.nodeBkndClasses || self.defaultSettings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
   
   // Declare calc'ed values - Unnecessary, but useful to lay them all out
   self.linkFunction = '';
@@ -201,19 +183,19 @@ ChrisTree.prototype.calcContainerVars = function() {
   // The X offset is always the offset of the tree in the SPAN (horizontal) direction
   self.rootOffsetX = 0;    // By default no X offset
   if (self.sinR === 1 || self.cosR === 1) {
-    self.rootOffsetX = self.sinR * ((-1 * self.minX) + (self.treePadding / 2)) +
-                    self.cosR * ((-1 * self.minX) + (self.treePadding / 2));
+    self.rootOffsetX = self.sinR * ((-1 * self.minX) + (self.treeContainerPadding / 2)) +
+                    self.cosR * ((-1 * self.minX) + (self.treeContainerPadding / 2));
   } else if (self.sinR === -1 || self.cosR === -1) {
-    self.rootOffsetX = self.sinR * (self.maxX + (self.treePadding / 2)) +
-                    self.cosR * (self.maxX + (self.treePadding / 2));
+    self.rootOffsetX = self.sinR * (self.maxX + (self.treeContainerPadding / 2)) +
+                    self.cosR * (self.maxX + (self.treeContainerPadding / 2));
   }
 
   // If necessary, calculate the root node Y offset based on the size of the calculated tree container
   // The Y offset is always the offset of the root node in the DEPTH (vertical) direction
   // The Y offset is only necessary when the tree is rotated 180 or 270 degrees (How do you write a function that is 1 for 180/270, but 0 for 0/90?)
-  self.rootOffsetY = (self.treePadding / 2);    // By default Y offset should be half the tree padding
+  self.rootOffsetY = (self.treeContainerPadding / 2);    // By default Y offset should be half the tree padding
   if (self.sinR === -1 || self.cosR === -1) {
-    self.rootOffsetY = -1 * (self.maxY - self.minY + (self.treePadding / 2));
+    self.rootOffsetY = -1 * (self.maxY - self.minY + (self.treeContainerPadding / 2));
   }
 
   // Calculate the container element width and height, based on depth/span spacing, orientation, and node size
@@ -266,8 +248,8 @@ ChrisTree.prototype.drawContainer = function() {
     .append('svg')
       // The SVG element is consistently 4 pixels larger on all sides than the G element
       // Add on 4 extra pixels in either direction for padding...could be due to borders?
-      .attr('width', self.treeContainerWidth + self.treePadding)
-      .attr('height', self.treeContainerHeight + self.treePadding)
+      .attr('width', self.treeContainerWidth + self.treeContainerPadding)
+      .attr('height', self.treeContainerHeight + self.treeContainerPadding)
     .append('g')
       .attr('id', 'tree-container-g');
 
@@ -541,5 +523,3 @@ ChrisTree.prototype.updateJSON = function(newNodeData) {
   self.calcLayout();
   self.drawNodes();
 };
-
-}(jQuery, _, d3 ));

@@ -92,8 +92,12 @@
               <td><input type="text" id="option-tree-container-id" /></td>
             </tr>
             <tr>
-              <td><label for="option-child-node-name">JSON Tree Node Property Name</label></td>
-              <td><input type="text" id="option-child-node-name" /></td>
+              <td><label for="option-tree-container-padding">Tree Container Padding</label></td>
+              <td><input type="text" id="option-tree-container-padding" /></td>
+            </tr>
+            <tr>
+              <td><label for="option-node-child-name">JSON Tree Node Property Name</label></td>
+              <td><input type="text" id="option-node-child-name" /></td>
             </tr>
             <tr>
               <td><label for="option-node-data-name">JSON Tree Data Property Name</label></td>
@@ -175,8 +179,8 @@
               <td><input type="text" id="option-node-depth-spacing" /></td>
             </tr>
             <tr>
-              <td><label for="option-node-sibling-spacing">Node Sibling Spacing (px)</label></td>
-              <td><input type="text" id="option-node-sibling-spacing" /></td>
+              <td><label for="option-node-width-spacing">Node Sibling Spacing (px)</label></td>
+              <td><input type="text" id="option-node-width-spacing" /></td>
             </tr>
             <tr>
               <td class="option-label-column">
@@ -417,8 +421,8 @@ node: {
 <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 <script type="text/javascript" src="http://underscorejs.org/underscore.js"></script>
-<!--<script type="text/javascript" src="treedrawerplugin.js"></script>-->
 <script type="text/javascript" src="ChrisTree.js"></script>
+<script type="text/javascript" src="chrisTreeDrawer.js"></script>
 
 <script type="text/javascript">
   var closeOutput = true;
@@ -469,7 +473,7 @@ node: {
     var userSettings = buildAndRefreshSettings();
 
     if ($("input:radio[name='data-source']:checked").val() === "user" && $("#node-data-input").val() !== "") {
-      userSettings.node = $("#node-data-input").val();
+      userSettings.nodeData = $("#node-data-input").val();
     }
 
     var newTreeContainerId = $.trim($("#option-tree-container-id").val()); 
@@ -534,6 +538,88 @@ node: {
     }
   });
 
+  var buildUserSettings = function() {
+    var settings = {};
+    
+    if ($.trim($("#option-tree-container-id").val()) !== "") { 
+      settings.treeContainerId = $.trim($("#option-tree-container-id").val()); 
+    }
+    if ($.trim($("#option-tree-container-padding").val()) !== "") { 
+      settings.treeContainerPadding = $.trim($("#option-tree-container-padding").val()); 
+    }
+
+    if ($.trim($("#option-node-child-name").val()) !== "") { 
+      settings.nodeChildName = $.trim($("#option-node-child-name").val()); 
+    }
+    if ($.trim($("#option-node-data-name").val()) !== "") { 
+      settings.nodeDataName = $.trim($("#option-node-data-name").val()); 
+    }
+
+    if ($("input:radio[name='tree-orientation']:checked").val()) { 
+      settings.treeOrientation = $("input:radio[name='tree-orientation']:checked").val(); 
+    }
+    if ($("input:radio[name='link-orientation']:checked").val()) { 
+      settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val(); 
+    }
+    if ($("input:radio[name='option-link-strategy']:checked").val()) { 
+      settings.linkType = $("input:radio[name='option-link-strategy']:checked").val(); 
+    }
+    
+    if ($.trim($("#option-node-width").val()) !== "") {
+      settings.nodeWidth = parseInt($.trim($("#option-node-width").val()));
+    }
+    if ($.trim($("#option-node-height").val()) !== "" ) {
+      settings.nodeHeight = parseInt($.trim($("#option-node-height").val()));
+    }
+    if ( $.trim($("#option-node-depth-spacing").val()) !== "" ) {
+      settings.depthSpacing = parseInt($.trim($("#option-node-depth-spacing").val()));
+    }
+    if ( $.trim($("#option-node-width-spacing").val()) !== "" ) {
+      settings.widthSpacing = parseInt($.trim($("#option-node-width-spacing").val()));
+    }
+
+    if ($.trim($("#option-forobj-not-supported").val()) !== "") { 
+      settings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
+    }
+    if ($.trim($("#node-html-template").val()) !== "") { 
+      settings.nodeHTMLTemplate = $.trim($("#node-html-template").val()); 
+    }
+
+    // Build class lists from groups of list entries 
+    settings.nodeBkndClasses = buildArrayFromList("option-node-background-classes");
+    settings.nodeHTMLClasses = buildArrayFromList("option-node-html-classes");
+    settings.linkClasses = buildArrayFromList("option-link-body-classes");
+    settings.arrowClasses = buildArrayFromList("option-link-arrow-classes");
+
+    return settings;
+  };
+
+  var buildDefaultObjSettings = function() {
+    var defaultSettings = {
+      treeContainerId: '#tree-container',
+      treeContainerPadding: 8,
+      treeOrientation: 'down',
+      linkOrientation: 'down',
+      nodeChildName: 'node',
+      nodeDataName: 'data',
+      linkType: 'elbow',
+      nodeType: '',
+      nodeWidth: 20,
+      nodeHeight: 20,
+      widthSpacing: 20,
+      depthSpacing: 20,
+      nodeBkndClasses: ['node-background'],
+      nodeHTMLClasses: ['node-html-container'],
+      linkClasses: ['link-html-container'],
+      arrowClasses: ['arrow-html-container'],
+      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
+      nodeHTMLTemplate: function (d) {
+        return '<div id="node-template">' + d.dataValue + '</div>';
+      }
+    };
+
+    return defaultSettings;
+  };
 
   // Builds array of strings from a given unordered list ID
   var buildArrayFromList = function(listId) {
@@ -547,111 +633,11 @@ node: {
         outputList.push(listItemValue);
       }
     }
-    return outputList;
-  };
-
-  var buildUserSettings = function() {
-    var settings = {};
-    
-    if ($.trim($("#option-tree-container-id").val()) !== "") { 
-      var newTreeContainerId = $.trim($("#option-tree-container-id").val()); 
-      settings.treeContainerId = newTreeContainerId;
+    if( outputList.length > 0) { 
+      return outputList;
+    } else {
+      return null;
     }
-    if ($.trim($("#option-child-node-name").val()) !== "") { 
-      settings.childNodeName = $.trim($("#option-child-node-name").val()); 
-    }
-    if ($.trim($("#option-node-data-name").val()) !== "") { 
-      settings.nodeDataName = $.trim($("#option-node-data-name").val()); 
-    }
-
-    if ($("input:radio[name='tree-orientation']:checked").val()) { 
-      settings.treeOrientation = $("input:radio[name='tree-orientation']:checked").val(); 
-    }
-    if ($("input:radio[name='link-orientation']:checked").val()) { 
-      settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val(); 
-    }
-    if ($("input:radio[name='option-link-strategy']:checked").val()) { 
-      settings.linkStrategy = $("input:radio[name='option-link-strategy']:checked").val(); 
-    }
-    
-    if ($.trim($("#option-node-width").val()) !== "") {
-      if(!settings.nodeSizing) {
-        settings.nodeSizing = {};
-      }
-      settings.nodeSizing.width = parseInt($.trim($("#option-node-width").val()));
-    }
-    if ($.trim($("#option-node-height").val()) !== "" ) {
-      if ( !settings.nodeSizing ) {
-        settings.nodeSizing = {};
-      }
-      settings.nodeSizing.height = parseInt($.trim($("#option-node-height").val()));
-    }
-    if ( $.trim($("#option-node-depth-spacing").val()) !== "" ) {
-      if ( !settings.nodeSpacing ) {
-        settings.nodeSpacing = {};
-      }
-      settings.nodeSpacing.level = parseInt($.trim($("#option-node-depth-spacing").val()));
-    }
-    if ( $.trim($("#option-node-sibling-spacing").val()) !== "" ) {
-      if( !settings.nodeSpacing ) {
-        settings.nodeSpacing = {};
-      }
-      settings.nodeSpacing.span = parseInt($.trim($("#option-node-sibling-spacing").val()));
-    }
-
-    // Build class lists from groups of list entries 
-    settings.nodeBkndClasses = buildArrayFromList("option-node-background-classes");
-    settings.nodeHTMLClasses = buildArrayFromList("option-node-html-classes");
-    settings.linkClasses = buildArrayFromList("option-link-body-classes");
-    settings.arrowClasses = buildArrayFromList("option-link-arrow-classes");
-
-    // Delete a class list if no text is added by the user
-    if (settings.nodeBkndClasses.length === 0) { delete settings.nodeBkndClasses; }
-    if (settings.nodeHTMLClasses.length === 0) { delete settings.nodeHTMLClasses; }
-    if (settings.linkClasses.length === 0) { delete settings.linkClasses; }
-    if (settings.arrowClasses.length === 0) { delete settings.arrowClasses; }
-
-    if ($.trim($("#option-forobj-not-supported").val()) !== "") { settings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); }
-    if ($.trim($("#node-html-template").val()) !== "") { settings.nodeHTMLTemplate = $.trim($("#node-html-template").val()); }
-
-
-    return settings;
-  };
-  //{ node: { name: "test3", node: [{  name: "test" }, {name: "test2" }] } }
-  //
-
-  var buildDefaultObjSettings = function() {
-    var defaultSettings = {
-      treeContainerId: '#tree-container',
-      treeOrientation: 'down',
-      linkOrientation: 'down',
-      childNodeName: 'node',
-      nodeDataName: 'data',
-      linkStrategy: 'elbow',
-      nodeSizing: {
-        width: 20,
-        height: 20
-      },
-      nodeSpacing: {
-        level: 20,
-        span: 20
-      },
-      nodeBkndClasses: [],
-      nodeHTMLClasses: [],
-      linkClasses: [],
-      arrowClasses: [],
-      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
-      nodeHTMLTemplate: function (d) {
-        return '<div id="node-template">' + d.dataValue + '</div>';
-      }
-    };
-
-    defaultSettings.nodeBkndClasses.push('node-background');
-    defaultSettings.nodeHTMLClasses.push('node-html-container');
-    defaultSettings.linkClasses.push('link-html-container');
-    defaultSettings.arrowClasses.push('arrow-html-container');
-
-    return defaultSettings;
   };
 
   var addDefaultClassArraySettings = function(obj) {
