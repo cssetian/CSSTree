@@ -557,6 +557,21 @@ node: {
 
     if ($("input:radio[name='tree-orientation']:checked").val()) { 
       settings.treeOrientation = $("input:radio[name='tree-orientation']:checked").val(); 
+
+      switch(settings.treeOrientation) {
+      case 'down':
+        settings.treeOrientation = 0;
+        break;
+      case 'right':
+        settings.treeOrientation = 90;
+        break;
+      case 'up':
+        settings.treeOrientation = 180;
+        break;
+      case 'left':
+        settings.treeOrientation = 270;
+        break;
+      }
     }
     if ($("input:radio[name='link-orientation']:checked").val()) { 
       settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val(); 
@@ -582,7 +597,7 @@ node: {
       settings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
     }
     if ($.trim($("#node-html-template").val()) !== "") { 
-      settings.nodeHTMLTemplate = $.trim($("#node-html-template").val()); 
+      settings.nodeHTMLTemplate = $("#node-html-template").val(); 
     }
 
     // Build class lists from groups of list entries 
@@ -598,7 +613,7 @@ node: {
     var defaultSettings = {
       treeContainerId: '#tree-container',
       treeContainerPadding: 8,
-      treeOrientation: 'down',
+      treeOrientation: 0,
       linkOrientation: 'down',
       nodeChildName: 'node',
       nodeDataName: 'data',
