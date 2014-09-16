@@ -97,9 +97,6 @@ function ChrisTree(userSettings) {
   self.rootOffsetY = '';
   self.treeContainerHeight = '';
   self.treeContainerWidth = '';
-
-  self.refreshTree();
-
 }
 
 // Recalculate tree layout and coordinates, then redraw tree

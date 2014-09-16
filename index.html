@@ -480,7 +480,7 @@ node: {
     var currentContainerId  = newTreeContainerId || "#tree-container";
 
     $(currentContainerId).text('');
-    $(currentContainerId).drawTree(userSettings);
+    $(currentContainerId).drawChrisTree(userSettings);
   };
 
   // Add a click event to each addRow button
@@ -597,7 +597,7 @@ node: {
       settings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
     }
     if ($.trim($("#node-html-template").val()) !== "") { 
-      settings.nodeHTMLTemplate = $("#node-html-template").val(); 
+      settings.nodeHTMLTemplate = eval($("#node-html-template").value); 
     }
 
     // Build class lists from groups of list entries 
