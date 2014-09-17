@@ -69,6 +69,11 @@ label {
 tbody>tr>td {
   vertical-align: middle !important;
 }
+/* Reset the label alignment for options where you can change number of inputs */
+.align-top {
+  display: table-cell;
+  vertical-align: top !important;
+}
 
 /* for larger widths, font sizes scale with width */
 @media (min-width: 1180px) {
@@ -151,7 +156,7 @@ h3>div>a {
 }
 
 /* Set cursor to pointer for span used to add class input rows */
-.sub-title-button>a {
+.sub-title-button {
   padding-left: 5px;
   font-size: 12px;
   cursor: pointer;

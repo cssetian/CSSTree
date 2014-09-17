@@ -1,7 +1,7 @@
-// ChrisTree Source
+// CSSTree 
 // github: https://github.com/cssetian
 
-function ChrisTree(userSettings) {
+function CSSTree(userSettings) {
   'use strict';
   var self = this;
 
@@ -100,16 +100,33 @@ function ChrisTree(userSettings) {
 }
 
 // Recalculate tree layout and coordinates, then redraw tree
-ChrisTree.prototype.refreshTree = function() {
+CSSTree.prototype.refreshTreeLayout = function() {
   'use strict';
   var self = this;
 
-  self.calcTree();
-  self.drawTree();
+  self.calcTreeLayout();
+  self.drawTreeLayout();
+};
+
+// Draw tree with current settings on specified element
+CSSTree.prototype.copyTreeLayout = function(containerId) {
+  'use strict';
+  var self = this;
+
+  if(containerId) {
+    var tempEl = self.treeContainer;
+    self.treeContainer = containerId;
+
+    self.refreshTreeLayout();
+
+    self.treeContainer = tempEl;
+  } else {
+    self.refreshTreeLayout();
+  }
 };
 
 // Replace the root element with a newly drawn tree
-ChrisTree.prototype.drawTree = function() {
+CSSTree.prototype.drawTreeLayout = function() {
   'use strict';
   var self = this;
 
@@ -120,7 +137,7 @@ ChrisTree.prototype.drawTree = function() {
 };
 
 // Recalculate the layout and coordinates of the tree - does not redraw
-ChrisTree.prototype.calcTree = function() {
+CSSTree.prototype.calcTreeLayout = function() {
   'use strict';
   var self = this;
 
@@ -131,7 +148,7 @@ ChrisTree.prototype.calcTree = function() {
 };
 
 // Calculate all dependent variables necessary to determine layout and coordinates of tree
-ChrisTree.prototype.calcTreeVars = function() {
+CSSTree.prototype.calcTreeVars = function() {
   'use strict';
   var self = this;
 
@@ -172,7 +189,7 @@ ChrisTree.prototype.calcTreeVars = function() {
   }
 };
 
-ChrisTree.prototype.calcContainerVars = function() {
+CSSTree.prototype.calcContainerVars = function() {
   'use strict';
   var self = this;
 
@@ -204,7 +221,7 @@ ChrisTree.prototype.calcContainerVars = function() {
 };
 
 // Calculate the layout of the tree based on current properties
-ChrisTree.prototype.calcLayout = function() {
+CSSTree.prototype.calcLayout = function() {
   'use strict';
   var self = this;
 
@@ -236,7 +253,7 @@ ChrisTree.prototype.calcLayout = function() {
 };
 
 // Draw the SVG container element on the root tree node
-ChrisTree.prototype.drawContainer = function() {
+CSSTree.prototype.drawContainer = function() {
   'use strict';
   var self = this;
 
@@ -254,7 +271,7 @@ ChrisTree.prototype.drawContainer = function() {
 };
 
 // Draw the background and HTML templates for each node
-ChrisTree.prototype.drawNodes = function(treeContainerEl) {
+CSSTree.prototype.drawNodes = function(treeContainerEl) {
   'use strict';
   var self = this;
 
@@ -306,7 +323,7 @@ ChrisTree.prototype.drawNodes = function(treeContainerEl) {
 };
 
 // Draw the SVG links connecting each node
-ChrisTree.prototype.drawLinks = function(treeContainerEl) {
+CSSTree.prototype.drawLinks = function(treeContainerEl) {
   'use strict';
   var self = this;
 
@@ -325,7 +342,7 @@ ChrisTree.prototype.drawLinks = function(treeContainerEl) {
   return svgInitializedLinks;
 };
 
-ChrisTree.prototype.drawLinkMarkerDef = function(treeContainerEl) {
+CSSTree.prototype.drawLinkMarkerDef = function(treeContainerEl) {
   'use strict';
   var self = this;
 
@@ -346,7 +363,7 @@ ChrisTree.prototype.drawLinkMarkerDef = function(treeContainerEl) {
 }
 
 // Returns a function that is used to draw the links as curved SVG paths between nodes
-ChrisTree.prototype.diagonalLinkStrategy = function() {
+CSSTree.prototype.diagonalLinkStrategy = function() {
   'use strict';
   var self = this;
 
@@ -381,7 +398,7 @@ ChrisTree.prototype.diagonalLinkStrategy = function() {
 };
 
 // Returns a an elbow link function that is used to draw right-angled SVG paths between nodes
-ChrisTree.prototype.elbowLinkStrategy = function() {
+CSSTree.prototype.elbowLinkStrategy = function() {
   'use strict';
   var self = this;
 
@@ -476,7 +493,7 @@ ChrisTree.prototype.elbowLinkStrategy = function() {
 };
 
 // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
-ChrisTree.prototype.calcMinMax = function() {
+CSSTree.prototype.calcMinMax = function() {
   'use strict';
   var self = this;
 
@@ -487,13 +504,13 @@ ChrisTree.prototype.calcMinMax = function() {
 };
 
 // Convert an angle from degrees to radians
-ChrisTree.prototype.toRad = function(degAngle) {
+CSSTree.prototype.toRad = function(degAngle) {
   'use strict';
   return degAngle * (Math.PI / 180);
 };
 
 // Redraw tree at specified orientation
-ChrisTree.prototype.setOrientation = function(newAngle) {
+CSSTree.prototype.setOrientation = function(newAngle) {
   'use strict';
   var self = this;
 
@@ -502,7 +519,7 @@ ChrisTree.prototype.setOrientation = function(newAngle) {
 };
 
 // Redraw links with new specified link type
-ChrisTree.prototype.setLinkType = function(newLinkType) {
+CSSTree.prototype.setLinkType = function(newLinkType) {
   'use strict';
   var self = this;
 
@@ -512,7 +529,7 @@ ChrisTree.prototype.setLinkType = function(newLinkType) {
 };
 
 // Refresh the node JSON data and then redraw the nodes
-ChrisTree.prototype.updateJSON = function(newNodeData) {
+CSSTree.prototype.updateJSON = function(newNodeData) {
   'use strict';
   var self = this;
 

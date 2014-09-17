@@ -183,7 +183,7 @@
               <td><input type="text" id="option-node-width-spacing" /></td>
             </tr>
             <tr>
-              <td class="option-label-column">
+              <td class="option-label-column align-top">
                 <label for="option-node-background-classes">Node Background Classes</label><br>
                 <span class="sub-title-button add-row disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
               </td>
@@ -196,7 +196,7 @@
               </td>
             </tr>
             <tr>
-              <td class="option-label-column">
+              <td class="option-label-column align-top">
                 <label for="option-node-html-classes">Node HTML Template Classes</label><br>
                 <span class="sub-title-button add-row disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
               </td>
@@ -209,7 +209,7 @@
               </td>
             </tr>
             <tr>
-              <td class="option-label-column">
+              <td class="option-label-column align-top">
                 <label for="option-link-body-classes">Link Body Classes</label><br>
                 <span class="sub-title-button add-row disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
               </td>
@@ -222,7 +222,7 @@
               </td>
             </tr>
             <tr>
-              <td class="option-label-column">
+              <td class="option-label-column align-top">
                 <label for="option-link-arrow-classes">Link Arrow Classes</label><br>
                 <span class="sub-title-button add-row disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
               </td>
@@ -480,7 +480,7 @@ node: {
     var currentContainerId  = newTreeContainerId || "#tree-container";
 
     $(currentContainerId).text('');
-    $(currentContainerId).drawChrisTree(userSettings);
+    $(currentContainerId).drawCSSTree(userSettings);
   };
 
   // Add a click event to each addRow button

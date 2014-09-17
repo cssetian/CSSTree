@@ -1,12 +1,12 @@
-(function( $, _, d3, ChrisTree ) {
+(function( $, _, d3, CSSTree ) {
 
-  $.fn.drawChrisTree = function( userSettings ) {
+  $.fn.drawCSSTree = function( userSettings ) {
     var self = this;
 
     // After defining default settings, call the helper function to draw the actual tree
-    self.customTree = new ChrisTree(userSettings);
-    self.customTree.refreshTree();
+    self.customTree = new CSSTree(userSettings);
+    self.customTree.refreshTreeLayout();
 
     return self;
   };
-}(jQuery, _, d3, ChrisTree ));
+}(jQuery, _, d3, CSSTree ));
