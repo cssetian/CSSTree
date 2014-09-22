@@ -16,7 +16,6 @@ REQUIRED DEPENDENCIES
 ---------------------
 * d3.js
 * jQuery
-* underscore.js
 
 USAGE
 -----
@@ -35,4 +34,3 @@ STILL TODO
 * With the diagonal link type, define the link arrow header markers such that they are aligned to the angle of the diagonal
 * Support for different node shapes?
 * Add an option for orientation of the HTML template (currently always oriented such that text is human-readable)
-* Remove underscore dependency for fewer library dependencies

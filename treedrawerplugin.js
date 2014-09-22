@@ -222,10 +222,10 @@
       console.log('Beginning to calculate the min/max coordinates of the tree space');
 
       // Calculate the min and max values of the tree layout, giving you a bounding box with which a tree container element can be created
-      var MIN_X_COORDS = _.min(nodes, function (node) { return node.x; });
-      var MAX_X_COORDS = _.max(nodes, function (node) { return node.x; });
-      var MIN_Y_COORDS = _.min(nodes, function (node) { return node.y; });
-      var MAX_Y_COORDS = _.max(nodes, function (node) { return node.y; });
+      var MIN_X_COORDS = d3.min(nodes, function (node) { return node.x; });
+      var MAX_X_COORDS = d3.max(nodes, function (node) { return node.x; });
+      var MIN_Y_COORDS = d3.min(nodes, function (node) { return node.y; });
+      var MAX_Y_COORDS = d3.max(nodes, function (node) { return node.y; });
       console.log('Min X: ' + Math.round(MIN_X_COORDS.x) + ' | Max X: ' + Math.round(MAX_X_COORDS.x));
       console.log('Min Y: ' + Math.round(MIN_Y_COORDS.y) + ' | Max Y: ' + Math.round(MAX_Y_COORDS.y));
 
