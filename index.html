@@ -424,193 +424,217 @@ node: {
 <script type="text/javascript" src="CSSTree.js"></script>
 <script type="text/javascript" src="cssTreeDrawer.js"></script>
 
+<!-- Main Application Initialization -->
 <script type="text/javascript">
-  var closeOutput = true;
-  var closeSettings = true;
-  $(function () { $('.output-panel-body').collapse({
-    toggle: false
-  })});
-  $(function () { $('.settings-panel-body').collapse({
-    toggle: false
-  })});
 
-  var refreshDataEl = function(el, data, formatted) {
+  $(document).ready(function(){
+    var self = this;
+
+    // Declare state variables
+    self.defaultSettings = {};
+    self.userSettings = {};
+    self.mergedSettings = {};
+    self.outputPanelsClosed = false;
+    self.settingsPanelsClosed = false;
+
+    // Initialize expand / collapse modules to an expanded state
+    $(function () { $('.output-panel-body').collapse({
+      toggle: false
+    })});
+    $(function () { $('.settings-panel-body').collapse({
+      toggle: false
+    })});
+
+    // Initialize default settings and copy to container element
+    self.defaultSettings = buildDefaultSettings();
+    refreshPanelText('#default-formatted-settings', self.defaultSettings, true);
+
+    setupEvents();
+  });
+
+  // Define various onClick events for expand/collapse and adding rows
+  var setupEvents = function() {
+    // Expand / Collapse - all when button under section heading is selected
+    $("#toggle-settings-modules").click(function(e) {
+      if(self.settingsPanelsClosed) {
+        $("#html-template-collapse").collapse('show');
+        $("#json-tree-data-collapse").collapse('show');
+        $("#tree-settings-collapse").collapse('show');
+        self.settingsPanelsClosed = false;
+      } else {
+        $("#html-template-collapse").collapse('hide');
+        $("#json-tree-data-collapse").collapse('hide');
+        $("#tree-settings-collapse").collapse('hide');
+        self.settingsPanelsClosed = true;
+      }
+    });
+
+    // Expand / Collapse - all when button under section heading is selected
+    $("#toggle-output-modules").click(function(e) {
+      if(self.outputPanelsClosed) {
+        $("#default-formatted-collapse").collapse('show');
+        $("#compiled-formatted-collapse").collapse('show');
+        $("#user-unformatted-collapse").collapse('show');
+        $("#user-formatted-collapse").collapse('show');
+        self.outputPanelsClosed = false;
+      } else {
+        $("#default-formatted-collapse").collapse('hide');
+        $("#compiled-formatted-collapse").collapse('hide');
+        $("#user-unformatted-collapse").collapse('hide');
+        $("#user-formatted-collapse").collapse('hide');
+        self.outputPanelsClosed = true;
+      }
+    });
+    
+    // Add a click event to each addRow button:
+    //    - Adds a new element to the text input list
+    //    - Each item in group included when compiling settings
+    //    - When options are compiled, all empty boxes are ignored
+    $(".add-row").click(function(e) {
+      var ul = $(self.dataset.listid);
+
+      var li = document.createElement("li");
+      li.className = "option-list-item";
+
+      var input = document.createElement("input");
+      input.type = "text";
+      input.className = "option-list-item-input";
+
+      li.appendChild(input);
+      ul.append(li);
+    });
+  };
+
+  // We can use the extend method to merge userSettings with defaultSettings:
+  // But with the added first parameter of TRUE to signify a DEEP COPY:
+  var buildMergedSettings = function(defaultSettings, userSettings) {
+    self.mergedSettings = $.extend( true, defaultSettings, userSettings );
+    return self.mergedSettings;
+  };
+
+  var buildUserSettings = function() {
+    if($("input:radio[name='settings-source']:checked").val() === "user") {
+      self.userSettings = buildUserSettings();
+    }
+    return self.userSettings;
+  };
+
+  // Define a function to refresh a given element with specific data
+  var refreshPanelText = function(el, data, formatted) {
     $(el).html('');
 
+    // If the text should be formatted, define size of indentation
     if(formatted) {
       $(el).html(JSON.stringify(data, undefined, 2));
     } else {
       $(el).html(JSON.stringify(data));
     }
-
   };
 
-  // We can use the extend method to merge userSettings with defaultSettings:
-  // But with the added first parameter of TRUE to signify a DEEP COPY:
-  var mergeSettings = function(defaultSettings, userSettings) {
-    return $.extend( true, defaultSettings, userSettings );
+  var refreshSettingsPanels = function() {
+    refreshPanelText('#user-unformatted-settings', self.userSettings, false);
+    refreshPanelText('#user-formatted-settings', self.userSettings, true);
+    refreshPanelText('#compiled-formatted-settings', self.mergedSettings, true);
   };
 
-  var buildAndRefreshSettings = function() {
-    var defaultObjSettings = buildDefaultObjSettings();
-    var defaultSettings = addDefaultClassArraySettings(defaultObjSettings);
-    refreshDataEl('#default-formatted-settings', defaultSettings, true);
-
-    var userSettings = {};
-    if($("input:radio[name='settings-source']:checked").val() === "user") {
-      userSettings = buildUserSettings();
-    }
-    refreshDataEl('#user-unformatted-settings', userSettings, false);
-    refreshDataEl('#user-formatted-settings', userSettings, true);
-
-    var mergedSettings = mergeSettings(defaultSettings, userSettings);
-    refreshDataEl('#compiled-formatted-settings', mergedSettings, true);
-
-    return userSettings;
-  };
-
+  // Builds settings and refreshes tree, redrawing on default root tree element
+  // Reset content of the root tree element before redrawing
   var buildAndRefreshTree = function() {
-    var userSettings = buildAndRefreshSettings();
+    buildAndRefreshSettings();
 
     if ($("input:radio[name='data-source']:checked").val() === "user" && $("#node-data-input").val() !== "") {
-      userSettings.nodeData = $("#node-data-input").val();
+      self.userSettings.nodeData = $("#node-data-input").val();
     }
 
     var newTreeContainerId = $.trim($("#option-tree-container-id").val()); 
-    var currentContainerId  = newTreeContainerId || "#tree-container";
+    self.currentContainerId  = newTreeContainerId || "#tree-container";
 
-    $(currentContainerId).text('');
-    $(currentContainerId).drawCSSTree(userSettings);
+    $(self.currentContainerId).text('');
+    $(self.currentContainerId).drawCSSTree(self.userSettings);
   };
 
-  // Add a click event to each addRow button
-  //    - Adds a new element to the text input list
-  //    - Each item in group included when compiling settings
-  //    - When options are compiled, all empty boxes are ignored
-  $(".add-row").click(function(e) {
-    var self = this;
-    var ul = $(self.dataset.listid);
 
-    var li = document.createElement("li");
-    li.className = "option-list-item";
-
-    var input = document.createElement("input");
-    input.type = "text";
-    input.className = "option-list-item-input";
-
-    li.appendChild(input);
-    ul.append(li);
-  });
-
-  $("#toggle-settings-modules").click(function(e) {
-    var self = this;
-    if(closeSettings) {
-      $("#html-template-collapse").collapse('show');
-      $("#json-tree-data-collapse").collapse('show');
-      $("#tree-settings-collapse").collapse('show');
-      closeSettings = false;
-    } else {
-      $("#html-template-collapse").collapse('hide');
-      $("#json-tree-data-collapse").collapse('hide');
-      $("#tree-settings-collapse").collapse('hide');
-      closeSettings = true;
-    }
-  });
-
-  $("#toggle-output-modules").click(function(e) {
-    var self = this;
-    if(closeOutput) {
-      $("#default-formatted-collapse").collapse('show');
-      $("#compiled-formatted-collapse").collapse('show');
-      $("#user-unformatted-collapse").collapse('show');
-      $("#user-formatted-collapse").collapse('show');
-
-      //$(".output-panel-body").slideUp();
-      closeOutput = false;
-    } else {
-      $("#default-formatted-collapse").collapse('hide');
-      $("#compiled-formatted-collapse").collapse('hide');
-      $("#user-unformatted-collapse").collapse('hide');
-      $("#user-formatted-collapse").collapse('hide');
-
-      //$(".output-panel-body").slideDown();
-      closeOutput = true;
-    }
-  });
-
+  // Parse all settings variables from form inputs to userSettings
   var buildUserSettings = function() {
-    var settings = {};
-    
+    self.userSettings = self.userSettings || {};
+
+    // Define the tree container ID and padding
     if ($.trim($("#option-tree-container-id").val()) !== "") { 
-      settings.treeContainerId = $.trim($("#option-tree-container-id").val()); 
+      self.userSettings.treeContainerId = $.trim($("#option-tree-container-id").val()); 
     }
     if ($.trim($("#option-tree-container-padding").val()) !== "") { 
-      settings.treeContainerPadding = $.trim($("#option-tree-container-padding").val()); 
+      self.userSettings.treeContainerPadding = $.trim($("#option-tree-container-padding").val()); 
     }
 
+    // Define the json property name of the data nodes and child nodes
     if ($.trim($("#option-node-child-name").val()) !== "") { 
-      settings.nodeChildName = $.trim($("#option-node-child-name").val()); 
+      self.userSettings.nodeChildName = $.trim($("#option-node-child-name").val()); 
     }
     if ($.trim($("#option-node-data-name").val()) !== "") { 
-      settings.nodeDataName = $.trim($("#option-node-data-name").val()); 
+      self.userSettings.nodeDataName = $.trim($("#option-node-data-name").val()); 
     }
 
+    // Translate the tree orientation from text to angle in degrees
     if ($("input:radio[name='tree-orientation']:checked").val()) { 
-      settings.treeOrientation = $("input:radio[name='tree-orientation']:checked").val(); 
-
-      switch(settings.treeOrientation) {
+      self.userSettings.treeOrientation = $("input:radio[name='tree-orientation']:checked").val(); 
+      switch(self.userSettings.treeOrientation) {
       case 'down':
-        settings.treeOrientation = 0;
+        self.userSettings.treeOrientation = 0;
         break;
       case 'right':
-        settings.treeOrientation = 90;
+        self.userSettings.treeOrientation = 90;
         break;
       case 'up':
-        settings.treeOrientation = 180;
+        self.userSettings.treeOrientation = 180;
         break;
       case 'left':
-        settings.treeOrientation = 270;
+        self.userSettings.treeOrientation = 270;
         break;
       }
     }
+
+    // Tree link properties
     if ($("input:radio[name='link-orientation']:checked").val()) { 
-      settings.linkOrientation = $("input:radio[name='link-orientation']:checked").val(); 
+      self.userSettings.linkOrientation = $("input:radio[name='link-orientation']:checked").val(); 
     }
     if ($("input:radio[name='option-link-strategy']:checked").val()) { 
-      settings.linkType = $("input:radio[name='option-link-strategy']:checked").val(); 
+      self.userSettings.linkType = $("input:radio[name='option-link-strategy']:checked").val(); 
     }
     
+    // Tree spacing properties
     if ($.trim($("#option-node-width").val()) !== "") {
-      settings.nodeWidth = parseInt($.trim($("#option-node-width").val()));
+      self.userSettings.nodeWidth = parseInt($.trim($("#option-node-width").val()));
     }
     if ($.trim($("#option-node-height").val()) !== "" ) {
-      settings.nodeHeight = parseInt($.trim($("#option-node-height").val()));
+      self.userSettings.nodeHeight = parseInt($.trim($("#option-node-height").val()));
     }
     if ( $.trim($("#option-node-depth-spacing").val()) !== "" ) {
-      settings.depthSpacing = parseInt($.trim($("#option-node-depth-spacing").val()));
+      self.userSettings.depthSpacing = parseInt($.trim($("#option-node-depth-spacing").val()));
     }
     if ( $.trim($("#option-node-width-spacing").val()) !== "" ) {
-      settings.widthSpacing = parseInt($.trim($("#option-node-width-spacing").val()));
+      self.userSettings.widthSpacing = parseInt($.trim($("#option-node-width-spacing").val()));
     }
 
+    // HTML Template / foreign object inputs
     if ($.trim($("#option-forobj-not-supported").val()) !== "") { 
-      settings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
+      self.userSettings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
     }
     if ($.trim($("#node-html-template").val()) !== "") { 
-      settings.nodeHTMLTemplate = eval($("#node-html-template").value); 
+      self.userSettings.nodeHTMLTemplate = eval($("#node-html-template").value); 
     }
 
     // Build class lists from groups of list entries 
-    settings.nodeBkndClasses = buildArrayFromList("option-node-background-classes");
-    settings.nodeHTMLClasses = buildArrayFromList("option-node-html-classes");
-    settings.linkClasses = buildArrayFromList("option-link-body-classes");
-    settings.arrowClasses = buildArrayFromList("option-link-arrow-classes");
+    self.userSettings.nodeBkndClasses = buildArrayFromList("option-node-background-classes");
+    self.userSettings.nodeHTMLClasses = buildArrayFromList("option-node-html-classes");
+    self.userSettings.linkClasses = buildArrayFromList("option-link-body-classes");
+    self.userSettings.arrowClasses = buildArrayFromList("option-link-arrow-classes");
 
-    return settings;
+    return self.userSettings;
   };
 
-  var buildDefaultObjSettings = function() {
-    var defaultSettings = {
+  // Default tree settings to display on the page
+  var buildDefaultSettings = function() {
+    self.defaultSettings = {
       treeContainerId: '#tree-container',
       treeContainerPadding: 8,
       treeOrientation: 0,
@@ -636,7 +660,21 @@ node: {
     return defaultSettings;
   };
 
-  // Builds array of strings from a given unordered list ID
+  // Builds compiled settings to use and display in formatted output.
+  // First build default settings
+  // Then merge with user input overridden settings, 
+  // Display formatted/unformatted output in grid
+  //      for default, user, and merged settings
+  // Settings don't need to be merged w default settings because
+  //      prototype object has defaults, but this allows for easy 
+  //      display of merged settings on the page.
+  var buildAndRefreshSettings = function() {
+    buildUserSettings();
+    buildMergedSettings(defaultSettings, userSettings);
+    refreshSettingsPanels();
+  };
+
+  // Builds an array of strings given the ID of an html list element
   var buildArrayFromList = function(listId) {
     var listItemsEl = document.getElementById(listId).getElementsByTagName('li');
     var outputList = [];
@@ -653,24 +691,6 @@ node: {
     } else {
       return null;
     }
-  };
-
-  var addDefaultClassArraySettings = function(obj) {
-
-    if(obj.nodeBkndClasses.indexOf('node-background') === -1) {
-      obj.nodeBkndClasses.push('node-background');
-    }
-    if(obj.nodeHTMLClasses.indexOf('node-html-container') === -1) {
-      obj.nodeHTMLClasses.push('node-html-container');
-    }
-    if(obj.linkClasses.indexOf('link-html-container') === -1) {
-      obj.linkClasses.push('link-html-container');
-    }
-    if(obj.arrowClasses.indexOf('arrow-html-container') === -1) {
-      obj.arrowClasses.push('arrow-html-container');
-    }
-
-    return obj;
   };
 
 </script>
