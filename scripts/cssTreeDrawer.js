@@ -1,3 +1,7 @@
+// Very simple wrapping on the CSSTree class, 
+// allowing a user with basic jQuery knowledge 
+// to leverage the plugin to draw a CSSTree on 
+// an element.
 (function( $, d3, CSSTree ) {
 
   $.fn.drawCSSTree = function( userSettings ) {

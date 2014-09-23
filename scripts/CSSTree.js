@@ -1,4 +1,4 @@
-// CSSTree 
+// CSSTree Class
 // github: https://github.com/cssetian
 
 function CSSTree(userSettings) {
