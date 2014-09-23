@@ -1,4 +1,4 @@
-(function( $, _, d3, CSSTree ) {
+(function( $, d3, CSSTree ) {
 
   $.fn.drawCSSTree = function( userSettings ) {
     var self = this;
@@ -9,4 +9,4 @@
 
     return self;
   };
-}(jQuery, _, d3, CSSTree ));
+}(jQuery, d3, CSSTree ));

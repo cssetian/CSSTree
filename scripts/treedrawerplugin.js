@@ -1,4 +1,6 @@
-(function( $, _, d3 ) {
+/* Depreciated basic jQuery plugin, sequential logic style */
+
+(function( $, d3 ) {
 
   $.fn.drawTree = function( userSettings ) {
     var self = this;
@@ -279,9 +281,9 @@
 
       // Not currently used for any specific purpose
       // Calculate the maximum depth and span of the Tree (requires the d3 extracted nodes to do so)
-      var MAX_DEPTH   = d3.max(nodes, function (x) { return x.depth; }) + 1;
-      var MAX_SPAN    = _.max(_.countBy(nodes, function (x) { return x.depth; }));
-      console.log('Max Depth: ' + MAX_DEPTH + ' | Max Span: ' + MAX_SPAN);
+      //var MAX_DEPTH   = d3.max(nodes, function (x) { return x.depth; }) + 1;
+      //var MAX_SPAN    = d3.max(_.countBy(nodes, function (x) { return x.depth; }));
+      //console.log('Max Depth: ' + MAX_DEPTH + ' | Max Span: ' + MAX_SPAN);
 
       // Calculate the container element width and height, based on depth/span spacing, orientation, and node size
       var TREE_CONTAINER_HEIGHT = Math.abs(SIN_R) * (settings.MAX_X - settings.MIN_X + settings.NODE_HEIGHT) +
@@ -730,4 +732,4 @@
     }
   };
 
-}(jQuery, _, d3 ));
+}(jQuery, d3 ));

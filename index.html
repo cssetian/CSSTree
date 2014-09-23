@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Tree-drawing demo site, for configuring and testing customization settings -->
 
 <html>
 <head>
@@ -8,7 +9,7 @@
 
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.css" />
-  <link rel="stylesheet" type="text/css" href="index.css" />
+  <link rel="stylesheet" type="text/css" href="styles/index.css" />
 </head>
 
 <body>
@@ -24,7 +25,9 @@
   </nav>
 
   <div role="main" class="main-container">
-    <h1 class="col-xs-12 col-sm-12 col-md-12">Tree-Drawing jQuery Plugin Demo Site</h1>
+    <h1 class="col-xs-12 col-sm-12 col-md-12">Tree-Drawing jQuery Plugin Demo Site
+        <div class="sub-title-button"><a id="source-code-link" target="_blank" href="https://github.com/cssetian/generic-tree-drawer">Source</a></div>
+    </h1>
   
     <!-- Container for displaying drawn Tree -->
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -416,12 +419,16 @@ node: {
   </div>
 </div>
 
+
+
+
 <!-- Latest compiled and minified JavaScript -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
-<script type="text/javascript" src="CSSTree.js"></script>
-<script type="text/javascript" src="cssTreeDrawer.js"></script>
+<script type="text/javascript" src="scripts/CSSTree.js"></script>
+<script type="text/javascript" src="scripts/cssTreeDrawer.js"></script>
+
 
 <!-- Main Application Initialization -->
 <script type="text/javascript">
