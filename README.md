@@ -11,6 +11,12 @@ The Demo Site included gives users the ability to configure speicfic settings an
 
 By default, d3.js builds a tree layout where each node has a size of 0x0px in its layout coordinate space, and any data relevant to a specific node is displayed in a caption or a separate, dynamically populated element. In this plugin, we instead define what we want the visual characteristics of the nodes to be and aggregate the dimensional characteristics into a coordinate space and the appropriate layout to use with SVG. With this abstraction and the ability to customize the HTML templates, node backgrounds, and link object classes, generated trees can be highly customized with complex class and css property combinations.
 
+IMPORTANT FILES
+---------------
+* scripts/CSSTree.js - The real deal, the prototype-based implementation of the tree drawing function
+* index.html - Contains a test site for playing around with settings, drawing sample trees, and then extracting those settings into javascript objects that can be passed into a function call to yield the same result
+* styles/index.css - Contains the CSS classes for the entire demo site page, as well as styles for the demo tree layout and template at the bottom of the file
+
 DEPRECIATED FILES
 -----------------
 * tree-drawer-plugin.js - Contains a scripted, straightforward implementation of the tree drawing object, contained within a jquery plugin
