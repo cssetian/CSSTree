@@ -5,9 +5,10 @@
 
 /* make page title thicker font */
 h1 {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: bold;
   margin-bottom: 0px;
+  text-align: center;
 }
 
 /* make section titles thicker font */
@@ -17,14 +18,6 @@ h2 {
   font-size: 24px;
   font-weight: bold;
 }
-
-/* Styling to center output tree on the page */
-svg {
-  display: block; 
-  margin-left: auto;
-  margin-right: auto;
-}
-
 
 /* padding-top to buffer for navbar */
 /* default text font size and weight */
@@ -42,6 +35,14 @@ p {
   font-weight: normal;
 }
 
+/* Clear the bottom margin on labels of the table. Better centers the labels within each row */
+label {
+  margin-bottom: 0px !important;
+}
+/* Clear the margin on the table so that it doesn't add on an extra padding to the bottom of inside the module body */
+table {
+  margin-bottom: 0px !important;
+}
 /* add line spacers between each tree setting, leave out top */
 tbody>tr>td {
   border-top: 0px !important;
@@ -50,22 +51,13 @@ tbody>tr:not(:first-child) {
   border-top: 1px solid #ddd !important;
 }
 
-/* Clear the margin on the table so that it doesn't add on an extra padding to the bottom of inside the module body */
-table {
-  margin-bottom: 0px !important;
-}
-
-/* Clear the bottom margin on labels of the table. Better centers the labels within each row */
-label {
-  margin-bottom: 0px !important;
-}
-
-/* So the table has regular spacing within the module */
+/* Eliminate top/bottom padding so table is regularly spaced within module */
 .panel-body {
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
+/******* Alignment *******/
 /* Override bootstrap vertical align to center settings labels between rows */
 tbody>tr>td {
   vertical-align: middle !important;
@@ -75,13 +67,15 @@ tbody>tr>td {
   display: table-cell;
   vertical-align: top !important;
 }
+/**************************/
 
+/**************View Port Specific *******************************/
+/****************************************************************/
 /* for larger widths, font sizes scale with width */
 @media (min-width: 1180px) {
   h1 {
     font-size: 3vw;
   }
-
   h2 {
     margin-bottom: 5px;
     font-size: 2vw;
@@ -142,27 +136,16 @@ tbody>tr>td {
 }
 /********************/
 
-.text-muted {
-  text-align: center;
-  font-size: 14px;
-}
 
-/* format the toggle modules links */
-.sub-title-button>a {
-  margin-top: 5px;
-  font-size:11px;
-  font-weight: normal;
-  vertical-align: top;
-  display: inline-block;
-}
-
+/* Styling for buttons adding rows and expand/collapsing modules */
+/********************/
 /* Use the pointer cursor for all radio select inputs */
 input[type=radio] {
   cursor: pointer;
 }
 
 /* Set cursor to pointer for span used to add class input rows */
-.sub-title-button {
+.sub-title-button>span {
   padding-left: 5px;
   font-size: 12px;
   cursor: pointer;
@@ -173,6 +156,29 @@ input[type=radio] {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+/* format the toggle modules links */
+.sub-title-button>a {
+  margin-top: 5px;
+  font-size:11px;
+  font-weight: normal;
+  vertical-align: top;
+  display: inline-block;
+}
+.sub-title-link>a {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: normal;
+  vertical-align: top;
+  display: inline-block;
+
+}
+/********************/
+
+.footer-text {
+  text-align: center;
+  font-size: 14px;
 }
 
 /* Make list of text inputs a raw list of elements with no styling */
@@ -206,21 +212,30 @@ input[type=radio] {
   box-sizing: border-box;
 }
 
+/* When there's no content, this gives output modules a basic min height */
 .output-container {
   min-height: 50px;
 }
 
+/* Wrap words in formatted code sections */
 .code-container {
   overflow-wrap: break-word;
 }
 
+/* Styling to center output tree on the page */
+svg {
+  display: block; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Allows different modules to wrap differently depending on vieweport size */
 .main-container {
   display: flex;
   flex-flow: row wrap;
 
   display: -webkit-flex;
   -webkit-flex-flow: row wrap;
-  
 }
 /****************************************************************/
 
