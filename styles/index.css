@@ -156,6 +156,10 @@ tbody>tr>td {
   display: inline-block;
 }
 
+/* Use the pointer cursor for all radio select inputs */
+input[type=radio] {
+  cursor: pointer;
+}
 
 /* Set cursor to pointer for span used to add class input rows */
 .sub-title-button {
