@@ -1,12 +1,11 @@
 Generic Tree-Drawer
 ===================
-This plugin is designed to take a JSON formatted tree of data and create a visual representation using a customization of the tree layout in d3.js. 
+This Object is designed to take a JSON based tree-structure of data and create a visual representation of it using a number of configurable parameters and the CSSTree custom object class leveraging d3.js. 
 
 The benefit of this particular implementation is that it
 
-1.  Extracted a number of different options into configurable settings
-2.  Allows the user to inject a generic HTML template into each node
-3.  Passes the JSON data object as a parameter to the HTML template function of each node in the tree, and is used to inject data from the tree data structure into the node templates.
+1.  Allows each node to be supplied an HTML template that utilizes data found on each node to populate variables
+2.  Is highly visually configurable using a number of different basic geometric and visual properties, coupled with CSS classes that can be added to various elements of the tree
 
 The Demo Site included gives users the ability to configure speicfic settings and customize the tree. The user can define a root HTML element, height, width, and template for each node of the tree, and additionally include any number of classes to customize the node backgrounds, node templates, link body elements, and link arrow elements. This plugin will then compile these options and display both a formatted and unformatted JSON object for viewing and copying. The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The element container will automatically expand to a size that is determined by an aggregation of the node size, node spacing, and general structure of the data tree. 
 
@@ -19,13 +18,13 @@ REQUIRED DEPENDENCIES
 
 USAGE
 -----
-* Reference dependencies first
-* Reference treedrawerplugin.js
+* Reference jQuery and d3 dependencies first
+* Reference CSSTree.js
 * Define JSON options either by 
 * 1. Using the demo site, completing your desired customized inputs, and copying the compiled JSON string
 * 2. Look at the defaults in the source file and write the options on your own using similar properties
-* Call the tree drawing function on an HTML container element, passing your options into the function
-  * Example: $("#my-container-el").drawTree(options);
+* Create a CSSTree object, supplying the user-defined settings
+* Call the tree drawing method CSSTree.refreshTreeLayout, which recalculates calculated variables based on any changes to primitive variables, and then draws the tree on the specified root element
 
 STILL TODO
 ------------
