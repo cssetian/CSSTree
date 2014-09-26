@@ -144,6 +144,10 @@ input[type=radio] {
   cursor: pointer;
 }
 
+a {
+  cursor: pointer;
+}
+
 /* Set cursor to pointer for span used to add class input rows */
 .sub-title-button>span {
   padding-left: 5px;
