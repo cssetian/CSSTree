@@ -1,64 +1,53 @@
 /********************* Button Styles ****************************/
 /****************************************************************/
-
 /* Make clickable area of nav button take up the full H & W of view */
 /********************/
-.navbar {
-  // Centers button in page
-  .container {
-    width: 100%;
-  }
-  a {
-    margin: 0px;
-    padding: 0px;
-    text-align: center;
-    line-height: 50px;
-    height: 50px;
+.navbar .container {
+  width: 100%; }
+.navbar a {
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  line-height: 50px;
+  height: 50px;
+  font-size: 26px; }
+.navbar li:hover {
+  background-color: #f5f5f5; }
 
-    font-size: 26px;
-  }
-  li:hover {
-    background-color: #f5f5f5;
-  }
-}
 /********************/
-
-
 /* Styling for buttons adding rows and expand/collapsing modules */
 /********************/
 /* Use the pointer cursor for all radio select inputs */
 input[type=radio] {
-  cursor: pointer;
-}
+  cursor: pointer; }
 
 /* Set cursor to pointer for span used to add class input rows */
-.sub-title-button>span {
+.sub-title-button > span {
   padding-left: 5px;
   font-size: 12px;
   cursor: pointer;
-
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
-}
+  user-select: none; }
 
 /* format the toggle modules links */
-.sub-title-button>a {
+.sub-title-button > a {
   margin-top: 5px;
-  font-size:11px;
+  font-size: 11px;
   font-weight: normal;
   vertical-align: top;
-  display: inline-block;
-}
-.sub-title-link>a {
+  display: inline-block; }
+
+.sub-title-link > a {
   margin-top: 5px;
   font-size: 14px;
   font-weight: normal;
   vertical-align: top;
-  display: inline-block;
+  display: inline-block; }
 
-}
 /********************/
+
+/*# sourceMappingURL=_buttons.css.map */
