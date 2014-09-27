@@ -80,4 +80,3 @@ The plugin then draws a d3 layout and SVG styled representation of the tree, app
 * Apply validation to numeric inputs and prevent refresh on invalid inputs
 * Auto-populate default values on page load and remove user/default settings values, allow users to reset to default settings by using reset to defaults button in each module
 * Possibly have 1 reset all to defaults button at top of page
-* 
