@@ -12,7 +12,7 @@ The benefit of this particular implementation is that it
 2.  Is highly visually configurable using a number of different properties, coupled with CSS classes that can be added for user customization of the tree
 
 ## Demo Site
-The [demo site](cssairportmaps.appspot.com) gives users a graphical web interface through which they have the ability to configure speicfic settings and customize the tree, while observing the resulting visual output in real time. 
+The [demo site](cssairportmaps.appspot.com), hosted on Google App Engine, gives users a graphical web interface through which they have the ability to configure speicfic settings and customize the tree, while observing the resulting visual output in real time. 
 ### Refreshing Tree Layout
 Upon updating specific variables of the modules, after which the user will press the refreshTree button. On refresh, the tree object will then recalculate all dependent variables, the tree layout, and redraw the tree in an output module. The page will then refresh the various read-only display modules.
 *The default settings are not necessary to input as settings when creating a tree, they are simply fallbacks for when those properties aren't specified*. 
