@@ -13,13 +13,13 @@ The benefit of this particular implementation is that it
 
 ## Demo Site
 The [demo site](cssairportmaps.appspot.com), hosted on Google App Engine, gives users a graphical web interface through which they have the ability to configure speicfic settings and customize the tree, while observing the resulting visual output in real time. 
-### Refreshing Tree Layout
+### Calculating Tree Layout
 Upon updating specific variables of the modules, after which the user will press the refreshTree button. On refresh, the tree object will then recalculate all dependent variables, the tree layout, and redraw the tree in an output module. The page will then refresh the various read-only display modules.
 *The default settings are not necessary to input as settings when creating a tree, they are simply fallbacks for when those properties aren't specified*. 
 ### Drawing The Tree
 The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The element container will automatically expand to a size that is determined by an aggregation of the node size, node spacing, and general structure of the data tree. 
 
-## IMPORTANT FILES
+## Important Files
 <dl>
   <dt>scripts/CSSTree.js</dt>
   <dd>
@@ -45,10 +45,10 @@ The plugin then draws a d3 layout and SVG styled representation of the tree, app
   </dd>
 
 
-REQUIRED DEPENDENCIES
+## Required Dependencies
 ---------------------
-* d3.js
-* jQuery
+* [d3.js](https://github.com/mbostock/d3)
+* [jQuery](https://github.com/jquery/jquery)
 
 USAGE
 -----
