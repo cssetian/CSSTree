@@ -39,10 +39,10 @@ The benefit of this particular implementation is that it:
 
 ## Demo Site
 The [demo site](cssairportmaps.appspot.com), hosted on Google App Engine, gives users a graphical web interface through which they have the ability to configure speicfic settings and customize the tree, while observing the resulting visual output in real time. 
-### Calculating Tree Layout
+##### Calculating Tree Layout
 Upon updating specific variables of the modules, after which the user will press the refreshTree button. On refresh, the tree object will then recalculate all dependent variables, the tree layout, and redraw the tree in an output module. The page will then refresh the various read-only display modules.
 *The default settings are not necessary to input as settings when creating a tree, they are simply fallbacks for when those properties aren't specified*. 
-### Drawing The Tree
+##### Drawing The Tree
 The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The element container will automatically expand to a size that is determined by an aggregation of the node size, node spacing, and general structure of the data tree. 
 
 ## Instructions
@@ -56,17 +56,17 @@ The plugin then draws a d3 layout and SVG styled representation of the tree, app
 * Call the tree drawing method `CSSTree.refreshTreeLayout()', which recomputes the calculated variables based on any changes to basic property variables, and then draws the new tree on the specified root element property
 
 ## STILL TODO
-### Bugs
+##### Bugs
 * Disable treeContainerId input but keep the default value filled in since user isn't going to change the Demo Site's container element ID
 * With the diagonal link type, fix the link arrow header markers such that they are aligned to the angle of the diagonal
 
-### CSSTree Features
+##### CSSTree Features
 * Add more useful prototype methods to CSSTree class
 * Add more link types
 * Support for different node shapes?
 * Add an option for orientation of the HTML template (currently always oriented such that text is human-readable)
 
-### Demo Site Features
+##### Demo Site Features
 * Allow for the tree to always be visible on-screen while scrolling through settings and output (may only be feasiible on larger viewports)
 * Auto-update displayed tree on changing basic properties. Remove static-ly positioned 'Draw Tree' button and 
 * Separate properties into modules:
