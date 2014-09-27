@@ -57,9 +57,27 @@ The plugin then draws a d3 layout and SVG styled representation of the tree, app
 
 ## STILL TODO
 ### Bugs
+* Disable treeContainerId input but keep the default value filled in since user isn't going to change the Demo Site's container element ID
 * With the diagonal link type, fix the link arrow header markers such that they are aligned to the angle of the diagonal
-### Features
+
+### CSSTree Features
 * Add more useful prototype methods to CSSTree class
 * Add more link types
 * Support for different node shapes?
 * Add an option for orientation of the HTML template (currently always oriented such that text is human-readable)
+
+### Demo Site Features
+* Allow for the tree to always be visible on-screen while scrolling through settings and output (may only be feasiible on larger viewports)
+* Auto-update displayed tree on changing basic properties. Remove static-ly positioned 'Draw Tree' button and 
+* Separate properties into modules:
+** Basic Properties
+** CSS Styling
+** Node HTML Template
+** Tree Data
+* Auto-update tree display when changing properties in the Basic Properties module
+* Add buttons to Apply properties in each of the complex properties modules
+* Add button to each module to reset to default values and apply to tree
+* Apply validation to numeric inputs and prevent refresh on invalid inputs
+* Auto-populate default values on page load and remove user/default settings values, allow users to reset to default settings by using reset to defaults button in each module
+* Possibly have 1 reset all to defaults button at top of page
+* 
