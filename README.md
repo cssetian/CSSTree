@@ -1,16 +1,17 @@
 CSSTree Generic Tree-Drawer
 ===================
-This is a d3-based class designed to take as inputs JSON-formatted tree data and a number of configurable parameters. The class then calculates a visual layout of the tree using d3 and constructs the HTML elements to draw it using SVG. The class is constructed with user settings as an optional parameter, and if any are specified, they are merged into the default settings. Basic settings can also be changed after creation, with a refresh function that recalculates both depenedent variables and the layout.
-
 <table>
 <tr><td>Class Name</td><td>File Location</td></tr>
 <tr><td>CSSTree</td><td>scripts/CSSTree.js</td></tr>
 </table>
+Background
+----------
+This is a d3-based class designed to take as inputs JSON-formatted tree data and a number of configurable parameters. The class then calculates a visual layout of the tree using d3 and constructs the HTML elements to draw it using SVG. The class is constructed with user settings as an optional parameter, and if any are specified, they are merged into the default settings. Basic settings can also be changed after creation, with a refresh function that recalculates both depenedent variables and the layout.
 
 The benefit of this particular implementation is that it
 
-1.  Allows each node to be supplied an HTML template that utilizes data found on each node to populate variables
-2.  Is highly visually configurable using a number of different basic geometric and visual properties, coupled with CSS classes that can be added to various elements of the tree
+1.  Allows each node to be supplied an HTML template that utilizes the tree data to programmatically populate specific data
+2.  Is highly visually configurable using a number of different properties, coupled with CSS classes that can be added for user customization of the tree
 
 The Demo Site included gives users the ability to configure speicfic settings and customize the tree. The user can define a root HTML element, height, width, and template for each node of the tree, and additionally include any number of classes to customize the node backgrounds, node templates, link body elements, and link arrow elements. This plugin will then compile these options and display both a formatted and unformatted JSON object for viewing and copying. The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The element container will automatically expand to a size that is determined by an aggregation of the node size, node spacing, and general structure of the data tree. 
 
