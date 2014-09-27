@@ -2,12 +2,10 @@ CSSTree Generic Tree-Drawer
 ===================
 This is a d3-based class designed to take as inputs JSON-formatted tree data and a number of configurable parameters. The class then calculates a visual layout of the tree using d3 and constructs the HTML elements to draw it using SVG. The class is constructed with user settings as an optional parameter, and if any are specified, they are merged into the default settings. Basic settings can also be changed after creation, with a refresh function that recalculates both depenedent variables and the layout.
 
-<dl>
-<dt>Class Name</dt>
-<dd>CSSTree</dd>
-<dt>File Location</dt>
-<dt>scripts/CSSTree.js</dt>
-</dl>
+<table>
+<tr><td>Class Name</td><td>File Location</td></tr>
+<tr><td>CSSTree</td><td>scripts/CSSTree.js</td></tr>
+</table>
 
 The benefit of this particular implementation is that it
 
