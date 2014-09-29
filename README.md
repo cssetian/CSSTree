@@ -8,7 +8,7 @@ The class first calculates a geometric layout of the json tree structure using d
 *The default settings do not need to be supplied and are used as fallbacks for when those properties aren't specified*. 
 
 ##### Drawing The Tree
-The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The container element (assuming a <div>) will automatically expand to the size that the calculations determine are the dimensions of the tree.
+The plugin then draws a d3 layout and SVG styled representation of the tree, appends it to the supplied element, and applies all user-specified settings. The container element (assuming a \<div\>) will automatically expand to the size that the calculations determine are the dimensions of the tree.
 
 User settings are an optional parameter, and if any are specified, they are merged into the default settings. Basic settings can also be changed after creation, and a refresh function can be called to recalculate depenedent variables and tree layout.
 
