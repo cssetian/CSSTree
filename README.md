@@ -54,15 +54,13 @@ The plugin then draws a d3 layout and SVG styled representation of the tree, app
 * 2. Look at the defaults in the source CSSTree.js file and just hand-write the options on your own using similar properties
 * Instantiate a new CSSTree object in your code, passing in a JSON object settings parameter
 * Call the tree drawing method `CSSTree.refreshTreeLayout()', which recomputes the calculated variables based on any changes to basic property variables, and then draws the new tree on the specified root element property
-
-## STILL TODO
-##### Bugs
-* Disable treeContainerId input but keep the default value filled in since user isn't going to change the Demo Site's container element ID
-* With the diagonal link type, fix the link arrow header markers such that they are aligned to the angle of the diagonal
+* 
+## Future Enhancements
 
 ##### CSSTree Features
 * Add more useful prototype methods to CSSTree class
 * Add more link types
+* With the diagonal link type, fix the link arrow header markers so that they are aligned to the angle of the diagonal
 * Support for different node shapes?
 * Add an option for orientation of the HTML template (currently always oriented such that text is human-readable)
 
