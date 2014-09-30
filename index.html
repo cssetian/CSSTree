@@ -93,7 +93,7 @@
             </tr>
             <tr>
               <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
-              <td><input type="text" id="option-tree-container-id" /></td>
+              <td><input type="text" id="option-tree-container-id" placeholder="#tree-container" disabled="true" /></td>
             </tr>
             <tr>
               <td><label for="option-tree-container-padding">Tree Container Padding</label></td>
@@ -438,7 +438,6 @@ node: {
     var self = this;
 
     // Declare state variables
-    self.defaultSettings = {};
     self.userSettings = {};
     self.mergedSettings = {};
     self.outputPanelsClosed = false;
@@ -452,9 +451,8 @@ node: {
       toggle: false
     })});
 
-    // Initialize default settings and copy to container element
-    self.defaultSettings = buildDefaultSettings();
-    refreshPanelText('#default-formatted-settings', self.defaultSettings, true);
+    // Initialize default settings to be used for all layout calculations (basically same as class prototype)
+    refreshPanelText('#default-formatted-settings', new CSSTree().defaultSettings, true);
 
     setupEvents();
   });
@@ -514,10 +512,26 @@ node: {
 
   // We can use the extend method to merge userSettings with defaultSettings:
   // But with the added first parameter of TRUE to signify a DEEP COPY:
-  var buildMergedSettings = function(defaultSettings, userSettings) {
-    self.mergedSettings = $.extend( true, defaultSettings, userSettings );
+  var buildMergedSettings = function(userSettings) {
+    self.mergedSettings = $.extend( true, new CSSTree().defaultSettings, userSettings );
+    addClassArraysToMergedSettings(userSettings);
     return self.mergedSettings;
   };
+
+  var addClassArraysToMergedSettings = function(userSettings) {
+    if (userSettings.nodeBkndClasses != null) {
+      self.mergedSettings.nodeBkndClasses = userSettings.nodeBkndClasses;
+    }
+    if (userSettings.nodeHTMLClasses != null) {
+    self.mergedSettings.nodeHTMLClasses = userSettings.nodeHTMLClasses;
+    }
+    if (userSettings.linkClasses != null) {
+      self.mergedSettings.linkClasses = userSettings.linkClasses;
+    }
+    if (userSettings.arrowClasses != null) {
+      self.mergedSettings.arrowClasses = userSettings.arrowClasses;
+    }
+  }
 
   var buildUserSettings = function() {
     if($("input:radio[name='settings-source']:checked").val() === "user") {
@@ -563,6 +577,8 @@ node: {
 
   // Parse all settings variables from form inputs to userSettings
   var buildUserSettings = function() {
+    var self = this;
+
     self.userSettings = self.userSettings || {};
 
     // Define the tree container ID and padding
@@ -631,40 +647,15 @@ node: {
     }
 
     // Build class lists from groups of list entries 
-    self.userSettings.nodeBkndClasses = buildArrayFromList("option-node-background-classes");
-    self.userSettings.nodeHTMLClasses = buildArrayFromList("option-node-html-classes");
-    self.userSettings.linkClasses = buildArrayFromList("option-link-body-classes");
-    self.userSettings.arrowClasses = buildArrayFromList("option-link-arrow-classes");
+    var classSettings = {};
+    classSettings.tempNodeBkndClasses = buildArrayFromList("option-node-background-classes");
+    classSettings.tempNodeHTMLClasses = buildArrayFromList("option-node-html-classes");
+    classSettings.tempLinkClasses = buildArrayFromList("option-link-body-classes");
+    classSettings.tempArrowClasses = buildArrayFromList("option-link-arrow-classes");
+
+    addClassArraysToMergedSettings(classSettings);
 
     return self.userSettings;
-  };
-
-  // Default tree settings to display on the page
-  var buildDefaultSettings = function() {
-    self.defaultSettings = {
-      treeContainerId: '#tree-container',
-      treeContainerPadding: 8,
-      treeOrientation: 0,
-      linkOrientation: 'down',
-      nodeChildName: 'node',
-      nodeDataName: 'data',
-      linkType: 'elbow',
-      nodeType: '',
-      nodeWidth: 20,
-      nodeHeight: 20,
-      widthSpacing: 20,
-      depthSpacing: 20,
-      nodeBkndClasses: ['node-background'],
-      nodeHTMLClasses: ['node-html-container'],
-      linkClasses: ['link-html-container'],
-      arrowClasses: ['arrow-html-container'],
-      notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
-      nodeHTMLTemplate: function (d) {
-        return '<div id="node-template">' + d.dataValue + '</div>';
-      }
-    };
-
-    return defaultSettings;
   };
 
   // Builds compiled settings to use and display in formatted output.
@@ -676,8 +667,8 @@ node: {
   //      prototype object has defaults, but this allows for easy 
   //      display of merged settings on the page.
   var buildAndRefreshSettings = function() {
-    buildUserSettings();
-    buildMergedSettings(defaultSettings, userSettings);
+    var userSettings = buildUserSettings();
+    buildMergedSettings(userSettings);
     refreshSettingsPanels();
   };
 

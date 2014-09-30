@@ -1,9 +1,10 @@
 // CSSTree Class
 // github: https://github.com/cssetian
 
-function CSSTree(userSettings) {
+function CSSTree(userInput) {
   'use strict';
   var self = this;
+  var userSettings = userInput || {};
 
   // Define default settings to be used for each setting the user doesn't specify 
   self.defaultSettings = {
@@ -71,7 +72,7 @@ function CSSTree(userSettings) {
   self.nodeDataName = userSettings.nodeDataName || self.defaultSettings.nodeDataName;
   self.nodeChildName = userSettings.nodeChildName || self.defaultSettings.nodeChildName;
   self.nodeHTMLTemplate = userSettings.nodeHTMLTemplate || self.defaultSettings.nodeHTMLTemplate;
- 
+
   self.depthSpacing = userSettings.depthSpacing || self.defaultSettings.depthSpacing;
   self.widthSpacing = userSettings.widthSpacing || self.defaultSettings.widthSpacing;
 
@@ -81,7 +82,8 @@ function CSSTree(userSettings) {
   self.arrowClasses = userSettings.arrowClasses || self.defaultSettings.arrowClasses;
   self.nodeTmplClasses = userSettings.nodeTmplClasses || self.defaultSettings.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
   self.nodeBkndClasses = userSettings.nodeBkndClasses || self.defaultSettings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
-  
+
+
   // Declare calc'ed values - Unnecessary, but useful to lay them all out
   self.linkFunction = '';
   self.treeOrientationRad = '';
