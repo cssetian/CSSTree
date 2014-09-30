@@ -1,5 +1,15 @@
 # CSSTree Generic Tree-Drawer
 
+## Class Specifics
+<table>
+<tr><th>Class Name</th><th>File Location</th></tr>
+<tr><td>CSSTree</td><td>scripts/CSSTree.js</td></tr>
+</table>
+
+## Required Dependencies
+* [d3.js](https://github.com/mbostock/d3)
+* [jQuery](https://github.com/jquery/jquery)
+
 ## Background
 This is a d3-based tree-drawing class, designed to configure and draw an SVG tree that renders each node's specific data into a user-supplied HTML template. The constructor takes in a settings variable that can be used to configure a number of useful visual characteristics of the tree.
 
@@ -18,16 +28,6 @@ The biggest benefits to this particular implementation are that it:
 1.  Allows each node to be supplied an HTML template, to be styled and populated with node-specific data. It then recalculates the geometry of the tree layout based on the dimensions of the resulting template, and the various dimension-specific basic options.
 2.  Is highly visually configurable, using a number of different properties, coupled with CSS classes that can be added for further user customization of the tree.
 
-## Specifics
-<table>
-<tr><th>Class Name</th><th>File Location</th></tr>
-<tr><td>CSSTree</td><td>scripts/CSSTree.js</td></tr>
-</table>
-
-## Required Dependencies
-* [d3.js](https://github.com/mbostock/d3)
-* [jQuery](https://github.com/jquery/jquery)
-
 ## Important Files
 <dl>
   <dt>scripts/CSSTree.js</dt>
@@ -38,7 +38,7 @@ The biggest benefits to this particular implementation are that it:
   <dd>This file contains the CSS classes for the demo site, specifically styled to gracefully change its layout to best suit any given viewport or re-size. It additionally contains basic styles for the default HTML template of each node.</dd>
 </dl>
 
-## DEPRECIATED FILES
+## Depreciated Files
 <dl>
   <dt>scripts/tree-drawer-plugin.js</dt>
   <dd>Contains a scripted, straightforward implementation of the basic tree drawing concept of the CSSTree class, though it isn't as robust and entirely unstructured. This plugin version wraps the library within a jquery plugin that creates a tree using the same settings as the prototype. Useful I guess for people who just want to use random libraries like this in the form of a jQuery function call.
