@@ -473,24 +473,24 @@ CSSTree.prototype.elbowLinkStrategy = function() {
     var kinkX = (xTNodeEdgePositioned - xSNodeEdgePositioned) / 4;
 
     if (sinD(dS) !== 0 && self.linkOrientation === 'down') {
-        return "M" + (xSNodeEdgePositioned) + "," + (ySNodeEdgePositioned)
-            + "H" + (xSNodeEdgePositioned + kinkX)
-            + "V" + (yTNodeEdgePositioned) + "H" + (xTNodeEdgePositioned);
+        return 'M' + (xSNodeEdgePositioned) + ',' + (ySNodeEdgePositioned)
+            + 'H' + (xSNodeEdgePositioned + kinkX)
+            + 'V' + (yTNodeEdgePositioned) + 'H' + (xTNodeEdgePositioned);
 
     } else if (cosD(dS) !== 0 && self.linkOrientation === 'down') {
-        return "M" + (xSNodeEdgePositioned) + "," + (ySNodeEdgePositioned)
-            + "V" + (ySNodeEdgePositioned + kinkY)
-            + "H" + (xTNodeEdgePositioned) + "V" + (yTNodeEdgePositioned);
+        return 'M' + (xSNodeEdgePositioned) + ',' + (ySNodeEdgePositioned)
+            + 'V' + (ySNodeEdgePositioned + kinkY)
+            + 'H' + (xTNodeEdgePositioned) + 'V' + (yTNodeEdgePositioned);
     }
     else if (sinD(dS) !== 0 && self.linkOrientation === 'up') {
-        return "M" + (xTNodeEdgePositioned) + "," + (yTNodeEdgePositioned)
-            + "H" + (xTNodeEdgePositioned - kinkX)
-            + "V" + (ySNodeEdgePositioned) + "H" + (xSNodeEdgePositioned);
+        return 'M' + (xTNodeEdgePositioned) + ',' + (yTNodeEdgePositioned)
+            + 'H' + (xTNodeEdgePositioned - kinkX)
+            + 'V' + (ySNodeEdgePositioned) + 'H' + (xSNodeEdgePositioned);
 
     } else if (cosD(dS) !== 0 && self.linkOrientation === 'up') {
-        return "M" + (xTNodeEdgePositioned) + "," + (yTNodeEdgePositioned)
-            + "V" + (yTNodeEdgePositioned - kinkY)
-            + "H" + (xSNodeEdgePositioned) + "V" + (ySNodeEdgePositioned);
+        return 'M' + (xTNodeEdgePositioned) + ',' + (yTNodeEdgePositioned)
+            + 'V' + (yTNodeEdgePositioned - kinkY)
+            + 'H' + (xSNodeEdgePositioned) + 'V' + (ySNodeEdgePositioned);
     }
   };
 };
