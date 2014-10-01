@@ -1,4 +1,5 @@
-// CSSTree Class
+// Class Name: CSSTree
+// Author: Christopher Stephen Setian
 // github: https://github.com/cssetian
 
 function CSSTree(userInput) {
