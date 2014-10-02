@@ -73,6 +73,7 @@ The [demo site](csstreedrawer.appspot.com), hosted on Google App Engine, gives u
 
 ##### Demo Site Future Enhancements
 * Add 2-3 different sample inputs and html templates, with bootstrap navbar-type buttons that each replace the textarea with its respective default.
+* When selecting a sample input, disable the text area input and have its contents be whatever that sample is. Upon switching to user-input, enable the textarea and remove existing sample text. have a button that says 'copy example' for when user input is enabled but the user wants to copy into it an example first for editing
 * Allow for the tree to always be visible on-screen while scrolling through settings and output (may only be feasiible on larger viewports)
 * Auto-update displayed tree on changing basic properties. Remove static-ly positioned 'Draw Tree' button and 
 * Separate properties into modules:
