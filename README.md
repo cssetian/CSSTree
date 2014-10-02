@@ -45,7 +45,7 @@ The biggest benefits to this particular implementation are that it:
   <dd>Contains a scripted, straightforward implementation of the basic tree drawing concept of the CSSTree class, though it isn't as robust and entirely unstructured. This plugin version wraps the library within a jquery plugin that creates a tree using the same settings as the prototype. Useful I guess for people who just want to use random libraries like this in the form of a jQuery function call.
   </dd>
   <dt>scripts/src/cssTreeDrawer.js</dt>
-  <dd>A second version of the jQuery plugin basically just creates a CSSTree object and executes its refresh function, drawing it on the page,. It essentially just wraps the CSSTree functionality into a jQuery function that can easily be called on a specific DOM element.
+  <dd>A second version of the jQuery plugin basically just creates a CSSTree object and executes its refresh function, drawing it on the page,. It essentially just wraps the CSSTree functionality into a jQuery function that can easily be called on a specific DOM element. Not particularly depreciated, but kind of an unnecessary wrapper considering it only has 2 lines.
   </dd>
 </dl>
 
