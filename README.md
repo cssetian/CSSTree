@@ -2,8 +2,9 @@
 
 ## Class Specifics
 <table>
-<tr><th>Class Name</th><th>File Location</th></tr>
-<tr><td>CSSTree</td><td>scripts/CSSTree.js</td></tr>
+<tr><th>Class Name</th><th>Description</th><th>File Location</th></tr>
+<tr><td>CSSTree</td><td>Tree-drawing class</th><td>scripts/CSSTree.js</td></tr>
+<tr><td>CSSTreeDrawer</td><td>Tree-drawing jQuery plugin</th><td>scripts/cssTreeDrawer.js</td></tr>
 </table>
 
 ## Required Dependencies
