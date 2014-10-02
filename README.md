@@ -72,6 +72,7 @@ The [demo site](csstreedrawer.appspot.com), hosted on Google App Engine, gives u
 * Add an option for orientation of the HTML template (currently always oriented such that text is human-readable)
 
 ##### Demo Site Future Enhancements
+* Add 2-3 different sample inputs and html templates, with bootstrap navbar-type buttons that each replace the textarea with its respective default.
 * Allow for the tree to always be visible on-screen while scrolling through settings and output (may only be feasiible on larger viewports)
 * Auto-update displayed tree on changing basic properties. Remove static-ly positioned 'Draw Tree' button and 
 * Separate properties into modules:
