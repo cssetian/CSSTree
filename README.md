@@ -1,4 +1,4 @@
-# CSSTree Generic Tree-Drawer
+# CSSTree Generic Tree-Drawing Class
 
 ## Class Specifics
 <table>
@@ -50,14 +50,14 @@ The biggest benefits to this particular implementation are that it:
 </dl>
 
 ## Demo Site
-The [demo site](cssairportmaps.appspot.com), hosted on Google App Engine, gives users a graphical web interface through which they have the ability to configure speicfic settings and customize the tree. Any changes can be observes unpon hitting the 'Draw Tree' button that is statically placed at the top of the page. It takes advantage of responsive design, and should work on a variety of devices. The actaul HTML is included in the github project.
+The [demo site](csstreedrawer.appspot.com), hosted on Google App Engine, gives users a graphical web interface through which they have the ability to configure speicfic settings and customize the tree. Any changes can be observes unpon hitting the 'Draw Tree' button that is statically placed at the top of the page. It takes advantage of responsive design, and should work on a variety of devices. The actaul HTML is included in the github project.
 
 ## Instructions For Incorporating Into Your Own App
 * Reference jQuery dependency
 * Reference d3 dependency
 * Reference CSSTree.js
 * Define JSON options using one of the following options:
-* 1. Download or Navigate to the [demo site](cssairportmaps.appspot.com) and select your desired customized inputs, copying the compiled JSON output string to a variable in your javascript file
+* 1. Download or Navigate to the [demo site](csstreedrawer.appspot.com) and select your desired customized inputs, copying the compiled JSON output string to a variable in your javascript file
 * 2. Look at the defaults in the source CSSTree.js file and just hand-write the options on your own using similar properties
 * Instantiate a new CSSTree object in your code, passing in a JSON object settings parameter
 * Call the tree drawing method `CSSTree.refreshTreeLayout()', which recomputes the calculated variables based on any changes to basic property variables, and then draws the new tree on the specified root element property
