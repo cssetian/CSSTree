@@ -45,7 +45,7 @@ function TreeDemoSite() {
     if (userSettings.arrowClasses != null) {
       self.mergedSettings.arrowClasses = userSettings.arrowClasses;
     }
-  }
+  };
 
   self.buildUserSettings = function() {
     if($("input:radio[name='settings-source']:checked").val() === "user") {

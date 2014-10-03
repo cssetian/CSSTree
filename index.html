@@ -29,7 +29,7 @@
     <div class="header">
       <h1 class="col-xs-12 col-sm-12 col-md-12">Tree-Drawer Class Demo Site
         <p>
-          This site uses the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src/CSSTree.js">CSSTree.js</a> class to demonstrate a configurable, stylable, visual representation of a tree-based set of data. Source code for the class and a basic jquery wrapping plugin can be found in the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src">scripts/src</a> folder of the  <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/">CSSTreeDrawer</a> project. <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src/generic-tree-drawer.js">generic-tree-drawer.js</a> is a depreciated, original version.
+          This site uses the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src/CSSTree.js">CSSTree.js</a> class to demonstrate a configurable, stylable, visual representation of a tree-based set of data. Source code for the class and a basic jquery wrapping plugin can be found in the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src">scripts/src</a> folder of the  <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/">CSSTreeDrawer</a> project.
         </p>
         <p>
           Use this site to test out different settings, and compile them into formatted json that can be copied near the bottom of the page and used as a constructor for your own usage of a CSSTree. THe default function-settings are configurable via text areas near the bottom, where you can use the example settings as example syntax.
@@ -46,7 +46,7 @@
     <!-- Custom Inputs for Configuring Tree -->
     <div id="options-container" class="col-xs-12 col-sm-12 col-md-12">
       <h3>Tree Customization
-        <div class="sub-title-button"><a id="toggle-settings-modules">Close / Open All Modules</a></div>
+        <br/><a id="toggle-settings-modules" class="sub-button sub-title-button">Close / Open All Modules</a>
       </h3>
       <div class="panel panel-default">
         <div class="panel-heading" data-toggle="collapse" href="#tree-settings-collapse">
@@ -196,7 +196,7 @@
             <tr>
               <td class="option-label-column align-top">
                 <label for="option-node-background-classes">Node Background Classes</label><br>
-                <span class="sub-title-button add-row disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
+                <span class="sub-button sub-option-button add-row disableDblClick" data-listid="#option-node-background-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-node-background-classes" class="option-list">
@@ -209,7 +209,7 @@
             <tr>
               <td class="option-label-column align-top">
                 <label for="option-node-html-classes">Node HTML Template Classes</label><br>
-                <span class="sub-title-button add-row disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
+                <span class="sub-button sub-option-button add-row disableDblClick" data-listid="#option-node-html-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-node-html-classes" class="option-list">
@@ -222,7 +222,7 @@
             <tr>
               <td class="option-label-column align-top">
                 <label for="option-link-body-classes">Link Body Classes</label><br>
-                <span class="sub-title-button add-row disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
+                <span class="sub-button sub-option-button add-row disableDblClick" data-listid="#option-link-body-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-link-body-classes" class="option-list">
@@ -235,7 +235,7 @@
             <tr>
               <td class="option-label-column align-top">
                 <label for="option-link-arrow-classes">Link Arrow Classes</label><br>
-                <span class="sub-title-button add-row disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
+                <span class="sub-button sub-option-button add-row disableDblClick" data-listid="#option-link-arrow-classes">Add Class Row</span>
               </td>
               <td class="option-input-column">
                 <ul id="option-link-arrow-classes" class="option-list">
@@ -267,34 +267,31 @@
         </div>
         <div id="html-template-collapse" class="panel-collapse collapse in">
           <div class="panel-body settings-panel-body">
-            <p>Add the HTML template to be used for each node. Delete the default template copied below and replace with your own if supplying custom template. Example Usage: 
-        <pre><code>function(node) { 
-var htmlString = "";
+            <p>Add the HTML template to be used for each node. Delete the default template copied below and replace with your own if supplying custom template. Example Usage:</p>
+              <pre><code>function(node) { 
+  var htmlString = "";
 
-/* Build Template String */ 
-htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue1 + "&lt/div&gt";
-htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue2 + "&lt/div&gt";
+  /* Build Template String */ 
+  htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue1 + "&lt/div&gt";
+  htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue2 + "&lt/div&gt";
 
-return htmlString; 
-}</code></pre></p>
+  return htmlString; 
+}</code></pre>
           <div id="html-template-btn-group" class="btn-group btn-group-justified">
             <div class="btn-group">
-              <button type="button" class="btn btn-default" id="node-html-ex-sq">Simple Squares</button>
+              <button type="button" class="btn btn-default" id="node-html-ex-sq" data-extype="sq">Squares</button>
             </div>
             <div class="btn-group">
-              <button type="button" class="btn btn-default" id="node-html-ex-tbl">Tabular Content</button>
+              <button type="button" class="btn btn-default" id="node-html-ex-tbl" data-extype="tbl">Tables</button>
             </div>
             <div class="btn-group">
-              <button type="button" class="btn btn-default" id="node-html-ex-btn">Interactive Elements</button>
+              <button type="button" class="btn btn-default" id="node-html-ex-btn" data-extype="btn">Buttons</button>
             </div>
             <div class="btn-group">
-              <button type="button" class="btn btn-default" id="node-html-user-tmpl">User Template</button>
+              <button type="button" class="btn btn-default" id="node-html-user-tmpl" data-extype="edit">Edit</button>
             </div>
           </div>
-          <textarea class="textarea-input" id="node-html-template">function (d) {
-    return '<div id="node-template">' + d.data  + '</div>';
-  }
-}</textarea>
+          <textarea class="textarea-input" id="node-html-template"></textarea>
           </div>
         </div>
       </div>
@@ -312,18 +309,21 @@ return htmlString;
         </div>
         <div id="json-tree-data-collapse" class="panel-collapse collapse in">
           <div class="panel-body settings-panel-body">
-            <p>Add stringified JSON data. Delete the default data copied below and replace with your own. Example Usage: 
+            <p>Add stringified JSON data. Delete the default data copied below and replace with your own. Example Usage:</p>
         <pre><code>{
-node: {
-  data: {
-    dataValue1: "testValue1",
-    dataValue2: "testValue2"
-  },
-  node {
-
-  }
-}            
-}</code></pre></p>
+  node: {
+    data: {
+      dataValue1: "testValue1",
+      dataValue2: "testValue2"
+    },
+    node: {
+      data: {
+        dataValue1: "testValue3",
+        dataValue2: "testValue4"
+      }
+    }
+  }            
+}</code></pre>
           <textarea class="textarea-input" id="node-data-input">node: {
   data: '1',
   node: [{
@@ -348,7 +348,7 @@ node: {
       data: '9'
     }]
   }]
-  }</textarea>
+}</textarea>
           </div>
         </div>
       </div>
@@ -357,7 +357,7 @@ node: {
     <!-- Output sections with collapsable content -->
     <div class="col-xs-12 col-sm-12 col-md-12">
       <h3>Output
-        <div class="sub-title-button"><a id="toggle-output-modules">Close / Open All Modules</a></div>
+        <br/><a id="toggle-output-modules" class="sub-button sub-title-button">Close / Open All Modules</a>
       </h3>
     </div>
 
@@ -451,6 +451,7 @@ node: {
 <script type="text/javascript" src="scripts/src/CSSTree.js"></script>
 <script type="text/javascript" src="scripts/src/cssTreeDrawer.js"></script>
 <script type="text/javascript" src="scripts/site/TreeDemoSite.js"></script>
+<script type="text/javascript" src="scripts/site/demoFunctions.js"></script>
 <script type="text/javascript" src="scripts/site/events.js"></script>
 
 

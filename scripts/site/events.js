@@ -4,6 +4,8 @@ TreeDemoSite.events = TreeDemoSite.events || {};
 
 // Define various onClick events for expand/collapse and adding rows
 TreeDemoSite.events.setupClickEvents = function() {
+    'use strict';
+    var self = this;
 
   // Expand / Collapse - all when button under section heading is selected
   $("#toggle-settings-modules").click(function(e) {
@@ -42,6 +44,9 @@ TreeDemoSite.events.setupClickEvents = function() {
   //    - Each item in group included when compiling settings
   //    - When options are compiled, all empty boxes are ignored
   $(".add-row").click(function(e) {
+    'use strict';
+    var self = this;
+      
     var ul = $(self.dataset.listid);
 
     var li = document.createElement("li");
@@ -54,4 +59,14 @@ TreeDemoSite.events.setupClickEvents = function() {
     li.appendChild(input);
     ul.append(li);
   });
+  
+  
+    $("#node-html-ex-sq").click(function(e) {
+      console.log('fired!');
+      console.log(TreeDemoSite.demoFunctions.squareDemoFunction);
+      var squareFuncString = String(TreeDemoSite.demoFunctions.squareDemoFunction);
+      console.log(squareFuncString);
+      $("#node-html-template").val('');
+      $("#node-html-template").val(squareFuncString);
+    });
 };
