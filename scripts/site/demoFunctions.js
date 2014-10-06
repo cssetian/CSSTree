@@ -6,42 +6,33 @@
 * To change this template use Tools | Templates.
 */
 var TreeDemoSite = TreeDemoSite || {};
-
 TreeDemoSite.demoFunctions = TreeDemoSite.demoFunctions || {};
 
-TreeDemoSite.demoFunctions = (function() {
-  'use strict'
+TreeDemoSite.demoFunctions.squareDemoFunction = function(node) {
+  'use strict';
+  var htmlString = '';
 
-  squareDemoFunction = function(node) { 
-    var htmlString = "";
+  /* Build Basic Template String */
+  htmlString = htmlString + '&ltdiv&gt' + node.data.dataValue1 + '&lt/div&gt';
+  htmlString = htmlString + '&ltdiv&gt' + node.data.dataValue2 + '&lt/div&gt';
 
-    /* Build Basic Template String */ 
-    htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue1 + "&lt/div&gt";
-    htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue2 + "&lt/div&gt";
-
-    return htmlString; 
-  };
+  return htmlString;
+};
     
-  tableDemoFunction = function(node) { 
-      var htmlString = "";
+TreeDemoSite.demoFunctions.tableDemoFunction = function(node) {
+  'use strict';
+  var htmlString = '' + node;
 
-      /* Build Table Template String */ 
+  /* Build Table Template String */
 
-      return htmlString; 
-    };
-    
-    buttonDemoFunction = function(node) { 
-      var htmlString = "";
+  return htmlString;
+};
 
-      /* Build Button Template String */ 
+TreeDemoSite.demoFunctions.buttonDemoFunction = function(node) {
+  'use strict';
+  var htmlString = '' + node;
 
-      return htmlString; 
-    };
-  
-  
-  return {
-    squareDemoFunction: squareDemoFunction,
-    tableDemoFunction: tableDemoFunction,
-    buttonDemoFunction: buttonDemoFunction
-  };
-});
+  /* Build Button Template String */
+
+  return htmlString;
+};

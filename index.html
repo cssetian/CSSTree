@@ -19,7 +19,7 @@
     <div class="container">
       <ul class="nav nav-justified navbar-nav">
         <li class="">
-          <a href="javascript:void(0)" onclick="site.buildAndRefreshTree()">Draw Tree</a>
+          <a href="javascript:void(0)" onclick="TreeDemoSite.App.buildAndRefreshTree()">Draw Tree</a>
         </li>
       </ul>
     </div>
@@ -29,7 +29,7 @@
     <div class="header">
       <h1 class="col-xs-12 col-sm-12 col-md-12">Tree-Drawer Class Demo Site
         <p>
-          This site uses the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src/CSSTree.js">CSSTree.js</a> class to demonstrate a configurable, stylable, visual representation of a tree-based set of data. Source code for the class and a basic jquery wrapping plugin can be found in the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src">scripts/src</a> folder of the  <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/">CSSTreeDrawer</a> project.
+          This site uses the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src/CSSTree.js">CSSTree.js</a> class to draw a configurable, stylable, visual representation of a tree-based set of data. Source code for the class and a basic jquery wrapping plugin can be found in the <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/tree/master/scripts/src">scripts/src</a> folder of the  <a target="_blank" href="https://github.com/cssetian/CSSTreeDrawer/">CSSTreeDrawer</a> project.
         </p>
         <p>
           Use this site to test out different settings, and compile them into formatted json that can be copied near the bottom of the page and used as a constructor for your own usage of a CSSTree. THe default function-settings are configurable via text areas near the bottom, where you can use the example settings as example syntax.
@@ -445,11 +445,17 @@
 
 
 <!-- Latest compiled and minified JavaScript -->
+
+<!-- 3rd Party -->
 <script type="text/javascript" src="scripts/lib/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="scripts/lib/bootstrap-3.2.0.js"></script>
 <script type="text/javascript" src="scripts/lib/d3-3.4.11.js" charset="utf-8"></script>
+
+<!-- Source Files -->
 <script type="text/javascript" src="scripts/src/CSSTree.js"></script>
 <script type="text/javascript" src="scripts/src/cssTreeDrawer.js"></script>
+
+<!-- Demo Site Files -->
 <script type="text/javascript" src="scripts/site/TreeDemoSite.js"></script>
 <script type="text/javascript" src="scripts/site/demoFunctions.js"></script>
 <script type="text/javascript" src="scripts/site/events.js"></script>
@@ -460,10 +466,9 @@
 
   $(document).ready(function(){
     'use strict';
-    var self = this;
+    TreeDemoSite.App.Initialize();
+    TreeDemoSite.SetupClickEvents();
 
-    self.site = new TreeDemoSite();
-    self.site.initialize();
   });
 
 </script>
