@@ -95,10 +95,10 @@ TreeDemoSite.App.buildAndRefreshTree = function() {
   var self = this;
 
   self.buildAndRefreshSettings();
-
+  /* Commented right now because of data/function example additions
   if ($("input:radio[name='data-source']:checked").val() === "user" && $("#node-data-input").val() !== "") {
     self.userSettings.nodeData = $("#node-data-input").val();
-  }
+  }*/
 
   var newTreeContainerId = $.trim($("#option-tree-container-id").val()); 
   self.currentContainerId  = newTreeContainerId || "#tree-container";
