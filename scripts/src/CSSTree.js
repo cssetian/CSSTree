@@ -57,34 +57,35 @@ function CSSTree(userInput) {
   };
 
   self.mergedSettings = self.extend(self.defaultSettings, userSettings);
-  console.log(self.mergedSettings);
-  self.treeContainerPadding = userSettings.treeContainerPadding || self.defaultSettings.treeContainerPadding;
+  console.log('Merged Settings: ', self.mergedSettings);
 
-  self.treeContainer = userSettings.treeContainer || self.defaultSettings.treeContainer;
+  self.treeContainerPadding = self.mergedSettings.treeContainerPadding;
 
-  self.treeOrientation = userSettings.treeOrientation || self.defaultSettings.treeOrientation;
-  self.linkOrientation = userSettings.linkOrientation || self.defaultSettings.linkOrientation;
+  self.treeContainer = self.mergedSettings.treeContainer;
 
-  self.nodeType = userSettings.nodeType || self.defaultSettings.nodeType;
-  self.linkType = userSettings.linkType || self.defaultSettings.linkType;
+  self.treeOrientation = self.mergedSettings.treeOrientation;
+  self.linkOrientation = self.mergedSettings.linkOrientation;
 
-  self.nodeWidth = userSettings.nodeWidth || self.defaultSettings.nodeWidth;
-  self.nodeHeight = userSettings.nodeHeight || self.defaultSettings.nodeHeight;
+  self.nodeType = self.mergedSettings.nodeType;
+  self.linkType = self.mergedSettings.linkType;
 
-  self.nodeData = userSettings.nodeData || self.defaultSettings.nodeData;
-  self.nodeDataName = userSettings.nodeDataName || self.defaultSettings.nodeDataName;
-  self.nodeChildName = userSettings.nodeChildName || self.defaultSettings.nodeChildName;
-  self.nodeHTMLTemplate = userSettings.nodeHTMLTemplate || self.defaultSettings.nodeHTMLTemplate;
+  self.nodeWidth = self.mergedSettings.nodeWidth;
+  self.nodeHeight = self.mergedSettings.nodeHeight;
 
-  self.depthSpacing = userSettings.depthSpacing || self.defaultSettings.depthSpacing;
-  self.widthSpacing = userSettings.widthSpacing || self.defaultSettings.widthSpacing;
+  self.nodeData = self.mergedSettings.nodeData;
+  self.nodeDataName = self.mergedSettings.nodeDataName;
+  self.nodeChildName = self.mergedSettings.nodeChildName;
+  self.nodeHTMLTemplate = self.mergedSettings.nodeHTMLTemplate;
 
-  self.notSupportedMsg = userSettings.notSupportedMsg || self.defaultSettings.notSupportedMsg;
+  self.depthSpacing = self.mergedSettings.depthSpacing;
+  self.widthSpacing = self.mergedSettings.widthSpacing;
 
-  self.linkClasses = userSettings.linkClasses || self.defaultSettings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
-  self.arrowClasses = userSettings.arrowClasses || self.defaultSettings.arrowClasses;
-  self.nodeTmplClasses = userSettings.nodeTmplClasses || self.defaultSettings.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
-  self.nodeBkndClasses = userSettings.nodeBkndClasses || self.defaultSettings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
+  self.notSupportedMsg = self.mergedSettings.notSupportedMsg;
+
+  self.linkClasses = self.mergedSettings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
+  self.arrowClasses = self.mergedSettings.arrowClasses;
+  self.nodeTmplClasses = self.mergedSettings.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
+  self.nodeBkndClasses = self.mergedSettings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
 
 
   // Declare calc'ed values - Unnecessary, but useful to lay them all out
@@ -102,6 +103,7 @@ function CSSTree(userInput) {
   self.rootOffsetY = '';
   self.treeContainerHeight = '';
   self.treeContainerWidth = '';
+  console.log('Finished CSSTree Initialization!');
 }
 
 CSSTree.prototype.extend = function(a, b){
