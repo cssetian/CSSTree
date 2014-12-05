@@ -2,7 +2,7 @@
 var TreeDemoSite = TreeDemoSite || {};
 
 // Basically like a static function
-TreeDemoSite.SetupClickEvents = function() {
+TreeDemoSite.Events = function() {
   'use strict';
   var self = this;
 

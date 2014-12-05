@@ -24,6 +24,7 @@ TreeDemoSite.App.Initialize = function() {
     // Initialize default settings to be used for all layout calculations (basically same as class prototype)
     self.refreshPanelText('#default-formatted-settings', new CSSTree().defaultSettings, true);
 
+    TreeDemoSite.Events();
   };
 // We can use the extend method to merge userSettings with defaultSettings:
 // But with the added first parameter of TRUE to signify a DEEP COPY:
