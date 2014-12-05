@@ -13,8 +13,8 @@ TreeDemoSite.demoFunctions.squareDemoFunction = function(node) {
   var htmlString = '';
 
   /* Build Basic Template String */
-  htmlString = htmlString + '&ltdiv&gt' + node.data.dataValue1 + '&lt/div&gt';
-  htmlString = htmlString + '&ltdiv&gt' + node.data.dataValue2 + '&lt/div&gt';
+  htmlString = htmlString + '&ltdiv class&equals&quotfirst-data&quot&gt' + node.data.dataValue1 + '&lt/div&gt';
+  htmlString = htmlString + '&ltdiv class&equals&quotsecond-data&quot&gt' + node.data.dataValue2 + '&lt/div&gt';
 
   return htmlString;
 };
