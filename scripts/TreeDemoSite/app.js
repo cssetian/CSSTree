@@ -176,7 +176,7 @@ TreeDemoSite.App.buildUserSettings = function() {
   if ($.trim($("#option-forobj-not-supported").val()) !== "") { 
     self.userSettings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
   }
-  if ($.trim($("#node-html-template").val()) !== "") { 
+  if (eval($("#node-html-template").value) !== undefined) { 
     self.userSettings.nodeHTMLTemplate = eval($("#node-html-template").value); 
   }
 

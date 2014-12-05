@@ -56,6 +56,8 @@ function CSSTree(userInput) {
     }
   };
 
+  self.mergedSettings = self.extend(self.defaultSettings, userSettings);
+  console.log(self.mergedSettings);
   self.treeContainerPadding = userSettings.treeContainerPadding || self.defaultSettings.treeContainerPadding;
 
   self.treeContainer = userSettings.treeContainer || self.defaultSettings.treeContainer;
@@ -101,6 +103,13 @@ function CSSTree(userInput) {
   self.treeContainerHeight = '';
   self.treeContainerWidth = '';
 }
+
+CSSTree.prototype.extend = function(a, b){
+    for(var key in b)
+        if(b.hasOwnProperty(key))
+            a[key] = b[key];
+    return a;
+};
 
 // Recalculate tree layout and coordinates, then redraw tree
 CSSTree.prototype.refreshTreeLayout = function() {
