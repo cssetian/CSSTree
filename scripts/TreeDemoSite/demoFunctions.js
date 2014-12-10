@@ -37,6 +37,11 @@ TreeDemoSite.demoFunctions.buttonDemoFunction = function(node) {
   return htmlTemplate;
 };
 
+TreeDemoSite.demoFunctions.defaultDemoFunction = function (d) {
+  'use strict';
+  return '<div id="node-template">' + d.data + '</div>';
+};
+
 TreeDemoSite.demoFunctions.userDemoFunction = function(node) {
   'use strict';
   var htmlTemplate = '';

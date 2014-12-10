@@ -8,6 +8,32 @@
 var TreeDemoSite = TreeDemoSite || {};
 TreeDemoSite.demoData = TreeDemoSite.demoData || {};
 
+TreeDemoSite.demoData.defaultDemoData = {
+  data: '1',
+  node: [{
+    data: '2',
+    node: [{
+      data: '5'
+    }, {
+      data: '6'
+    }]
+  }, {
+    data: '3'
+  }, {
+    data: '4',
+    node: [{
+      data: '7',
+      node: [{
+        data: '10'
+      }]
+    }, {
+      data: '8'
+    }, {
+      data: '9'
+    }]
+  }]
+};
+
 TreeDemoSite.demoData.squareDemoData = {
   dataValue1: '1',
   dataValue2: 'Node1',

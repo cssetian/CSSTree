@@ -59,24 +59,36 @@ TreeDemoSite.Events = function() {
     ul.append(li);
   });
   
+  // Populate data textarea with demo data when buttons are clicked
+  $('#node-data-ex-default').click(function(e) {
+    var defaultDataString = JSON.stringify(TreeDemoSite.demoData.defaultDemoData, null, 2);
+    $('#node-data-input').val('');
+    $('#node-data-input').val(defaultDataString);
+  });
+  $('#node-data-ex-user').click(function(e) {
+    $('#node-data-input').val('');
+  });
   $('#node-data-ex-sq').click(function(e) {
     var squareDataString = JSON.stringify(TreeDemoSite.demoData.squareDemoData, null, 2);
     $('#node-data-input').val('');
     $('#node-data-input').val(squareDataString);
   });
 
+  // Populate html template textarea with demo functions when buttons are clicked
+  $('#node-html-ex-default').click(function(e) {
+    var defaultDemoFunction = String(TreeDemoSite.demoFunctions.defaultDemoFunction);
+    $('#node-html-template').val('');
+    $('#node-html-template').val(defaultDemoFunction);
+  });
+  $('#node-html-ex-user').click(function(e) {
+    var userDemoFunction = String(TreeDemoSite.demoFunctions.userDemoFunction);
+    $('#node-html-template').val('');
+    $('#node-html-template').val(userDemoFunction);
+  });
   $('#node-html-ex-sq').click(function(e) {
     var squareFuncString = String(TreeDemoSite.demoFunctions.squareDemoFunction);
     $('#node-html-template').val('');
     $('#node-html-template').val(squareFuncString);
   });
-  $('#node-data-user-tmpl').click(function(e) {
-    $('#node-data-input').val('');
-  });
 
-  $('#node-html-user-tmpl').click(function(e) {
-    var userDemoFunction = String(TreeDemoSite.demoFunctions.userDemoFunction);
-    $('#node-html-template').val('');
-    $('#node-html-template').val(userDemoFunction);
-  });
 };

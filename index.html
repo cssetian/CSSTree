@@ -80,25 +80,6 @@
               </td>
             </tr>
             <tr>
-              <td><label for="data-source">Data Source</label></td>
-              <td>
-                <div class="options-module">
-                  <div class="radio">
-                    <label>
-                      <input type="radio" name="data-source" id="data-source-0" value="default" checked>
-                      Default Data (Auto-Populated Below)
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" name="data-source" id="data-source-1" value="user">
-                      User Data (Overrides Defaults)
-                    </label>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
               <td><label for="option-tree-container-id">Tree Container ID (Disabled)</label></td>
               <td><input type="text" id="option-tree-container-id" placeholder="#tree-container" disabled="true" /></td>
             </tr>
@@ -267,18 +248,14 @@
         </div>
         <div id="html-template-collapse" class="panel-collapse collapse in">
           <div class="panel-body settings-panel-body">
-            <p>Add the HTML template to be used for each node. Delete the default template copied below and replace with your own if supplying custom template. Example Usage:</p>
-              <pre><code>function(node) { 
-  var htmlString = "";
-
-  /* Build Template String */ 
-  htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue1 + "&lt/div&gt";
-  htmlString = htmlString + "&ltdiv&gt" + node.data.dataValue2 + "&lt/div&gt";
-
-  return htmlString; 
-}</code></pre>
-          Commented until finished with the utility function to inject the example functions.
+            <p>Choose the HTML template to be used for each node. Select 'Default' or leave blank / delete all text to use the default settings. Select 'User' and define your own HTML template function for customization, or choose one of the example functions to pair with its corresponding example data.</p>
           <div id="html-template-btn-group" class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" id="node-html-ex-default" data-extype="default">Default</button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" id="node-html-ex-user" data-extype="user">User</button>
+            </div>
             <div class="btn-group">
               <button type="button" class="btn btn-default" id="node-html-ex-sq" data-extype="sq">Squares</button>
             </div>
@@ -287,9 +264,6 @@
             </div>
             <div class="btn-group">
               <button type="button" class="btn btn-default" id="node-html-ex-btn" data-extype="btn">Buttons</button>
-            </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-default" id="node-html-user-tmpl" data-extype="user">User</button>
             </div>
           </div>
           <textarea class="textarea-input" id="node-html-template"></textarea>
@@ -304,28 +278,20 @@
         <div class="panel-heading" data-toggle="collapse" href="#json-tree-data-collapse">
           <h4 class="panel-title">
             <a>
-              JSON Tree Data Input
+              JSON Tree Data
             </a>
           </h4>
         </div>
         <div id="json-tree-data-collapse" class="panel-collapse collapse in">
           <div class="panel-body settings-panel-body">
-            <p>Add stringified JSON data. Delete the default data copied below and replace with your own. Example Usage:</p>
-        <pre><code>{
-  node: {
-    data: {
-      dataValue1: "testValue1",
-      dataValue2: "testValue2"
-    },
-    node: {
-      data: {
-        dataValue1: "testValue3",
-        dataValue2: "testValue4"
-      }
-    }
-  }            
-}</code></pre>
+            <p>Choose the JSON data to be used with the tree and applied to the HTML template. Select 'Default' or leave blank / delete all text to use the default data. Select 'User' and define your own JSON data for customization, or choose one of the example functions to pair with the corresponding example function.
           <div id="node-data-btn-group" class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" id="node-data-ex-default" data-extype="default">Default</button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" id="node-data-ex-user" data-extype="user">User</button>
+            </div>
             <div class="btn-group">
               <button type="button" class="btn btn-default" id="node-data-ex-sq" data-extype="sq">Squares</button>
             </div>
@@ -335,11 +301,8 @@
             <div class="btn-group">
               <button type="button" class="btn btn-default" id="node-data-ex-btn" data-extype="btn">Buttons</button>
             </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-default" id="node-data-user-tmpl" data-extype="user">User</button>
-            </div>
           </div>
-          <textarea class="textarea-input" id="node-data-input" disabled></textarea>
+          <textarea class="textarea-input" id="node-data-input"></textarea>
           </div>
         </div>
       </div>
