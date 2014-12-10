@@ -73,22 +73,33 @@ TreeDemoSite.Events = function() {
     $('#node-data-input').val('');
     $('#node-data-input').val(squareDataString);
   });
+  $('#node-data-ex-tbl').click(function(e) {
+    var tableDataString = JSON.stringify(TreeDemoSite.demoData.tableDemoData, null, 2);
+    $('#node-data-input').val('');
+    $('#node-data-input').val(tableDataString);
+  });
+
 
   // Populate html template textarea with demo functions when buttons are clicked
   $('#node-html-ex-default').click(function(e) {
-    var defaultDemoFunction = String(TreeDemoSite.demoFunctions.defaultDemoFunction);
+    var defaultFuncString = String(TreeDemoSite.demoFunctions.defaultDemoFunction);
     $('#node-html-template').val('');
-    $('#node-html-template').val(defaultDemoFunction);
+    $('#node-html-template').val(defaultFuncString);
   });
   $('#node-html-ex-user').click(function(e) {
-    var userDemoFunction = String(TreeDemoSite.demoFunctions.userDemoFunction);
+    var userFuncString = String(TreeDemoSite.demoFunctions.userDemoFunction);
     $('#node-html-template').val('');
-    $('#node-html-template').val(userDemoFunction);
+    $('#node-html-template').val(userFuncString);
   });
   $('#node-html-ex-sq').click(function(e) {
     var squareFuncString = String(TreeDemoSite.demoFunctions.squareDemoFunction);
     $('#node-html-template').val('');
     $('#node-html-template').val(squareFuncString);
+  });
+  $('#node-html-ex-tbl').click(function(e) {
+    var tableFuncString = String(TreeDemoSite.demoFunctions.tableDemoFunction);
+    $('#node-html-template').val('');
+    $('#node-html-template').val(tableFuncString);
   });
 
 };

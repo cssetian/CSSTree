@@ -21,9 +21,13 @@ TreeDemoSite.demoFunctions.squareDemoFunction = function(node) {
     
 TreeDemoSite.demoFunctions.tableDemoFunction = function(node) {
   'use strict';
-  var htmlTemplate = '' + node;
+  var htmlTemplate = '';
 
   /* Build Table Template String */
+  htmlTemplate = htmlTemplate + '<table class="demo-table-template"><tr>';
+  htmlTemplate = htmlTemplate + '<td class=&quotfirst-data&quot>' + node.dataValue1 + '</td>';
+  htmlTemplate = htmlTemplate + '<td class=&quotsecond-data&quot>' + node.dataValue2 + '</td>';
+  htmlTemplate = htmlTemplate + '</tr></table>';
 
   return htmlTemplate;
 };

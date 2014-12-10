@@ -70,13 +70,40 @@ TreeDemoSite.demoData.squareDemoData = {
   }]
 };
     
-TreeDemoSite.demoData.tableDemoData = function(node) {
-  'use strict';
-  var htmlString = '' + node;
-
-  /* Build Table Template String */
-
-  return htmlString;
+TreeDemoSite.demoData.tableDemoData = {
+  dataValue1: 'N1|',
+  dataValue2: 'A',
+  node: [{
+    dataValue1: 'N2|',
+    dataValue2: 'B',
+    node: [{
+      dataValue1: 'N5|',
+      dataValue2: 'E'
+    }, {
+      dataValue1: 'N6|',
+      dataValue2: 'F'
+    }]
+  }, {
+    dataValue1: 'N3|',
+    dataValue2: 'C'
+  }, {
+    dataValue1: 'N4|',
+    dataValue2: 'D',
+    node: [{
+      dataValue1: 'N7|',
+      dataValue2: 'G',
+      node: [{
+        dataValue1: 'N10|',
+        dataValue2: 'J',
+      }]
+    }, {
+      dataValue1: 'N8|',
+      dataValue2: 'H',
+    }, {
+      dataValue1: 'N9|',
+      dataValue2: 'I'
+    }]
+  }]
 };
 
 TreeDemoSite.demoData.buttonDemoData = function(node) {
