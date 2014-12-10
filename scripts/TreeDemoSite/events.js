@@ -59,13 +59,24 @@ TreeDemoSite.Events = function() {
     ul.append(li);
   });
   
-  
+  $('#node-data-ex-sq').click(function(e) {
+    var squareDataString = JSON.stringify(TreeDemoSite.demoData.squareDemoData, null, 2);
+    $('#node-data-input').val('');
+    $('#node-data-input').val(squareDataString);
+  });
+
   $('#node-html-ex-sq').click(function(e) {
-    console.log('fired!');
-    console.log(TreeDemoSite.demoFunctions.squareDemoFunction);
     var squareFuncString = String(TreeDemoSite.demoFunctions.squareDemoFunction);
-    console.log(squareFuncString);
     $('#node-html-template').val('');
     $('#node-html-template').val(squareFuncString);
+  });
+  $('#node-data-user-tmpl').click(function(e) {
+    $('#node-data-input').val('');
+  });
+
+  $('#node-html-user-tmpl').click(function(e) {
+    var userDemoFunction = String(TreeDemoSite.demoFunctions.userDemoFunction);
+    $('#node-html-template').val('');
+    $('#node-html-template').val(userDemoFunction);
   });
 };

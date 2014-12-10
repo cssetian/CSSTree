@@ -2,10 +2,10 @@
 // Author: Christopher Stephen Setian
 // github: https://github.com/cssetian
 
-function CSSTree(userInput) {
+function CSSTree(userSettings) {
   'use strict';
   var self = this;
-  var userSettings = userInput || {};
+  var userSettings = userSettings || {};
 
   // Define default settings to be used for each setting the user doesn't specify 
   self.defaultSettings = {
@@ -56,7 +56,7 @@ function CSSTree(userInput) {
     }
   };
 
-  self.mergedSettings = self.extend(self.defaultSettings, userSettings);
+  self.mergedSettings = CSSTree.extend(self.defaultSettings, userSettings);
   console.log('Merged Settings: ', self.mergedSettings);
 
   self.treeContainerPadding = self.mergedSettings.treeContainerPadding;
@@ -106,11 +106,14 @@ function CSSTree(userInput) {
   console.log('Finished CSSTree Initialization!');
 }
 
-CSSTree.prototype.extend = function(a, b){
-    for(var key in b)
-        if(b.hasOwnProperty(key))
-            a[key] = b[key];
-    return a;
+CSSTree.extend = function(a, b){
+  'use strict';
+  for(var key in b) {
+    if(b.hasOwnProperty(key)) {
+      a[key] = b[key];
+    }
+  }
+  return a;
 };
 
 // Recalculate tree layout and coordinates, then redraw tree

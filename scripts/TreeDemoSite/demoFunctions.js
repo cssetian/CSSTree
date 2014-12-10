@@ -10,29 +10,38 @@ TreeDemoSite.demoFunctions = TreeDemoSite.demoFunctions || {};
 
 TreeDemoSite.demoFunctions.squareDemoFunction = function(node) {
   'use strict';
-  var htmlString = '';
+  var htmlTemplate = '';
 
   /* Build Basic Template String */
-  htmlString = htmlString + '&ltdiv class&equals&quotfirst-data&quot&gt' + node.data.dataValue1 + '&lt/div&gt';
-  htmlString = htmlString + '&ltdiv class&equals&quotsecond-data&quot&gt' + node.data.dataValue2 + '&lt/div&gt';
+  htmlTemplate = htmlTemplate + '<div class=&quotfirst-data&quot>' + node.dataValue1 + '</div>';
+  htmlTemplate = htmlTemplate + '<div class=&quotsecond-data&quot>' + node.dataValue2 + '</div>';
 
-  return htmlString;
+  return htmlTemplate;
 };
     
 TreeDemoSite.demoFunctions.tableDemoFunction = function(node) {
   'use strict';
-  var htmlString = '' + node;
+  var htmlTemplate = '' + node;
 
   /* Build Table Template String */
 
-  return htmlString;
+  return htmlTemplate;
 };
 
 TreeDemoSite.demoFunctions.buttonDemoFunction = function(node) {
   'use strict';
-  var htmlString = '' + node;
+  var htmlTemplate = '' + node;
 
   /* Build Button Template String */
 
-  return htmlString;
+  return htmlTemplate;
+};
+
+TreeDemoSite.demoFunctions.userDemoFunction = function(node) {
+  'use strict';
+  var htmlTemplate = '';
+
+  /* Build Your HTML Template Here */
+
+  return htmlTemplate;
 };

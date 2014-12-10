@@ -9,41 +9,39 @@ var TreeDemoSite = TreeDemoSite || {};
 TreeDemoSite.demoData = TreeDemoSite.demoData || {};
 
 TreeDemoSite.demoData.squareDemoData = {
-  node: {
-    dataValue1: '1',
-    dataValue2: '',
+  dataValue1: '1',
+  dataValue2: 'Node1',
+  node: [{
+    dataValue1: '2',
+    dataValue2: 'Node2',
     node: [{
-      dataValue1: '2',
-      dataValue2: '',
-      node: [{
-        dataValue1: '5',
-        dataValue2: ''
-      }, {
-        dataValue1: '6',
-        dataValue2: ''
-      }]
+      dataValue1: '5',
+      dataValue2: 'Node5'
     }, {
-      dataValue1: '3',
-      dataValue2: ''
-    }, {
-      dataValue1: '4',
-      dataValue2: '',
-      node: [{
-        dataValue1: '7',
-        dataValue2: '',
-        node: [{
-          dataValue1: '10',
-          dataValue2: '',
-        }]
-      }, {
-        dataValue1: '8',
-        dataValue2: '',
-      }, {
-        dataValue1: '9',
-        dataValue2: ''
-      }]
+      dataValue1: '6',
+      dataValue2: 'Node6'
     }]
-  }
+  }, {
+    dataValue1: '3',
+    dataValue2: 'Node3'
+  }, {
+    dataValue1: '4',
+    dataValue2: 'Node4',
+    node: [{
+      dataValue1: '7',
+      dataValue2: 'Node7',
+      node: [{
+        dataValue1: '10',
+        dataValue2: 'Node10',
+      }]
+    }, {
+      dataValue1: '8',
+      dataValue2: 'Node8',
+    }, {
+      dataValue1: '9',
+      dataValue2: 'Node9'
+    }]
+  }]
 };
     
 TreeDemoSite.demoData.tableDemoData = function(node) {

@@ -101,8 +101,8 @@ TreeDemoSite.App.buildAndRefreshTree = function() {
     self.userSettings.nodeData = $("#node-data-input").val();
   }*/
 
-  var newTreeContainerId = $.trim($("#option-tree-container-id").val()); 
-  self.currentContainerId  = newTreeContainerId || "#tree-container";
+  var newTreeContainerId = $.trim($('#option-tree-container-id').val());
+  self.currentContainerId  = newTreeContainerId || '#tree-container';
 
   $(self.currentContainerId).text('');
   $(self.currentContainerId).drawCSSTree(self.userSettings);
@@ -176,16 +176,21 @@ TreeDemoSite.App.buildUserSettings = function() {
   if ($.trim($("#option-forobj-not-supported").val()) !== "") { 
     self.userSettings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val()); 
   }
-  if (eval($("#node-html-template").value) !== undefined) { 
-    self.userSettings.nodeHTMLTemplate = eval($("#node-html-template").value); 
+  if ($("#node-html-template").val() !== "") {
+    var baseFunction = $("#node-html-template").val();
+    var augmentedFunction = "new function() { return " + baseFunction + "; }";
+    self.userSettings.nodeHTMLTemplate = eval(augmentedFunction); 
+  }
+  if ($("#node-data-input").val() !== "") { 
+    self.userSettings.nodeData = JSON.parse($("#node-data-input").val()); 
   }
 
   // Build class lists from groups of list entries 
   var classSettings = {};
-  classSettings.tempNodeBkndClasses = self.buildArrayFromList("option-node-background-classes");
-  classSettings.tempNodeHTMLClasses = self.buildArrayFromList("option-node-html-classes");
-  classSettings.tempLinkClasses = self.buildArrayFromList("option-link-body-classes");
-  classSettings.tempArrowClasses = self.buildArrayFromList("option-link-arrow-classes");
+  classSettings.tempNodeBkndClasses = TreeDemoSite.App.buildArrayFromList("option-node-background-classes");
+  classSettings.tempNodeHTMLClasses = TreeDemoSite.App.buildArrayFromList("option-node-html-classes");
+  classSettings.tempLinkClasses = TreeDemoSite.App.buildArrayFromList("option-link-body-classes");
+  classSettings.tempArrowClasses = TreeDemoSite.App.buildArrayFromList("option-link-arrow-classes");
 
   self.addClassArraysToMergedSettings(classSettings);
 
@@ -212,7 +217,6 @@ TreeDemoSite.App.buildAndRefreshSettings = function() {
 // Builds an array of strings given the ID of an html list element
 TreeDemoSite.App.buildArrayFromList = function(listId) {
   'use strict';
-  var self = this;
 
   var listItemsEl = document.getElementById(listId).getElementsByTagName('li');
   var outputList = [];
