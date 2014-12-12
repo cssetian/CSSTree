@@ -66,7 +66,9 @@ TreeDemoSite.Events = function() {
     $('#node-data-input').val(defaultDataString);
   });
   $('#node-data-ex-user').click(function(e) {
+    var userDemoData = JSON.stringify(TreeDemoSite.demoData.userDemoData, null, 2);
     $('#node-data-input').val('');
+    $('#node-data-input').val(userDemoData);
   });
   $('#node-data-ex-sq').click(function(e) {
     var squareDataString = JSON.stringify(TreeDemoSite.demoData.squareDemoData, null, 2);
