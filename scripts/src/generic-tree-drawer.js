@@ -27,7 +27,7 @@
       arrowClasses: [],
       notSupportedMessage: 'Sorry, d3 html templates are not supported by your browser.',
       nodeHTMLTemplate: function (d) {
-        return '<div id="node-template">' + d.data + '</div>';
+        return '<div class="node-template">' + d.data + '</div>';
       },
       node: {
         data: '1',

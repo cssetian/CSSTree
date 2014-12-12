@@ -78,6 +78,11 @@ TreeDemoSite.Events = function() {
     $('#node-data-input').val('');
     $('#node-data-input').val(tableDataString);
   });
+  $('#node-data-ex-btn').click(function(e) {
+    var buttonDataString = JSON.stringify(TreeDemoSite.demoData.buttonDemoData, null, 2);
+    $('#node-data-input').val('');
+    $('#node-data-input').val(buttonDataString);
+  });
 
 
   // Populate html template textarea with demo functions when buttons are clicked
@@ -100,6 +105,11 @@ TreeDemoSite.Events = function() {
     var tableFuncString = String(TreeDemoSite.demoFunctions.tableDemoFunction);
     $('#node-html-template').val('');
     $('#node-html-template').val(tableFuncString);
+  });
+  $('#node-html-ex-btn').click(function(e) {
+    var buttonFuncString = String(TreeDemoSite.demoFunctions.buttonDemoFunction);
+    $('#node-html-template').val('');
+    $('#node-html-template').val(buttonFuncString);
   });
 
 };

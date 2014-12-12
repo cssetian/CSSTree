@@ -272,5 +272,25 @@ svg {
   font-weight: bold;
   text-align: center;
 }
+.nodeHTMLTemplate {
+  font-size: 20px;
+}
+.button-demo-container {
+  font-size: 7px;
+}
+.button-demo-container button {
+    width: 30px;
+    font-size: 6px;
+}
+.button-demo-container .first-data {
+    font-size: 10px;
+}
+.square-demo-container {
+  font-size: 10px;
+  font-weight: bold;
+}
+.square-demo-container .second-data {
+  font-size: 8px;
+}
 /****************************************************************/
 

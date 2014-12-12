@@ -13,8 +13,10 @@ TreeDemoSite.demoFunctions.squareDemoFunction = function(node) {
   var htmlTemplate = '';
 
   /* Build Basic Template String */
-  htmlTemplate = htmlTemplate + '<div class=&quotfirst-data&quot>' + node.dataValue1 + '</div>';
-  htmlTemplate = htmlTemplate + '<div class=&quotsecond-data&quot>' + node.dataValue2 + '</div>';
+  htmlTemplate = htmlTemplate + '<div class=\"square-demo-container\">';
+  htmlTemplate = htmlTemplate + '<div class=\"first-data\">' + node.dataValue1 + '</div>';
+  htmlTemplate = htmlTemplate + '<div class=\"second-data\">' + node.dataValue2 + '</div>';
+  htmlTemplate = htmlTemplate + '</div>';
 
   return htmlTemplate;
 };
@@ -24,9 +26,9 @@ TreeDemoSite.demoFunctions.tableDemoFunction = function(node) {
   var htmlTemplate = '';
 
   /* Build Table Template String */
-  htmlTemplate = htmlTemplate + '<table class="demo-table-template"><tr>';
-  htmlTemplate = htmlTemplate + '<td class=&quotfirst-data&quot>' + node.dataValue1 + '</td>';
-  htmlTemplate = htmlTemplate + '<td class=&quotsecond-data&quot>' + node.dataValue2 + '</td>';
+  htmlTemplate = htmlTemplate + '<table class=\"demo-table-template\"><tr>';
+  htmlTemplate = htmlTemplate + '<td class=\"first-data\">' + node.dataValue1 + '</td>';
+  htmlTemplate = htmlTemplate + '<td class=\"second-data\">' + node.dataValue2 + '</td>';
   htmlTemplate = htmlTemplate + '</tr></table>';
 
   return htmlTemplate;
@@ -34,23 +36,27 @@ TreeDemoSite.demoFunctions.tableDemoFunction = function(node) {
 
 TreeDemoSite.demoFunctions.buttonDemoFunction = function(node) {
   'use strict';
-  var htmlTemplate = '' + node;
+  var htmlTemplate = '';
 
   /* Build Button Template String */
+  htmlTemplate = htmlTemplate + '<div class=\"button-demo-container\">';
+  htmlTemplate = htmlTemplate + '<div class=\"first-data\">' + node.dataValue1 + '</div>';
+  htmlTemplate = htmlTemplate + '<button type=\"button\" class=\"second-data\" onClick=\"javascript: alert(\' Thanks for clicking! Here\\\'s some data: ' + node.dataValue2 + '\') \">Click!</button>';
+  htmlTemplate = htmlTemplate + '</div>';
 
   return htmlTemplate;
 };
 
 TreeDemoSite.demoFunctions.defaultDemoFunction = function (d) {
   'use strict';
-  return '<div id="node-template">' + d.data + '</div>';
+  return '<div class="node-template">' + d.data + '</div>';
 };
 
 TreeDemoSite.demoFunctions.userDemoFunction = function(node) {
   'use strict';
   var htmlTemplate = '';
 
-  /* Build Your HTML Template Here */
+  /* Edit this and build your own HTML template here! */
 
   return htmlTemplate;
 };
