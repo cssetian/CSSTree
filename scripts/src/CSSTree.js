@@ -9,7 +9,7 @@ function CSSTree(userSettings) {
 
   // Define default settings to be used for each setting the user doesn't specify 
   self.defaultSettings = {
-    treeContainer: '#tree-container',
+    treeContainer: 'tree-container',
     treeContainerPadding: 8,
     treeOrientation: 0,
     linkOrientation: 'down',
@@ -121,6 +121,7 @@ CSSTree.prototype.refreshTreeLayout = function() {
   var self = this;
 
   self.calcTreeLayout();
+  self.clearEl();
   self.drawTreeLayout();
 };
 
@@ -130,7 +131,7 @@ CSSTree.prototype.copyTreeLayout = function(containerId) {
   var self = this;
 
   if(containerId) {
-    var tempEl = self.treeContainer;
+    var tempEl = document.getElementById(self.treeContainer).innerHTML = '';
     self.treeContainer = containerId;
 
     self.refreshTreeLayout();
@@ -140,7 +141,11 @@ CSSTree.prototype.copyTreeLayout = function(containerId) {
     self.refreshTreeLayout();
   }
 };
-
+CSSTree.prototype.clearEl = function() {
+  'use strict';
+  var self = this;
+  document.getElementById(self.treeContainer).innerHTML = '';
+};
 // Replace the root element with a newly drawn tree
 CSSTree.prototype.drawTreeLayout = function() {
   'use strict';
@@ -274,7 +279,7 @@ CSSTree.prototype.drawContainer = function() {
   var self = this;
 
   // Define the spatial container that the tree will be laid out in
-  var svgContainer = d3.select(self.treeContainer)
+  var svgContainer = d3.select('#' + self.treeContainer)
     .append('svg')
       // The SVG element is consistently 4 pixels larger on all sides than the G element
       // Add on 4 extra pixels in either direction for padding...could be due to borders?

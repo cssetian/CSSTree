@@ -26,7 +26,7 @@ TreeDemoSite.demoFunctions.tableDemoFunction = function(node) {
   var htmlTemplate = '';
 
   /* Build Table Template String */
-  htmlTemplate = htmlTemplate + '<table class=\"demo-table-template\"><tr>';
+  htmlTemplate = htmlTemplate + '<table class=\"table-demo-template\"><tr>';
   htmlTemplate = htmlTemplate + '<td class=\"first-data\">' + node.dataValue1 + '</td>';
   htmlTemplate = htmlTemplate + '<td class=\"second-data\">' + node.dataValue2 + '</td>';
   htmlTemplate = htmlTemplate + '</tr></table>';
