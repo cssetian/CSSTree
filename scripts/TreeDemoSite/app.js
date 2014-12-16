@@ -61,9 +61,9 @@ TreeDemoSite.App.renderJSONText = function(el, data, formatted) {
 
   // If the text should be formatted, define size of indentation
   if(formatted) {
-    $(el).html = JSON.stringify(data, null, 2);
+    $(el).html(JSON.stringify(data, null, 2));
   } else {
-    $(el).html = JSON.stringify(data);
+    $(el).html(JSON.stringify(data));
   }
 };
 
@@ -72,10 +72,11 @@ TreeDemoSite.App.renderJSONText = function(el, data, formatted) {
 TreeDemoSite.App.refreshSettingsPanels = function() {
   'use strict';
   var self = this;
+  var mergedSettings = CSSTree.extend(CSSTree.defaultSettings, self.userSettings);
 
   TreeDemoSite.App.renderJSONText('#user-unformatted-settings', self.userSettings, false);
   TreeDemoSite.App.renderJSONText('#user-formatted-settings', self.userSettings, true);
-  TreeDemoSite.App.renderJSONText('#compiled-formatted-settings', self.mergedSettings, true);
+  TreeDemoSite.App.renderJSONText('#compiled-formatted-settings', mergedSettings, true);
 };
 
 // Builds settings and refreshes tree, redrawing on default root tree element

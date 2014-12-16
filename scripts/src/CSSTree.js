@@ -106,6 +106,54 @@ function CSSTree(userSettings) {
   console.log('Finished CSSTree Initialization!');
 }
 
+CSSTree.defaultSettings = {
+    treeContainer: 'tree-container',
+    treeContainerPadding: 8,
+    treeOrientation: 0,
+    linkOrientation: 'down',
+    nodeChildName: 'node',
+    nodeDataName: 'data',
+    nodeType: '',
+    linkType: 'elbow',
+    nodeWidth: 40,
+    nodeHeight: 40,
+    depthSpacing: 20,
+    widthSpacing: 20,
+    nodeBkndClasses: ['node-background'],
+    nodeTmplClasses: ['node-html-container'],
+    linkClasses: ['link-html-container'],
+    arrowClasses: ['arrow-html-container'],
+    notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
+    nodeHTMLTemplate: function (d) {
+      return '<div class="node-template">' + d.data + '</div>';
+    },
+    nodeData: {
+      data: '1',
+      node: [{
+        data: '2',
+        node: [{
+          data: '5'
+        }, {
+          data: '6'
+        }]
+      }, {
+        data: '3'
+      }, {
+        data: '4',
+        node: [{
+          data: '7',
+          node: [{
+            data: '10'
+          }]
+        }, {
+          data: '8'
+        }, {
+          data: '9'
+        }]
+      }]
+    }
+  };
+
 CSSTree.extend = function(a, b){
   for(var key in b) {
     if(b.hasOwnProperty(key)) {
