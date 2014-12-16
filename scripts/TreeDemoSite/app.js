@@ -111,24 +111,24 @@ TreeDemoSite.App.refreshUserSettings = function() {
   self.userSettings = self.userSettings || {};
 
   // Define the tree container ID and padding
-  if ($.trim($("#option-tree-container-id").val()) !== "") {
-    self.userSettings.treeContainerId = $.trim($("#option-tree-container-id").val());
+  if ($.trim($('#option-tree-container-id').val()) !== '') {
+    self.userSettings.treeContainerId = $.trim($('#option-tree-container-id').val());
   }
-  if ($.trim($("#option-tree-container-padding").val()) !== "") {
-    self.userSettings.treeContainerPadding = parseInt($.trim($("#option-tree-container-padding").val()));
+  if ($.trim($('#option-tree-container-padding').val()) !== '') {
+    self.userSettings.treeContainerPadding = parseInt($.trim($('#option-tree-container-padding').val()), 0);
   }
 
   // Define the json property name of the data nodes and child nodes
-  if ($.trim($("#option-node-child-name").val()) !== "") {
-    self.userSettings.nodeChildName = $.trim($("#option-node-child-name").val());
+  if ($.trim($('#option-node-child-name').val()) !== '') {
+    self.userSettings.nodeChildName = $.trim($('#option-node-child-name').val());
   }
-  if ($.trim($("#option-node-data-name").val()) !== "") {
-    self.userSettings.nodeDataName = $.trim($("#option-node-data-name").val());
+  if ($.trim($('#option-node-data-name').val()) !== '') {
+    self.userSettings.nodeDataName = $.trim($('#option-node-data-name').val());
   }
 
   // Translate the tree orientation from text to angle in degrees
-  if ($("input:radio[name='tree-orientation']:checked").val()) {
-    self.userSettings.treeOrientation = $("input:radio[name='tree-orientation']:checked").val();
+  if ($('input:radio[name="tree-orientation"]:checked').val()) {
+    self.userSettings.treeOrientation = $('input:radio[name="tree-orientation"]:checked').val();
     switch(self.userSettings.treeOrientation) {
     case 'down':
       self.userSettings.treeOrientation = 0;
@@ -146,38 +146,38 @@ TreeDemoSite.App.refreshUserSettings = function() {
   }
 
   // Tree link properties
-  if ($("input:radio[name='link-orientation']:checked").val()) {
-    self.userSettings.linkOrientation = $("input:radio[name='link-orientation']:checked").val();
+  if ($('input:radio[name="link-orientation"]:checked').val()) {
+    self.userSettings.linkOrientation = $('input:radio[name="link-orientation"]:checked').val();
   }
-  if ($("input:radio[name='option-link-strategy']:checked").val()) {
-    self.userSettings.linkType = $("input:radio[name='option-link-strategy']:checked").val();
+  if ($('input:radio[name="option-link-strategy"]:checked').val()) {
+    self.userSettings.linkType = $('input:radio[name="option-link-strategy"]:checked').val();
   }
   
   // Tree spacing properties
-  if ($.trim($("#option-node-width").val()) !== "") {
-    self.userSettings.nodeWidth = parseInt($.trim($("#option-node-width").val()));
+  if ($.trim($('#option-node-width').val()) !== '') {
+    self.userSettings.nodeWidth = parseInt($.trim($('#option-node-width').val()), 0);
   }
-  if ($.trim($("#option-node-height").val()) !== "" ) {
-    self.userSettings.nodeHeight = parseInt($.trim($("#option-node-height").val()));
+  if ($.trim($('#option-node-height').val()) !== '' ) {
+    self.userSettings.nodeHeight = parseInt($.trim($('#option-node-height').val()), 0);
   }
-  if ( $.trim($("#option-node-depth-spacing").val()) !== "" ) {
-    self.userSettings.depthSpacing = parseInt($.trim($("#option-node-depth-spacing").val()));
+  if ( $.trim($('#option-node-depth-spacing').val()) !== '' ) {
+    self.userSettings.depthSpacing = parseInt($.trim($('#option-node-depth-spacing').val()), 0);
   }
-  if ( $.trim($("#option-node-width-spacing").val()) !== "" ) {
-    self.userSettings.widthSpacing = parseInt($.trim($("#option-node-width-spacing").val()));
+  if ( $.trim($('#option-node-width-spacing').val()) !== '' ) {
+    self.userSettings.widthSpacing = parseInt($.trim($('#option-node-width-spacing').val()), 0);
   }
 
   // HTML Template / foreign object inputs
-  if ($.trim($("#option-forobj-not-supported").val()) !== "") { 
-    self.userSettings.notSupportedMessage = $.trim($("#option-forobj-not-supported").val());
+  if ($.trim($('#option-forobj-not-supported').val()) !== '') {
+    self.userSettings.notSupportedMessage = $.trim($('#option-forobj-not-supported').val());
   }
-  if ($("#node-html-template").val() !== "") {
-    var baseFunction = $("#node-html-template").val();
-    var augmentedFunction = "new function() { return " + baseFunction + "; }";
-    self.userSettings.nodeHTMLTemplate = eval(augmentedFunction); 
+  if ($('#node-html-template').val() !== '') {
+    var baseFunction = $('#node-html-template').val();
+    var augmentedFunction = 'new function() { return ' + baseFunction + '; }';
+    self.userSettings.nodeHTMLTemplate = eval(augmentedFunction);
   }
-  if ($("#node-data-input").val() !== "") { 
-    self.userSettings.nodeData = JSON.parse($("#node-data-input").val());
+  if ($('#node-data-input').val() !== '') {
+    self.userSettings.nodeData = JSON.parse($('#node-data-input').val());
   }
 
   self.addClassesToSettingsObject();
@@ -194,7 +194,7 @@ TreeDemoSite.App.buildArrayFromList = function(listId) {
     var listItemEl = listItemsEl[i];
     var itemInputEl = listItemEl.getElementsByTagName('input')[0];
     var listItemValue = $.trim(itemInputEl.value);
-    if(listItemValue !== "") {
+    if(listItemValue !== '') {
       outputList.push(listItemValue);
     }
   }
