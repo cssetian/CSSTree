@@ -67,6 +67,9 @@ tbody>tr>td {
   display: table-cell;
   vertical-align: top !important;
 }
+.btn-default {
+  font-size: 10px;
+}
 /**************************/
 
 /**************View Port Specific *******************************/
@@ -84,6 +87,9 @@ tbody>tr>td {
     font-size: 1vw;
   }
   body {
+    font-size: 1vw;
+  }
+  .btn-default {
     font-size: 1vw;
   }
 

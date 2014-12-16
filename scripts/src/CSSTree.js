@@ -107,7 +107,6 @@ function CSSTree(userSettings) {
 }
 
 CSSTree.extend = function(a, b){
-  'use strict';
   for(var key in b) {
     if(b.hasOwnProperty(key)) {
       a[key] = b[key];
@@ -553,4 +552,18 @@ CSSTree.prototype.updateJSON = function(newNodeData) {
   self.nodeData = newNodeData;
   self.calcLayout();
   self.drawNodes();
+};
+
+// Very simple wrapping on the CSSTree class, 
+// allowing a user with basic jQuery knowledge 
+// to leverage the plugin to draw a CSSTree on 
+// an element.
+$.fn.drawCSSTree = function( userSettings ) {
+  var self = this;
+
+  // After defining default settings, call the helper function to draw the actual tree
+  self.customTree = new CSSTree(userSettings);
+  self.customTree.refreshTreeLayout();
+
+  return self;
 };
