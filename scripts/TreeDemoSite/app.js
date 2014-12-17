@@ -61,11 +61,24 @@ TreeDemoSite.App.renderJSONText = function(el, data, formatted) {
   var self = this;
   $(el).html('');
 
+  // Copies function properties, i.e. the HTML Template, as a string to 
+  // a new data object before writing it to the panel as a string
+  var sData = {};
+  for(var prop in data) {
+    if (data.hasOwnProperty(prop)) {
+      if(typeof data[prop] === "function") {
+        sData[prop] = data[prop].toString();
+      } else {
+        sData[prop] = data[prop];
+      }
+    }
+  }
+  
   // If the text should be formatted, define size of indentation
   if(formatted) {
-    $(el).html(JSON.stringify(data, null, 2));
+    $(el).html(JSON.stringify(sData, null, 2));
   } else {
-    $(el).html(JSON.stringify(data));
+    $(el).html(JSON.stringify(sData));
   }
 };
 
