@@ -7,60 +7,93 @@ function CSSTree(userSettings) {
   var self = this;
   var userSettings = userSettings || {};
 
-  // Define default settings to be used for each setting the user doesn't specify 
-  self.defaultSettings = {
-    treeContainer: 'tree-container',
-    treeContainerPadding: 8,
-    treeOrientation: 0,
-    linkOrientation: 'down',
-    nodeChildName: 'node',
-    nodeDataName: 'data',
-    nodeType: '',
-    linkType: 'elbow',
-    nodeWidth: 40,
-    nodeHeight: 40,
-    depthSpacing: 20,
-    widthSpacing: 20,
-    nodeBkndClasses: ['node-background'],
-    nodeTmplClasses: ['node-html-container'],
-    linkClasses: ['link-html-container'],
-    arrowClasses: ['arrow-html-container'],
-    notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
-    nodeHTMLTemplate: function (d) {
-      return '<div class="node-template">' + d.data + '</div>';
-    },
-    nodeData: {
-      data: '1',
-      node: [{
-        data: '2',
-        node: [{
-          data: '5'
-        }, {
-          data: '6'
-        }]
-      }, {
-        data: '3'
-      }, {
-        data: '4',
-        node: [{
-          data: '7',
-          node: [{
-            data: '10'
-          }]
-        }, {
-          data: '8'
-        }, {
-          data: '9'
-        }]
-      }]
-    }
-  };
+  self.initialize(userSettings);
 
-  self.mergedSettings = CSSTree.extend(self.defaultSettings, userSettings);
+  // Declare calc'ed values - Unnecessary, but useful 
+  //      to lay them all out for remembering.
+  self.linkFunction = '';
+  self.treeOrientationRad = '';
+  self.sinR = '';
+  self.cosR = '';
+  self.nodeAnchorX = '';
+  self.nodeSourceAnchorY = '';
+  self.nodeTargetAnchorY = '';
+  self.hwRatio = '';
+  self.rawSpanSpacingPxls = '';
+  self.nodeSpanSpacingPct = '';
+  self.rootOffsetX = '';
+  self.rootOffsetY = '';
+  self.treeContainerHeight = '';
+  self.treeContainerWidth = '';
+  console.log('Finished CSSTree Initialization!');
+}
+
+// Define the defaultSettings as a static object so it can be copied 
+//    into a new object every time the tree is redrawn. Otherwise the
+//    d3 functions pollute the variable with properties.
+CSSTree.defaultSettings = {
+  treeContainer: 'tree-container',
+  treeContainerPadding: 8,
+  treeOrientation: 0,
+  linkOrientation: 'down',
+  nodeChildName: 'node',
+  nodeDataName: 'data',
+  nodeType: '',
+  linkType: 'elbow',
+  nodeWidth: 40,
+  nodeHeight: 40,
+  depthSpacing: 20,
+  widthSpacing: 20,
+  nodeBkndClasses: ['node-background'],
+  nodeTmplClasses: ['node-html-container'],
+  linkClasses: ['link-html-container'],
+  arrowClasses: ['arrow-html-container'],
+  notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
+  nodeHTMLTemplate: function (d) {
+    'use strict';
+    return '<div class="node-template">' + d.data + '</div>';
+  },
+  nodeData: {
+    data: '1',
+    node: [{
+      data: '2',
+      node: [{
+        data: '5'
+      }, {
+        data: '6'
+      }]
+    }, {
+      data: '3'
+    }, {
+      data: '4',
+      node: [{
+        data: '7',
+        node: [{
+          data: '10'
+        }]
+      }, {
+        data: '8'
+      }, {
+        data: '9'
+      }]
+    }]
+  }
+};
+
+// Redefine all of the tree settings based on a new userSettings object
+CSSTree.prototype.initialize = function(userSettings) {
+  'use strict';
+  var self = this;
+
+  // Make a deep copy of defaultSettings 
+  self.defaultSettings = $.extend(true, {}, CSSTree.defaultSettings);
+  self.mergedSettings = $.extend(true, {}, self.defaultSettings, userSettings);
+
+  console.log('Default Settings: ', self.defaultSettings);
+  console.log('User Settings: ', userSettings);
   console.log('Merged Settings: ', self.mergedSettings);
 
   self.treeContainerPadding = self.mergedSettings.treeContainerPadding;
-
   self.treeContainer = self.mergedSettings.treeContainer;
 
   self.treeOrientation = self.mergedSettings.treeOrientation;
@@ -82,85 +115,10 @@ function CSSTree(userSettings) {
 
   self.notSupportedMsg = self.mergedSettings.notSupportedMsg;
 
-  self.linkClasses = self.mergedSettings.linkClasses;              // Any classes to be added onto the links between each pair of nodes
-  self.arrowClasses = self.mergedSettings.arrowClasses;
-  self.nodeTmplClasses = self.mergedSettings.nodeTmplClasses;          // Any classes to be added onto the root HTML template element of each node
-  self.nodeBkndClasses = self.mergedSettings.nodeBkndClasses;          // Any classes to be added onto the rect SVG element of each node
-
-
-  // Declare calc'ed values - Unnecessary, but useful to lay them all out
-  self.linkFunction = '';
-  self.treeOrientationRad = '';
-  self.sinR = '';
-  self.cosR = '';
-  self.nodeAnchorX = '';
-  self.nodeSourceAnchorY = '';
-  self.nodeTargetAnchorY = '';
-  self.hwRatio = '';
-  self.rawSpanSpacingPxls = '';
-  self.nodeSpanSpacingPct = '';
-  self.rootOffsetX = '';
-  self.rootOffsetY = '';
-  self.treeContainerHeight = '';
-  self.treeContainerWidth = '';
-  console.log('Finished CSSTree Initialization!');
-}
-
-CSSTree.defaultSettings = {
-    treeContainer: 'tree-container',
-    treeContainerPadding: 8,
-    treeOrientation: 0,
-    linkOrientation: 'down',
-    nodeChildName: 'node',
-    nodeDataName: 'data',
-    nodeType: '',
-    linkType: 'elbow',
-    nodeWidth: 40,
-    nodeHeight: 40,
-    depthSpacing: 20,
-    widthSpacing: 20,
-    nodeBkndClasses: ['node-background'],
-    nodeTmplClasses: ['node-html-container'],
-    linkClasses: ['link-html-container'],
-    arrowClasses: ['arrow-html-container'],
-    notSupportedMsg: 'Sorry, d3 html templates are not supported by your browser.',
-    nodeHTMLTemplate: function (d) {
-      return '<div class="node-template">' + d.data + '</div>';
-    },
-    nodeData: {
-      data: '1',
-      node: [{
-        data: '2',
-        node: [{
-          data: '5'
-        }, {
-          data: '6'
-        }]
-      }, {
-        data: '3'
-      }, {
-        data: '4',
-        node: [{
-          data: '7',
-          node: [{
-            data: '10'
-          }]
-        }, {
-          data: '8'
-        }, {
-          data: '9'
-        }]
-      }]
-    }
-  };
-
-CSSTree.extend = function(a, b){
-  for(var key in b) {
-    if(b.hasOwnProperty(key)) {
-      a[key] = b[key];
-    }
-  }
-  return a;
+  self.linkClasses = self.mergedSettings.linkClasses;           // Any classes to be added onto the links between each pair of nodes
+  self.arrowClasses = self.mergedSettings.arrowClasses;         // Any classes to be added onto the arrows of each link
+  self.nodeTmplClasses = self.mergedSettings.nodeTmplClasses;   // Any classes to be added onto the root HTML template element of each node
+  self.nodeBkndClasses = self.mergedSettings.nodeBkndClasses;   // Any classes to be added onto the rect SVG element of each node
 };
 
 // Recalculate tree layout and coordinates, then redraw tree
@@ -189,11 +147,14 @@ CSSTree.prototype.copyTreeLayout = function(containerId) {
     self.refreshTreeLayout();
   }
 };
+
+// Clear tree element of HTML
 CSSTree.prototype.clearEl = function() {
   'use strict';
   var self = this;
   document.getElementById(self.treeContainer).innerHTML = '';
 };
+
 // Replace the root element with a newly drawn tree
 CSSTree.prototype.drawTreeLayout = function() {
   'use strict';
@@ -344,12 +305,12 @@ CSSTree.prototype.drawNodes = function(treeContainerEl) {
   'use strict';
   var self = this;
 
-  var nodeData = treeContainerEl.selectAll('g.node')
+  var selectedNodeData = treeContainerEl.selectAll('g.node')
     .data(self.nodes, function (d, i) {
       return d.id || (d.id = ++i);
     });
 
-  var svgInitializedNodes = nodeData.enter()
+  var svgInitializedNodes = selectedNodeData.enter()
   .append('g')
   .attr('class', 'node')
   // Append the root-node attribute to the root of the tree
@@ -597,15 +558,6 @@ CSSTree.prototype.setLinkType = function(newLinkType) {
   self.drawLinks();
 };
 
-// Refresh the node JSON data and then redraw the nodes
-CSSTree.prototype.updateJSON = function(newNodeData) {
-  'use strict';
-  var self = this;
-
-  self.nodeData = newNodeData;
-  self.calcLayout();
-  self.drawNodes();
-};
 
 // Very simple wrapping on the CSSTree class, 
 // allowing a user with basic jQuery knowledge 

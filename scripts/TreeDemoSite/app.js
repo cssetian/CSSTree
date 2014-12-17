@@ -27,6 +27,8 @@ TreeDemoSite.App.Initialize = function() {
   TreeDemoSite.Events();
 };
 
+// Helper function to add the custom tree classes to the settings 
+//    object if the tree settings classes are supplied.
 TreeDemoSite.App.addClassesToSettingsObject = function() {
   'use strict';
   var self = this;
@@ -39,21 +41,21 @@ TreeDemoSite.App.addClassesToSettingsObject = function() {
   classList.tempArrowClasses = TreeDemoSite.App.buildArrayFromList('option-link-arrow-classes');
 
   if (classList.tempNodeBkndClasses !== null) {
-    self.mergedSettings.nodeBkndClasses = classList.tempNodeBkndClasses;
+    self.userSettings.nodeBkndClasses = classList.tempNodeBkndClasses;
   }
   if (classList.tempNodeHTMLClasses !== null) {
-    self.mergedSettings.nodeHTMLClasses = classList.tempNodeHTMLClasses;
+    self.userSettings.nodeHTMLClasses = classList.tempNodeHTMLClasses;
   }
   if (classList.tempLinkClasses !== null) {
-    self.mergedSettings.linkClasses = classList.tempLinkClasses;
+    self.userSettings.linkClasses = classList.tempLinkClasses;
   }
   if (classList.tempArrowClasses !== null) {
-    self.mergedSettings.arrowClasses = classList.tempArrowClasses;
+    self.userSettings.arrowClasses = classList.tempArrowClasses;
   }
   return self;
 };
 
-// Define a function to refresh a given element with specific data
+// Define a function to refresh a given panel element with specific settings data.
 TreeDemoSite.App.renderJSONText = function(el, data, formatted) {
   'use strict';
   var self = this;
@@ -67,20 +69,20 @@ TreeDemoSite.App.renderJSONText = function(el, data, formatted) {
   }
 };
 
-// Display formatted/unformatted user settings in modules
-//      Show default (in initialization), user, and compiled settings in formatted JSON
+// Refreshes displays with formatted/unformatted user settings in module panels
+//    Show default, user, and compiled settings in formatted JSON.
 TreeDemoSite.App.refreshSettingsPanels = function() {
   'use strict';
   var self = this;
-  var mergedSettings = CSSTree.extend(CSSTree.defaultSettings, self.userSettings);
 
   TreeDemoSite.App.renderJSONText('#user-unformatted-settings', self.userSettings, false);
   TreeDemoSite.App.renderJSONText('#user-formatted-settings', self.userSettings, true);
-  TreeDemoSite.App.renderJSONText('#compiled-formatted-settings', mergedSettings, true);
+  TreeDemoSite.App.renderJSONText('#compiled-formatted-settings', self.mergedSettings, true);
+  TreeDemoSite.App.renderJSONText('#default-formatted-settings', CSSTree.defaultSettings, true);
 };
 
-// Builds settings and refreshes tree, redrawing on default root tree element
-// Reset content of the root tree element before redrawing
+// Builds settings and refreshes tree, redrawing SVG representation on the
+//    default root tree element. First resets root el HTML before redrawing.
 TreeDemoSite.App.refreshSettingsAndTree = function() {
   'use strict';
   var self = this;
@@ -88,10 +90,10 @@ TreeDemoSite.App.refreshSettingsAndTree = function() {
   //Refresh Settings
   if ($('input:radio[name="settings-source"]:checked').val() === 'user') {
     self.refreshUserSettings();
-    self.addClassesToSettingsObject();
   } else {
-    self.userSettings = '';
+    self.userSettings = {};
   }
+  self.refreshMergedSettings();
 
   self.refreshSettingsPanels();
 
@@ -103,12 +105,19 @@ TreeDemoSite.App.refreshSettingsAndTree = function() {
   self.tree.refreshTreeLayout();
 };
 
-// Parse all settings variables from form inputs to userSettings
+// Rebuild merged settings, in this case only for display purposes in panels.
+TreeDemoSite.App.refreshMergedSettings = function() {
+  'use strict';
+  var self = this;
+  console.log('getting defaults from app.js', CSSTree.defaultSettings);
+  self.mergedSettings = $.extend({}, CSSTree.defaultSettings, self.userSettings);
+};
+
+// Parse all settings variables from form inputs to userSettings.
 TreeDemoSite.App.refreshUserSettings = function() {
   'use strict';
   var self = this;
-
-  self.userSettings = self.userSettings || {};
+  self.userSettings = {};
 
   // Define the tree container ID and padding
   if ($.trim($('#option-tree-container-id').val()) !== '') {
@@ -183,8 +192,7 @@ TreeDemoSite.App.refreshUserSettings = function() {
   self.addClassesToSettingsObject();
 };
 
-
-// Builds an array of strings given the ID of an html list element
+// Builds an array of strings given the ID of an html list element.
 TreeDemoSite.App.buildArrayFromList = function(listId) {
   'use strict';
 
